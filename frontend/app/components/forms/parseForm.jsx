@@ -2,7 +2,7 @@
 
 import axiosClient from "@/app/axiosClient";
 import { useState, useEffect } from "react";
-import { addSong } from "../songs/Song";
+import { addSong } from "../songs/SongFunctions";
 
 export default function Form({ formType }) {
   const [form_data, setFormData] = useState({});
@@ -37,9 +37,18 @@ export default function Form({ formType }) {
 }
 
 function parseField(field) {
+  const nonFormFields = [
+    "secondsPlayed"
+  ]
+
+  if (nonFormFields.includes(field.name)){return}
+
   switch (field.type) {
     case "CharField":
       var type = "text";
+      break;
+    case "IntegerField":
+      var type = "number"
       break;
   }
 

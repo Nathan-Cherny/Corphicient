@@ -5,7 +5,8 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from . serializer import *
 from . forms import *
-from . download import download_m4a
+from . download import download_song
+import os
 
 @api_view(['GET'])
 def get_songs(request):
@@ -24,8 +25,8 @@ def add_song(request):
 
         # should actually use request.user, but getting default user for testing rn
 
-        download_m4a(data["href"])
-        serializer.save()
+        location = download_song(data["href"], data["name"])
+        serializer.save(src=location)
 
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
@@ -43,5 +44,6 @@ def delete_song(request, pk):
     except Song.DoesNotExist:
         return Response({"error": "Song not found"}, status=status.HTTP_404_NOT_FOUND)
     
+    os.remove(song.src)
     song.delete()
     return Response(status=status.HTTP_204_NO_CONTENT)

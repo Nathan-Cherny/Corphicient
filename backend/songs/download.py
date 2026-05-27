@@ -1,19 +1,28 @@
 import yt_dlp
 
-def download_m4a(url, output_dir="../backend/media/songs/"):
+def download_song(url, name="New Song", output_dir="../backend/media/songs/"):
+    type = "mp3"
+    downloaded_path = {}
+
+    def progress_hook(d):
+        if d["status"] == "finished":
+            downloaded_path["filename"] = d["filename"]
+
     ydl_opts = {
-        "format": "bestaudio[ext=m4a]/bestaudio",
+        "format": "bestaudio[ext=mp3]/bestaudio",
         "postprocessors": [{
             "key": "FFmpegExtractAudio",
-            "preferredcodec": "m4a",
+            "preferredcodec": "mp3",
         }],
-        "outtmpl": f"{output_dir}/%(title)s.%(ext)s",
+        "outtmpl": f"{output_dir}/{name}.mp3",
+        "progress_hooks": [progress_hook],
     }
     try:
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-            results = ydl.download([url])
-            print(results)
-            return results
+            ydl.download([url])
+            return convertPathToLocalSRC(downloaded_path.get("filename"))
     except:
-        pass
-
+        return ""
+    
+def convertPathToLocalSRC(path):
+    return "/".join(path.split("\\")[2:])
