@@ -4,9 +4,9 @@ def download_song(url, name="New Song", output_dir="../backend/media/songs/"):
     type = "mp3"
     downloaded_path = {}
 
-    def progress_hook(d):
+    def postprocessor_hook(d):
         if d["status"] == "finished":
-            downloaded_path["filename"] = d["filename"]
+            downloaded_path["filename"] = d["info_dict"]["filepath"]
 
     ydl_opts = {
         "format": "bestaudio[ext=mp3]/bestaudio",
@@ -14,8 +14,8 @@ def download_song(url, name="New Song", output_dir="../backend/media/songs/"):
             "key": "FFmpegExtractAudio",
             "preferredcodec": "mp3",
         }],
-        "outtmpl": f"{output_dir}/{name}.mp3",
-        "progress_hooks": [progress_hook],
+        "outtmpl": f"{output_dir}/{name}.%(ext)s",
+        "postprocessor_hooks": [postprocessor_hook],
     }
     try:
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
