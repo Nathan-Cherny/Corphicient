@@ -5,6 +5,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from . serializer import *
 from . forms import *
+from . download import download_m4a
 
 @api_view(['GET'])
 def get_songs(request):
@@ -15,6 +16,7 @@ def get_songs(request):
 @api_view(["POST"])
 def add_song(request):
     data = request.data
+    print(data)
 
     serializer = SongSerializer(data=data)
 
@@ -22,6 +24,7 @@ def add_song(request):
 
         # should actually use request.user, but getting default user for testing rn
 
+        download_m4a(data["href"])
         serializer.save()
 
         return Response(serializer.data, status=status.HTTP_201_CREATED)
