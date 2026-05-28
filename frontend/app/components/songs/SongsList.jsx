@@ -12,7 +12,6 @@ export default function SongsList({ request }) {
   useEffect(() => {
     async function allSongs() {
       const res = await axiosClient(...request);
-      console.log(res);
       setSongs(res || []);
     }
 

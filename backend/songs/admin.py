@@ -1,7 +1,12 @@
 from django.contrib import admin
-from .models import Song
+from .models import *
 
 @admin.register(Song)
-class FoodTruckAdmin(admin.ModelAdmin):
-    list_display = ('name', 'href')
+class SongAdmin(admin.ModelAdmin):
+    list_display = ('name', 'src')
+    search_fields = ('name',)
+
+@admin.register(Playlist)
+class PlaylistAdmin(admin.ModelAdmin):
+    list_display = ('name',)
     search_fields = ('name',)

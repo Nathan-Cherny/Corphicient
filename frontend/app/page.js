@@ -11,7 +11,8 @@ export default function Home() {
     <div>
       <SongsList request={["songs/", null, "", "GET"]} />
       <button onClick={() => addSong()}>add</button>
-      <Form formType="get_song_form"/>
+      <Form formType="get_song_form" nonFormFields={["secondsPlayed", "src"]}/>
+      <Form formType="get_playlist_form"/>
     </div>
   );
 }

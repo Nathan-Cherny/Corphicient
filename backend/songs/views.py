@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from songs.models import Song
+from songs.models import *
 from rest_framework import generics, status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -34,8 +34,13 @@ def add_song(request):
 
 @api_view(["GET"])
 def get_song_form(request):
-    data = SongFormSchema(request=request)
-    return Response(data, status=status.HTTP_200_OK)
+    serializer = FormSerializer(Song)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
+@api_view(["GET"])
+def get_playlist_form(request):
+    serializer = FormSerializer(Playlist)
+    return Response(serializer.data, status=status.HTTP_200_OK)
 
 @api_view(['DELETE'])
 def delete_song(request, pk):

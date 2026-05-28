@@ -1,6 +1,5 @@
 from django.db import models
 
-# Create your models here.
 class Song(models.Model):
     name = models.CharField(max_length=50)
     href = models.CharField(max_length=250)
@@ -8,5 +7,12 @@ class Song(models.Model):
     src = models.CharField(max_length=100, blank=True)
     secondsPlayed = models.IntegerField(blank=True, default=0)
     
+    def __str__(self):
+        return self.name
+    
+class Playlist(models.Model):
+    name = models.CharField(max_length=100)
+    songs = models.ManyToManyField(Song, blank=True)
+
     def __str__(self):
         return self.name

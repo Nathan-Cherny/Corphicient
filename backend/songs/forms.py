@@ -1,26 +1,55 @@
-from .models import Song
+from .models import *
+from .serializer import *
+from rest_framework import serializers
+from django.db.models.fields import NOT_PROVIDED
 
+class FormSerializer(serializers.Serializer):
+    def to_representation(self, instance):
+        print(self, instance)
+        # Assuming 'instance' is a Django model class
+        fields = []
+        for field in list(instance._meta.fields) + list(instance._meta.many_to_many):
+            if field.name == "id":
+                continue
 
-def SongFormSchema(request):
-    fields = []
+            field_type = "text"
+            options = []
+            if field.get_internal_type() in [
+                "IntegerField",
+                "FloatField",
+                "DecimalField",
+            ]:
+                field_type = "number"
+            elif field.get_internal_type() == "BooleanField":
+                field_type = "checkbox"
+            elif field.get_internal_type() == "DateTimeField":
+                field_type = "datetime-local"
+            elif field.get_internal_type() == "ManyToManyField":
+                field_type = "select"
+                related_model = field.related_model
+                options = [
+                    {"value": obj.pk, "label": str(obj)}
+                    for obj in related_model.objects.all()
+                ]
 
-    for field in Song._meta.fields:
-        if field.name == "id": continue
-
-        field_data = {
-            "name": field.name,
-            "required": not field.blank,
-            "type": field.get_internal_type(),
-        }
-
-        if hasattr(field, "max_length") and field.max_length:
-            field_data["max_length"] = field.max_length
-
-        if field.choices:
-            field_data["choices"] = [
-                {"value": c[0], "label": c[1]} for c in field.choices
-            ]
-
-        fields.append(field_data)
-
-    return {"fields": fields}
+            fields.append(
+                {
+                    "name": field.name,
+                    "label": field.verbose_name.title(),
+                    "type": field_type,
+                    "required": not field.blank,
+                    "default": (
+                        get_default(field)
+                    ),
+                    "max_length": getattr(field, "max_length", 0),
+                    "options": options
+                }
+            )
+        return {"fields": fields}
+    
+def get_default(field):
+    if field.default is NOT_PROVIDED:
+        return False
+    if callable(field.default):
+        return field.default()
+    return field.default

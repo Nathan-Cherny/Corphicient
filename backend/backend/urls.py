@@ -25,6 +25,7 @@ urlpatterns = [
     path('songs/', views.get_songs, name="get_songs"),
     path('add_song/', views.add_song, name='add_song'),
     path('get_song_form/', views.get_song_form, name='get_song_form'),
+    path('get_playlist_form/', views.get_playlist_form, name='get_playlist_form'),
     path('delete_song/<int:pk>/', views.delete_song, name="delete_song")
 ]
 

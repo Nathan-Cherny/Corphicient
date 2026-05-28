@@ -4,12 +4,14 @@ import axiosClient from "@/app/axiosClient";
 import { useState, useEffect } from "react";
 import { addSong } from "../songs/SongFunctions";
 
-export default function Form({ formType }) {
+export default function Form({ formType, nonFormFields = []}) {
   const [form_data, setFormData] = useState({});
 
+  // get the form data
   useEffect(() => {
     async function getForm() {
       let data = await axiosClient(formType, {}, null, "GET");
+      data.fields = data.fields?.filter(field => !nonFormFields.includes(field.name))
       setFormData(data || {});
     }
 
@@ -20,10 +22,12 @@ export default function Form({ formType }) {
     return <div>Loading...</div>;
   }
 
+  // go thru each form_data field and add that
   return (
     <div className="flex flex-col border p-5">
       <form onSubmit={(e) => addSong(e)}>
         {form_data.fields?.map((field) => {
+
           return (
             <div key={field.name} className="p-2 m-2">
               {parseField(field)}
@@ -37,19 +41,23 @@ export default function Form({ formType }) {
 }
 
 function parseField(field) {
-  const nonFormFields = [
-    "secondsPlayed"
-  ]
-
-  if (nonFormFields.includes(field.name)){return}
-
-  switch (field.type) {
-    case "CharField":
-      var type = "text";
-      break;
-    case "IntegerField":
-      var type = "number"
-      break;
+  if (field.type == "select") {
+    return (
+      <>
+        <label htmlFor={field.name}>{field.name}</label>
+        <select
+          multiple
+          required={field.required}
+          className="border mx-5"
+          id={field.name}
+          name={field.name}
+        >
+          {field.options.map((option) => (
+            <option key={option.value} value={option.value}>{option.label}</option>
+          ))}
+        </select>
+      </>
+    );
   }
 
   return (
@@ -59,7 +67,7 @@ function parseField(field) {
         required={field.required}
         className="border mx-5"
         id={field.name}
-        type={type}
+        type={field.type}
         name={field.name}
       />
     </>
