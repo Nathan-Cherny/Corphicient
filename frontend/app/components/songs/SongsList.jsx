@@ -5,13 +5,16 @@ import axiosClient from "../../axiosClient";
 import { useEffect, useState } from "react";
 import SongCard from "./SongCard";
 
-// request example: ["foodtrucks/", null, "", "GET"]
-export default function SongsList({ request }) {
+export default function SongsList({filterSongIds}) {
+  const request = ["songs/", null, "", "GET"]
   const [songs, setSongs] = useState([]);
 
   useEffect(() => {
     async function allSongs() {
-      const res = await axiosClient(...request);
+      let res = await axiosClient(...request);
+      if(filterSongIds){
+        res = res.filter((song) => filterSongIds.includes(song.id))
+      }
       setSongs(res || []);
     }
 

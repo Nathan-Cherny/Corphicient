@@ -2,9 +2,8 @@
 
 import axiosClient from "@/app/axiosClient";
 import { useState, useEffect } from "react";
-import { addSong } from "../songs/SongFunctions";
 
-export default function Form({ formType, nonFormFields = []}) {
+export default function Form({ formType, nonFormFields = [], submitFunction}) {
   const [form_data, setFormData] = useState({});
 
   // get the form data
@@ -25,7 +24,7 @@ export default function Form({ formType, nonFormFields = []}) {
   // go thru each form_data field and add that
   return (
     <div className="flex flex-col border p-5">
-      <form onSubmit={(e) => addSong(e)}>
+      <form onSubmit={(e) => submitFunction(e)}>
         {form_data.fields?.map((field) => {
 
           return (

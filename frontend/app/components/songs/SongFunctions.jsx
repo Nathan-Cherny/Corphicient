@@ -1,15 +1,11 @@
-"use client"
+"use client";
 
-import axiosClient from "@/app/axiosClient";
+import { addModel, deleteModel } from "../communication/general";
 
-export async function addSong(e){
-    e.preventDefault()
-    let payload = new FormData(e.target)
-    let response = await axiosClient("add_song/", payload, null, "POST");
-    return response
+export function addSong(e){
+    return addModel(e, "song")
 }
 
-export async function deleteSong(song_id){
-    let response = await axiosClient(`delete_song/${song_id}/`, null, null, "DELETE");
-    return response
+export function deleteSong(id){
+    return deleteModel(id, "song")
 }

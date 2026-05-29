@@ -1,18 +1,20 @@
 "use client";
 
-import axiosClient from "./axiosClient";
-import Form from "./components/forms/parseForm";
+import Form from "./components/forms/Forms";
+import { addSong } from "./components/songs/SongFunctions";
+import { addPlaylist } from "./components/playlists/PlaylistFunctions";
 import SongsList from "./components/songs/SongsList";
 
 import { useEffect, useState } from "react";
+import PlaylistList from "./components/playlists/PlaylistList";
 
 export default function Home() {
   return (
     <div>
-      <SongsList request={["songs/", null, "", "GET"]} />
-      <button onClick={() => addSong()}>add</button>
-      <Form formType="get_song_form" nonFormFields={["secondsPlayed", "src"]}/>
-      <Form formType="get_playlist_form"/>
+      <SongsList />
+      <PlaylistList />
+      <Form formType="get_song_form" nonFormFields={["secondsPlayed", "src"]} submitFunction={addSong}/>
+      <Form formType="get_playlist_form" submitFunction={addPlaylist}/>
     </div>
   );
 }
