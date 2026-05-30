@@ -19,7 +19,7 @@ export default function SongsList({filterSongIds}) {
     }
 
     allSongs();
-  }, [request[0]]);
+  }, [filterSongIds]);
 
   return (
     <div className="flex flex-wrap justify-center m-20 gap-7">
