@@ -1,7 +1,6 @@
 "use client";
 
 import * as Playlist from "./PlaylistFunctions";
-import SongCard from "../songs/SongCard";
 import SongsList from "../songs/SongsList";
 
 export default function PlaylistCard({ playlist }) {
@@ -11,9 +10,7 @@ export default function PlaylistCard({ playlist }) {
         X
       </button>
       <h3 className="font-bold text-3xl text-center m-5">{playlist.name}</h3>
-      <li>
-        <SongsList filterSongIds={playlist.songs}/>
-      </li>
+      <SongsList filterSongIds={playlist.songs}/>
     </div>
   );
 }

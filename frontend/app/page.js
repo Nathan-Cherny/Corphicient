@@ -11,7 +11,6 @@ import PlaylistList from "./components/playlists/PlaylistList";
 export default function Home() {
   return (
     <div>
-      <SongsList />
       <PlaylistList />
       <Form formType="get_song_form" nonFormFields={["secondsPlayed", "src"]} submitFunction={addSong}/>
       <Form formType="get_playlist_form" submitFunction={addPlaylist}/>

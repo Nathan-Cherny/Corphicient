@@ -70,3 +70,14 @@ def add_playlist(request):
 def get_playlist_form(request):
     serializer = FormSerializer(Playlist)
     return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+@api_view(['DELETE'])
+def delete_playlist(request, pk):
+    try:
+        playlist = Playlist.objects.get(pk=pk)
+    except Playlist.DoesNotExist:
+        return Response({"error": "Playlist not found"}, status=status.HTTP_404_NOT_FOUND)
+    
+    playlist.delete()
+    return Response(status=status.HTTP_204_NO_CONTENT)

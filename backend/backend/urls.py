@@ -29,6 +29,7 @@ urlpatterns = [
     path('playlists/', views.get_playlists, name="get_playlists"),
     path('add_playlist/', views.add_playlist, name="get_playlists"),
     path('get_playlist_form/', views.get_playlist_form, name='get_playlist_form'),
+    path('delete_playlist/<int:pk>/', views.delete_playlist, name="delete_playlist"),
 ]
 
 if settings.DEBUG:
