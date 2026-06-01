@@ -1,20 +1,67 @@
 "use client";
 
 // imports from next
-import SongCard from "./SongCard";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
+import SongCard, { playSong } from "./SongCard";
 
-export default function SongsList({songs, currentSong, setCurrentSong}) {
-  const request = ["songs/", null, "", "GET"]
+/**
+ * The part of the Playlist that displays Songs. Manages going from song to song and such
+ */
+export default function SongsList({ songs, currentSong, setCurrentSong, settings }) {
+  const request = ["songs/", null, "", "GET"];
+  const currentAudioRef = useRef(null)
+
+  const timeSkip = settings?.timeSkip || 5
+
+  const playNextSong = () => {
+    setCurrentSong((prev) => {
+      const otherSongs = songs.filter((s) => s.id != currentSong.id);
+      if (otherSongs.length == 0) return;
+      return getRandomSong(otherSongs);
+    });
+  };
+
+  const getRandomSong = (otherSongs) => {
+    return otherSongs[Math.floor(Math.random() * otherSongs.length)];
+  };
+
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (!currentSong) return;
+      switch (e.key){
+        case "s":
+          playNextSong()
+          break
+        case "0":
+          currentAudioRef.current.currentTime = 0
+          break
+        case "ArrowRight":
+          currentAudioRef.current.currentTime += 5;
+          break
+        case "ArrowLeft":
+          currentAudioRef.current.currentTime -= 5;
+          break
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [currentSong, getRandomSong]);
+
 
   return (
     <div className="flex flex-wrap justify-center m-20 gap-7">
       {songs.map((song, i) => (
         <div key={i}>
-          <SongCard song={song} currentSong={currentSong} setCurrentSong={setCurrentSong}/>
+          <SongCard
+            song={song}
+            isCurrentSong={currentSong?.id == song.id}
+            setCurrentSong={setCurrentSong}
+            onSongEnd={playNextSong}
+            onAudioRef={(ref) => { currentAudioRef.current = ref; }} // this allows the currentAudioRef to change if a new song becomes currentSong
+          />
         </div>
-        
       ))}
     </div>
   );
