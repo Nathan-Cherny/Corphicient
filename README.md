@@ -1,0 +1,5 @@
+This is my personal one-stop-shop for everything related to productivity, playing music, and managing my tasks.
+
+In the past, I used many different products (some of which I built, some of which I didn't) for this purpose. Corphicient is my way to aggregate all of these into a central location that makes it easy for me to locate everything and get to work faster.
+
+Corphish is a pokemon that has a 'hardy vitality' that allows it to 'adapt to any environment and thrive.' By being efficent, I can do the same.
