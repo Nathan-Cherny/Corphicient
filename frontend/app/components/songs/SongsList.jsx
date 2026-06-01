@@ -3,14 +3,16 @@
 // imports from next
 import SongCard from "./SongCard";
 
-export default function SongsList({songs}) {
+import { useState } from "react";
+
+export default function SongsList({songs, currentSong, setCurrentSong}) {
   const request = ["songs/", null, "", "GET"]
 
   return (
     <div className="flex flex-wrap justify-center m-20 gap-7">
       {songs.map((song, i) => (
         <div key={i}>
-          <SongCard song={song}/>
+          <SongCard song={song} currentSong={currentSong} setCurrentSong={setCurrentSong}/>
         </div>
         
       ))}

@@ -2,7 +2,7 @@
 
 // imports from next
 import axiosClient from "../../axiosClient";
-import { act, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import PlaylistCard from "./PlaylistCard";
 
 export default function PlaylistList({}) {
@@ -10,6 +10,7 @@ export default function PlaylistList({}) {
 
   const [activePlaylist, setActivePlaylist] = useState(null)
   const [playlists, setPlaylists] = useState([]);
+  const [currentSong, setCurrentSong] = useState(null)
 
   useEffect(() => {
     async function allPlaylists() {
@@ -20,17 +21,30 @@ export default function PlaylistList({}) {
     allPlaylists();
   }, [request[0]]);
 
+  useEffect(() => {
+    document.title = currentSong ? `${currentSong.name} | ${activePlaylist.name} | Corphicient` : "Corphicient"
+  }, [currentSong]);
+
   return (
     <div className="flex flex-col flex-wrap justify-center m-20 gap-7">
       <div id="playlistButtonBar" className="flex flex-row gap-10 justify-center">
         {playlists.map((pl, i) => (
-          <button onClick={() => setActivePlaylist(pl.id)} key={i} id={pl.id} className="border bg-blue-50 p-5 hover:scale-105 hover:cursor-pointer">{pl.name}</button>
+          <button onClick={() => changePlaylist(pl.id, playlists, setCurrentSong, setActivePlaylist)} key={i} id={pl.id} className="border bg-blue-50 p-5 hover:scale-105 hover:cursor-pointer">{pl.name}</button>
       ))}
       </div>
 
       {activePlaylist && (
-        <PlaylistCard playlist={playlists.find(pl => pl.id === activePlaylist)} />
+        <PlaylistCard playlist={activePlaylist} currentSong={currentSong} setCurrentSong={setCurrentSong} />
       )}
     </div>
   );
+}
+
+function findPlaylist(id, playlists){
+  return playlists.find(pl => pl.id === id)
+}
+
+function changePlaylist(id, playlists, setCurrentSong, setActivePlaylist){
+  setCurrentSong(null)
+  setActivePlaylist(findPlaylist(id, playlists))
 }

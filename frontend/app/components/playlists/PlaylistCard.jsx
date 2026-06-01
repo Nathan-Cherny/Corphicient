@@ -5,7 +5,7 @@ import SongsList from "../songs/SongsList";
 
 import { useState, useEffect } from "react";
 
-export default function PlaylistCard({ playlist }) {
+export default function PlaylistCard({ playlist, currentSong, setCurrentSong }) {
 
   return (
     <div className="relative flex flex-col border p-5">
@@ -13,7 +13,7 @@ export default function PlaylistCard({ playlist }) {
         X
       </button>
       <h3 className="font-bold text-3xl text-center m-5">{playlist.name}</h3>
-      <SongsList songs={playlist.songs}/>
+      <SongsList currentSong={currentSong} setCurrentSong={setCurrentSong} songs={playlist.songs}/>
     </div>
   );
 }
