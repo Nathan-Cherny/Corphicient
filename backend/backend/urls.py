@@ -23,7 +23,7 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('songs/', views.get_songs, name="get_songs"),
-    path('media/songs/<str:filename>', views.serve_audio),
+    path('media/songs/<path:filename>/', views.serve_audio, name='serve_audio'),
     path('add_song/', views.add_song, name='add_song'),
     path('get_song_form/', views.get_song_form, name='get_song_form'),
     path('delete_song/<int:pk>/', views.delete_song, name="delete_song"),

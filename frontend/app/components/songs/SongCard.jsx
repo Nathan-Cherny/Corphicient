@@ -6,7 +6,7 @@ export default function SongCard({
   isCurrentSong,
   setCurrentSong,
   onSongEnd,
-  onAudioRef
+  onAudioRef,
 }) {
   const audioRef = useRef(null);
 
@@ -46,6 +46,8 @@ export default function SongCard({
           if (isCurrentSong) onAudioRef(el);
         }}
         src={`http://localhost:8000/${song.src}`}
+        crossOrigin="use-credentials"
+        preload="auto"
         onPlay={() => setCurrentSong(song)}
         onClick={(e) => e.stopPropagation()}
         onLoadedMetadata={() => console.log(`${song.name} is ready`)}

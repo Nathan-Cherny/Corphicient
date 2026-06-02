@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from songs.models import *
-from django.http import FileResponse
+from django.http import FileResponse, HttpResponse
 from django.conf import settings
 from rest_framework import generics, status
 from rest_framework.decorators import api_view
@@ -87,4 +87,27 @@ def delete_playlist(request, pk):
 
 def serve_audio(request, filename):
     path = os.path.join(settings.MEDIA_ROOT, filename)
-    return FileResponse(open(path, 'rb'), content_type='audio/mpeg')
+    file_size = os.path.getsize(path)
+    range_header = request.META.get('HTTP_RANGE', '')
+    print(f"Range: {range_header}")
+
+    if range_header:
+        start, end = range_header.replace('bytes=', '').split('-')
+        start = int(start)
+        end = int(end) if end else file_size - 1
+        length = end - start + 1
+
+        with open(path, 'rb') as f:
+            f.seek(start)
+            data = f.read(length)
+
+        response = HttpResponse(data, status=206, content_type='audio/mpeg')
+        response['Content-Range'] = f'bytes {start}-{end}/{file_size}'
+        response['Accept-Ranges'] = 'bytes'
+        response['Content-Length'] = str(length)
+        return response
+
+    response = FileResponse(open(path, 'rb'), content_type='audio/mpeg')
+    response['Accept-Ranges'] = 'bytes'
+    response['Content-Length'] = str(file_size)
+    return response
