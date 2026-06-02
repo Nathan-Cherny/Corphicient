@@ -5,27 +5,29 @@ import { useEffect, useState } from "react";
 export default function RandomPokemon() {
   const [pokemon, setPokemon] = useState("");
   const [isShiny, setIsShiny] = useState(false);
+  const [update, setUpdate] = useState(1)
   const shinyChance = 8192;
 
   useEffect(() => {
+    console.log(update)
     const allPokes = getPokemon();
     const p = allPokes[Math.floor(Math.random() * allPokes.length)];
     const shiny = Math.floor(Math.random() * shinyChance + 1) == 1;
 
     setPokemon(p);
     setIsShiny(shiny);
-  }, []);
+  }, [update]);
 
   if (!pokemon) return null; 
 
   const shinySegment = isShiny ? "-shiny" : "";
 
   if(isShiny){
-    alert(`YOU FOUND A SHINY ${pokemon}!! THE CHANCE FOR THAT IS 1/${shinyChance} OR ${(1/shinyChance) * 100}%`)
+    console.log(`YOU FOUND A SHINY ${pokemon}!! THE CHANCE FOR THAT IS 1/${shinyChance} OR ${(1/shinyChance) * 100}%`)
   }
   const src = `https://play.pokemonshowdown.com/sprites/gen5ani${shinySegment}/${pokemon}.gif`;
 
-  return <img className="w-1/24 max-h-25" src={src} alt={pokemon} />;
+  return <img onClick={() => {setUpdate(update + 1)}} className="absolute w-25 h-25 m-5 hover:scale-105 transition" src={src} alt={pokemon} />;
 }
 
 function getPokemon() {
@@ -91,7 +93,6 @@ function getPokemon() {
     "articuno-galar",
     "articuno",
     "audino",
-    "aurumoth",
     "avalugg",
     "axew",
     "azelf",
@@ -198,7 +199,6 @@ function getPokemon() {
     "chingling",
     "chiyu",
     "cinccino",
-    "cinderace-gmax",
     "clamperl",
     "clauncher",
     "clawitzer",
@@ -209,7 +209,6 @@ function getPokemon() {
     "clobbopus",
     "clodsire",
     "cloyster",
-    "coalossal-gmax",
     "coalossal",
     "cobalion",
     "cofagrigus",
@@ -290,7 +289,6 @@ function getPokemon() {
     "drampa",
     "drapion",
     "dratini",
-    "drednaw-gmax",
     "drednaw",
     "dreepy",
     "drifblim",
@@ -315,7 +313,6 @@ function getPokemon() {
     "dwebble",
     "eelektrik",
     "eelektross",
-    "eevee-gmax",
     "eevee",
     "eiscue-noice",
     "eiscue",
@@ -381,7 +378,6 @@ function getPokemon() {
     "gabite",
     "gallade",
     "galvantula",
-    "garbodor-gmax",
     "garbodor",
     "garchomp-f",
     "garchomp-mega",
@@ -462,7 +458,6 @@ function getPokemon() {
     "happiny",
     "hariyama",
     "hatenna",
-    "hatterene-gmax",
     "hatterene",
     "haunter",
     "haxorus",
@@ -654,7 +649,6 @@ function getPokemon() {
     "meltan",
     "meowth-alola",
     "meowth-galar",
-    "meowth-gmax",
     "meowth",
     "mesprit",
     "metagross",
@@ -742,7 +736,6 @@ function getPokemon() {
     "omanyte",
     "omastar",
     "onix",
-    "orbeetle-gmax",
     "oricorio-pau",
     "oricorio-pompom",
     "oricorio-sensu",
@@ -1086,7 +1079,6 @@ function getPokemon() {
     "toxel",
     "toxicroak-f",
     "toxicroak",
-    "toxtricity-gmax",
     "toxtricity",
     "tranquill",
     "trapinch",
