@@ -8,7 +8,8 @@ import corphishLogo from '@/public/corphish.png'
 import Pokemon from "../pokemon/getPokemon";
 
 import {
-    Music
+    Music,
+    UserCheck
 } from "lucide-react";
 
 import Link from "next/link";
@@ -20,6 +21,7 @@ export default function Navbar() {
   useEffect(() => {
     let navLinksData = [
       { href: "/music_player", label: "Music Player", icon: Music},
+      { href: "http://localhost:8000/admin/", label: "Admin", icon: UserCheck, newTab: true},
     ];
 
     setNavLinks(navLinksData);
@@ -67,6 +69,7 @@ function getHTMLFromLinkData(link, pathname) {
     <Link
       key={link.href}
       href={link.href}
+      target={link.newTab ? "_blank" : "_self"}
       className={cn(
         "relative flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all duration-200",
         isActive
@@ -74,6 +77,7 @@ function getHTMLFromLinkData(link, pathname) {
           : "text-zinc-400 hover:text-white hover:bg-zinc-800/50",
       )}
     >
+      <link.icon className="w-4 h-4"></link.icon>
       <span className="hidden sm:inline">{link.label}</span>
     </Link>
   );
