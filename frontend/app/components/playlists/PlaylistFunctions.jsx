@@ -1,6 +1,6 @@
 "use client";
 
-import { addModel, deleteModel } from "../communication/general";
+import { addModel, deleteModel } from "../communication/communication";
 
 export function addPlaylist(e){
     return addModel(e, "playlist")

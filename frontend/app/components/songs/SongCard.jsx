@@ -21,7 +21,7 @@ export default function SongCard({
   return (
     <div
       onClick={() => setCurrentSong(isCurrentSong ? null : song)}
-      className={`relative w-1/5 flex flex-col border p-5 transition-all duration-200 justify-between ${
+      className={`relative w-1/4 flex flex-col border p-5 transition-all duration-200 justify-between ${
         isCurrentSong
           ? "border-blue-500 border-2 shadow-lg shadow-blue-200"
           : "border-gray-300"

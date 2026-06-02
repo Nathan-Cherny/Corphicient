@@ -9,7 +9,6 @@ export default function RandomPokemon() {
   const shinyChance = 8192;
 
   useEffect(() => {
-    console.log(update)
     const allPokes = getPokemon();
     const p = allPokes[Math.floor(Math.random() * allPokes.length)];
     const shiny = Math.floor(Math.random() * shinyChance + 1) == 1;
@@ -27,7 +26,7 @@ export default function RandomPokemon() {
   }
   const src = `https://play.pokemonshowdown.com/sprites/gen5ani${shinySegment}/${pokemon}.gif`;
 
-  return <img onClick={() => {setUpdate(update + 1)}} className="absolute w-15 m-5 hover:scale-105 transition" src={src} alt={pokemon} />;
+  return <img onClick={() => {setUpdate(update + 1)}} className="h-25 py-5 hover:scale-105 transition" src={src} alt={pokemon} />;
 }
 
 function getPokemon() {
