@@ -22,7 +22,7 @@ def download_song(url, name="New Song", output_dir="../backend/media/songs/"):
             sanitized_info = ydl.sanitize_info(info)
             return {
                 "location": convertPathToLocalSRC(downloaded_path.get("filename")),
-                "duration": sanitized_info.get('duration')
+                "duration": sanitized_info.get('duration') or 0
             }
     except Exception as e:
         print(f"\n\n\nException while downloading song: \n\n{e}")

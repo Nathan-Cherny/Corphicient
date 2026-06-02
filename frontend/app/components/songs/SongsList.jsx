@@ -49,21 +49,20 @@ export default function SongsList({ songs, currentSong, setCurrentSong, settings
   }, [currentSong, getRandomSong]);
 
   return (
-    <div className="flex flex-wrap flex-col justify-center m-20 gap-7" onLoad={() => {}}>
+    <div className="flex flex-wrap flex-col justify-center m-20 gap-7">
       <p>
         <i>Total Duration</i>: {songs.map((song) => song.duration).reduce((acc, current) => acc + current, 0)} <i>seconds</i>
       </p>
       <div className="flex flex-row flex-wrap justify-center gap-5">
         {songs.map((song, i) => (
-          <div key={i}>
             <SongCard
+              key={i}
               song={song}
               isCurrentSong={currentSong?.id == song.id}
               setCurrentSong={setCurrentSong}
               onSongEnd={playNextSong}
               onAudioRef={(ref) => { currentAudioRef.current = ref; }} // this allows the currentAudioRef to change if a new song becomes currentSong
             />
-          </div>
         ))}
       </div>
     </div>
