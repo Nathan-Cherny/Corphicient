@@ -1,5 +1,50 @@
-w = {'formats': [{'url': 'https://jetta.vgmtreasurechest.com/soundtracks/pokemon-diamond-and-pearl-super-music-collection/ieyghuby/1-07.%20Lake.mp3', 'vcodec': 'none', 'ext': 'mp3', 'http_headers': {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36', 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'Accept-Language': 'en-us,en;q=0.5', 'Sec-Fetch-Mode': 'navigate', 'Referer': 'https://downloads.khinsider.com/game-soundtracks/album/pokemon-diamond-and-pearl-super-music-collection/1-07.%2520Lake.mp3'}, 'protocol': 'https', 'audio_ext': 'mp3', 'video_ext': 'none', 'vbr': 0, 'abr': None, 'tbr': None, 'acodec': 'mp3', 'resolution': 'audio only', 'aspect_ratio': None, 'filesize_approx': None, 'format_id': '0', 'format': '0 - audio only'}], 'subtitles': {}, 'id': '1-07.%20Lake-1', 'title': 'Lake MP3 - Nintendo DS Pokémon Diamond & Pearl Super Music Collection (2006) - Download Soundtracks for FREE! (1)', '_old_archive_ids': ['generic 1-07.%20Lake'], 'extractor': 'html5', 'extractor_key': 'HTML5MediaEmbed', 'timestamp': 1780407860, 'webpage_url': 'https://downloads.khinsider.com/game-soundtracks/album/pokemon-diamond-and-pearl-super-music-collection/1-07.%2520Lake.mp3', 'original_url': 'https://downloads.khinsider.com/game-soundtracks/album/pokemon-diamond-and-pearl-super-music-collection/1-07.%2520Lake.mp3', 'webpage_url_basename': '1-07.%2520Lake.mp3', 'webpage_url_domain': 'downloads.khinsider.com', 'playlist': None, 'playlist_index': None, 'display_id': '1-07.%20Lake-1', 'fulltitle': 'Lake MP3 - Nintendo DS Pokémon Diamond & Pearl Super Music Collection (2006) - Download Soundtracks for FREE! (1)', 'upload_date': '20260602', 'release_year': None, 'requested_subtitles': None, '_has_drm': None, 'epoch': 1780408579, 'requested_downloads': [{'url': 'https://jetta.vgmtreasurechest.com/soundtracks/pokemon-diamond-and-pearl-super-music-collection/ieyghuby/1-07.%20Lake.mp3', 'vcodec': 'none', 'ext': 'mp3', 'http_headers': {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36', 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'Accept-Language': 'en-us,en;q=0.5', 'Sec-Fetch-Mode': 'navigate', 'Referer': 'https://downloads.khinsider.com/game-soundtracks/album/pokemon-diamond-and-pearl-super-music-collection/1-07.%2520Lake.mp3'}, 'protocol': 'https', 'audio_ext': 'mp3', 'video_ext': 'none', 'vbr': 0, 'acodec': 'mp3', 'resolution': 'audio only', 'format_id': '0', 'format': '0 - audio only', '_filename': '..\\backend\\media\\songs\\Lake.mp3', 'filename': '..\\backend\\media\\songs\\Lake.mp3', '__postprocessors': [], '__real_download': True, '__finaldir': 'C:\\Users\\comsc\\OneDrive\\Desktop\\Personal Projects\\Corphicient\\backend\\media\\songs', 'filepath': 'C:\\Users\\comsc\\OneDrive\\Desktop\\Personal Projects\\Corphicient\\backend\\media\\songs\\Lake.mp3', '__write_download_archive': True}], 'url': 'https://jetta.vgmtreasurechest.com/soundtracks/pokemon-diamond-and-pearl-super-music-collection/ieyghuby/1-07.%20Lake.mp3', 'vcodec': 'none', 'ext': 'mp3', 'http_headers': {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36', 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'Accept-Language': 'en-us,en;q=0.5', 'Sec-Fetch-Mode': 'navigate', 'Referer': 'https://downloads.khinsider.com/game-soundtracks/album/pokemon-diamond-and-pearl-super-music-collection/1-07.%2520Lake.mp3'}, 'protocol': 'https', 'audio_ext': 'mp3', 'video_ext': 'none', 'vbr': 0, 'abr': None, 'tbr': None, 'acodec': 'mp3', 'resolution': 'audio only', 'aspect_ratio': None, 'filesize_approx': None, 'format_id': '0', 'format': '0 - audio only', '_type': 'video', '_version': {'version': '2026.03.17', 'current_git_head': None, 'release_git_head': '04d6974f502bbdfaed72c624344f262e30ad9708', 'repository': 'yt-dlp/yt-dlp'}}
+from backend import songs
+import yt_dlp
 
-print(w.keys())
-for thing in w.items():
-    print(thing)
+a = [
+    {"name": "Feeling Good", 'src': "https://www.youtube.com/watch?v=MBWK0WEkdEo"},
+    {"name": "Vega Theme", "src": "https://downloads.khinsider.com/game-soundtracks/album/super-smash-bros.-ultimate-enhanced-original-soundtrack/5-16%2520-%2520Vega%2520Stage%2520%255BStreet%2520Fighter%2520II%255D.mp3"},
+    {"name": "Spunky", "src": "https://downloads.khinsider.com/game-soundtracks/album/street-fighter-iii-3rd-strike-original-soundtrack/1-07.%2520Makoto%2520Stage%2520-SPUNKY-.mp3"},
+    {"name": "Wizard City", "src": "https://www.youtube.com/watch?v=8zWp25WaN1Y"},
+    {"name": "Krokotopia", "src": "https://www.youtube.com/watch?v=HB-Q1v1Npds"},
+    {"name": "Route 29", "src": "https://downloads.khinsider.com/game-soundtracks/album/pokemon-heartgold-and-soulsilver-music-super-complete/1-09.%2520Route%252029.mp3"},
+    {"name": "New Bark Town", "src": "https://downloads.khinsider.com/game-soundtracks/album/pokemon-heartgold-and-soulsilver-music-super-complete/1-04.%2520New%2520Bark%2520Town.mp3"}
+]
+
+
+def download_song(url, name="New Song", output_dir="../backend/media/songs/"):
+    downloaded_path = {}
+
+    def postprocessor_hook(d):
+        if d["status"] == "finished":
+            downloaded_path["filename"] = d["info_dict"]["filepath"]
+
+    ydl_opts = {
+        "format": "bestaudio[ext=mp3]/bestaudio",
+        "postprocessors": [{
+            "key": "FFmpegExtractAudio",
+            "preferredcodec": "mp3",
+        }],
+        "outtmpl": f"{output_dir}/{name}.%(ext)s",
+        "postprocessor_hooks": [postprocessor_hook],
+    }
+    try:
+        with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+            info = ydl.extract_info(url, download=True)
+            sanitized_info = ydl.sanitize_info(info)
+            return {
+                "location": convertPathToLocalSRC(downloaded_path.get("filename")),
+                "duration": sanitized_info.get('duration')
+            }
+    except Exception as e:
+        print(f"\n\n\nException while downloading song: \n\n{e}")
+        return {
+            "location": "",
+            "duration": 0
+        }
+
+def convertPathToLocalSRC(path):
+    return "/".join(path.split("\\")[2:])
+
+for link in a:
+    download_song(link["src"], link["name"])

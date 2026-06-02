@@ -53,7 +53,7 @@ export default function SongsList({ songs, currentSong, setCurrentSong, settings
       <p>
         <i>Total Duration</i>: {songs.map((song) => song.duration).reduce((acc, current) => acc + current, 0)} <i>seconds</i>
       </p>
-      <div className="flex flex-row">
+      <div className="flex flex-row flex-wrap justify-center gap-5">
         {songs.map((song, i) => (
           <div key={i}>
             <SongCard

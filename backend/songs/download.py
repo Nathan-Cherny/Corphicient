@@ -20,7 +20,6 @@ def download_song(url, name="New Song", output_dir="../backend/media/songs/"):
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
             info = ydl.extract_info(url, download=True)
             sanitized_info = ydl.sanitize_info(info)
-            print(sanitized_info)
             return {
                 "location": convertPathToLocalSRC(downloaded_path.get("filename")),
                 "duration": sanitized_info.get('duration')
@@ -31,6 +30,7 @@ def download_song(url, name="New Song", output_dir="../backend/media/songs/"):
             "location": "",
             "duration": 0
         }
-    
+
+
 def convertPathToLocalSRC(path):
     return "/".join(path.split("\\")[2:])
