@@ -27,7 +27,7 @@ export default function RandomPokemon() {
   }
   const src = `https://play.pokemonshowdown.com/sprites/gen5ani${shinySegment}/${pokemon}.gif`;
 
-  return <img onClick={() => {setUpdate(update + 1)}} className="absolute w-25 h-25 m-5 hover:scale-105 transition" src={src} alt={pokemon} />;
+  return <img onClick={() => {setUpdate(update + 1)}} className="absolute w-15 m-5 hover:scale-105 transition" src={src} alt={pokemon} />;
 }
 
 function getPokemon() {

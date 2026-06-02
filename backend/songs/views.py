@@ -1,5 +1,7 @@
 from django.shortcuts import render
 from songs.models import *
+from django.http import FileResponse
+from django.conf import settings
 from rest_framework import generics, status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -81,3 +83,8 @@ def delete_playlist(request, pk):
     
     playlist.delete()
     return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+def serve_audio(request, filename):
+    path = os.path.join(settings.MEDIA_ROOT, filename)
+    return FileResponse(open(path, 'rb'), content_type='audio/mpeg')

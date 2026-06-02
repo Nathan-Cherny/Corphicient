@@ -48,6 +48,7 @@ export default function SongCard({
         src={`http://localhost:8000/${song.src}`}
         onPlay={() => setCurrentSong(song)}
         onClick={(e) => e.stopPropagation()}
+        onLoadedMetadata={() => console.log(`${song.name} is ready`)}
         onEnded={onSongEnd}
       />
     </div>
