@@ -12,7 +12,7 @@ export default function Home() {
     <div>
       <Pokemon/>
       <PlaylistList />
-      <Form formType="get_song_form" nonFormFields={["secondsPlayed", "src"]} submitFunction={addSong}/>
+      <Form formType="get_song_form" nonFormFields={["secondsPlayed", "src", "duration"]} submitFunction={addSong}/>
       <Form formType="get_playlist_form" submitFunction={addPlaylist}/>
     </div>
   );

@@ -1,7 +1,6 @@
 import yt_dlp
 
 def download_song(url, name="New Song", output_dir="../backend/media/songs/"):
-    type = "mp3"
     downloaded_path = {}
 
     def postprocessor_hook(d):
@@ -19,10 +18,19 @@ def download_song(url, name="New Song", output_dir="../backend/media/songs/"):
     }
     try:
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-            ydl.download([url])
-            return convertPathToLocalSRC(downloaded_path.get("filename"))
-    except:
-        return ""
+            info = ydl.extract_info(url, download=True)
+            sanitized_info = ydl.sanitize_info(info)
+            print(sanitized_info)
+            return {
+                "location": convertPathToLocalSRC(downloaded_path.get("filename")),
+                "duration": sanitized_info.get('duration')
+            }
+    except Exception as e:
+        print(f"\n\n\nException while downloading song: \n\n{e}")
+        return {
+            "location": "",
+            "duration": 0
+        }
     
 def convertPathToLocalSRC(path):
     return "/".join(path.split("\\")[2:])

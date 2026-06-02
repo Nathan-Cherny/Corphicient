@@ -9,7 +9,6 @@ import SongCard, { playSong } from "./SongCard";
  * The part of the Playlist that displays Songs. Manages going from song to song and such
  */
 export default function SongsList({ songs, currentSong, setCurrentSong, settings }) {
-  const request = ["songs/", null, "", "GET"];
   const currentAudioRef = useRef(null)
 
   const timeSkip = settings?.timeSkip || 5
@@ -49,20 +48,24 @@ export default function SongsList({ songs, currentSong, setCurrentSong, settings
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [currentSong, getRandomSong]);
 
-
   return (
-    <div className="flex flex-wrap justify-center m-20 gap-7">
-      {songs.map((song, i) => (
-        <div key={i}>
-          <SongCard
-            song={song}
-            isCurrentSong={currentSong?.id == song.id}
-            setCurrentSong={setCurrentSong}
-            onSongEnd={playNextSong}
-            onAudioRef={(ref) => { currentAudioRef.current = ref; }} // this allows the currentAudioRef to change if a new song becomes currentSong
-          />
-        </div>
-      ))}
+    <div className="flex flex-wrap flex-col justify-center m-20 gap-7" onLoad={() => {}}>
+      <p>
+        <i>Total Duration</i>: {songs.map((song) => song.duration).reduce((acc, current) => acc + current, 0)} <i>seconds</i>
+      </p>
+      <div className="flex flex-row">
+        {songs.map((song, i) => (
+          <div key={i}>
+            <SongCard
+              song={song}
+              isCurrentSong={currentSong?.id == song.id}
+              setCurrentSong={setCurrentSong}
+              onSongEnd={playNextSong}
+              onAudioRef={(ref) => { currentAudioRef.current = ref; }} // this allows the currentAudioRef to change if a new song becomes currentSong
+            />
+          </div>
+        ))}
+      </div>
     </div>
   );
 }

@@ -5,7 +5,7 @@ from .models import *
 class SongSerializer(serializers.ModelSerializer):
     class Meta:
         model = Song
-        fields = ["id", "name", "href", "src", "secondsPlayed"]
+        fields = ["id", "name", "href", "src", "secondsPlayed", "duration"]
         read_only_fields = []
 
 

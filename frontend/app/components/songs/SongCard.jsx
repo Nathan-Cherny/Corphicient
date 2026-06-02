@@ -50,7 +50,6 @@ export default function SongCard({
         preload="auto"
         onPlay={() => setCurrentSong(song)}
         onClick={(e) => e.stopPropagation()}
-        onLoadedMetadata={() => console.log(`${song.name} is ready`)}
         onEnded={onSongEnd}
       />
     </div>
