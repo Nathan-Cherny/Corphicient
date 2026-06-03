@@ -4,13 +4,10 @@ import { usePathname } from "next/navigation";
 import { cn } from "../../lib/utils";
 import { useEffect, useState } from "react";
 import Image from "next/image";
-import corphishLogo from '@/public/corphish.png'
+import corphishLogo from "@/public/corphish.png";
 import Pokemon from "../pokemon/getPokemon";
 
-import {
-    Music,
-    UserCheck
-} from "lucide-react";
+import { Music, UserCheck } from "lucide-react";
 
 import Link from "next/link";
 
@@ -20,11 +17,58 @@ export default function Navbar() {
 
   useEffect(() => {
     let navLinksData = [
-      { href: "/music_player", label: "Music Player", icon: Music},
-      { href: "http://localhost:8000/admin/", label: "Admin", icon: UserCheck, newTab: true},
+      { href: "/music_player", label: "Music Player", icon: Music },
+      {
+        href: "http://localhost:8000/admin/",
+        label: "Admin",
+        icon: UserCheck,
+        newTab: true,
+      },
     ];
 
     setNavLinks(navLinksData);
+  }, []);
+
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      switch (e.key) {
+        case "i":
+          let result = prompt("Extract ID from Google URL");
+          let split = result.split("/");
+          let id = split[split.length - 2];
+          navigator.clipboard.writeText(id);
+          break;
+        case "x":
+          let yes = prompt("ai-ify").replaceAll("xSoTec", "PLACE");
+          for (let i of [
+            "Nathan",
+            "Jay",
+            "Eliana",
+            "nathan",
+            "jay",
+            "stephen",
+            "Stephen",
+            "Tom",
+            "eliana",
+          ]) {
+            yes = yes.replaceAll(i, "");
+          }
+          navigator.clipboard.writeText(yes);
+          break
+        case "z":
+          let ai = prompt("deai-ify").replaceAll("PLACE", "xSoTec");
+          navigator.clipboard.writeText(ai);
+          break
+        case "g":
+          let loop = prompt("loopObj -> globalObj");
+          loop = loop.replaceAll("loopObj", "globalObj")
+          navigator.clipboard.writeText(loop);
+          break
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
   }, []);
 
   return (
@@ -34,7 +78,7 @@ export default function Navbar() {
           <div className="flex items-center justify-between h-1/8 py-1">
             <Link
               href="/"
-              className="flex items-center gap-2 text-white font-semibold text-lg tracking-tight hover:opacity-80 transition-opacity"
+              className="flex flex-col items-center gap-1 text-white font-semibold text-lg tracking-tight hover:opacity-80 transition-opacity"
             >
               <Image
                 src={corphishLogo}
@@ -42,9 +86,7 @@ export default function Navbar() {
                 width={75}
                 height={75}
               />
-              <span className="hidden sm:inline text-2xl font-sans">
-                Corphicient
-              </span>
+              <span className="hidden sm:inline font-sans">Corphicient</span>
             </Link>
 
             <div className="flex items-center gap-1">
@@ -52,9 +94,8 @@ export default function Navbar() {
             </div>
 
             <div>
-              <Pokemon/>
+              <Pokemon />
             </div>
-
           </div>
         </div>
       </nav>
