@@ -1,5 +1,6 @@
 import { useEffect, useRef } from "react";
 import * as Song from "./SongFunctions";
+import { useNotification } from "../layout/notification/NotificationContext";
 
 export default function SongCard({
   song,
@@ -9,8 +10,10 @@ export default function SongCard({
   onAudioRef,
 }) {
   const audioRef = useRef(null);
+  const notify = useNotification();
 
   useEffect(() => {
+    notify({"message": "yesah"})
     if (isCurrentSong) {
       audioRef.current?.play();
     } else {
