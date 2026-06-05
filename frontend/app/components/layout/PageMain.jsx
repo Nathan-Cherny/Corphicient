@@ -1,5 +1,6 @@
 "use client";
 
+import Footer from "./Footer";
 import Navbar from "./Navbar";
 import { NotificationProvider } from "./notification/NotificationContext";
 import { useState, useEffect } from "react";
@@ -17,21 +18,21 @@ export function PageMain({ children }) {
   }, []);
 
   return (
-    <>
-      <NotificationProvider>
-        <div
-          style={{ backgroundColor: bgColor }}
-          className="relative z-10 pt-18 flex min-h-screen text-wrap flex-col items-center pb-15 px-15 bg-black"
-        >
-          <Navbar />
+    <NotificationProvider>
+      <div
+        style={{ backgroundColor: bgColor }}
+        className="relative z-10 pt-18 flex min-h-screen flex-col w-full"
+      >
+        <Navbar />
 
-          <main className="grow w-full m-0 p-5">{children}</main>
-        </div>
-      </NotificationProvider>
-    </>
+        <main className="flex flex-col items-center grow px-15 pb-15">{children}</main>
+
+        <Footer/>
+      </div>
+    </NotificationProvider>
   );
 }
 
 const getBackgroundColor = () => {
-  return `rgba(255, 255, 255, 0.75)`;
+  return `rgba(255, 255, 255, 1)`;
 };

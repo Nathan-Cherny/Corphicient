@@ -7,7 +7,6 @@ import { addPlaylist } from ".././components/playlists/PlaylistFunctions";
 import PlaylistList from ".././components/playlists/PlaylistList";
 import { PageMain } from "../components/layout/PageMain";
 import { useEffect } from "react";
-import { useNotification } from "../components/layout/notification/NotificationContext";
 
 export default function Music() {
   return (

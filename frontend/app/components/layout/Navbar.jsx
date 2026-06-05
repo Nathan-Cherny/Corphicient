@@ -5,7 +5,6 @@ import { cn } from "../../lib/utils";
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import corphishLogo from "@/public/corphish.png";
-import Pokemon from "../pokemon/getPokemon";
 
 import { Music, UserCheck } from "lucide-react";
 
@@ -30,6 +29,7 @@ export default function Navbar() {
   }, []);
 
   useEffect(() => {
+    return
     const handleKeyDown = (e) => {
       switch (e.key) {
         case "i":
@@ -93,9 +93,6 @@ export default function Navbar() {
               {navLinks.map((link) => getHTMLFromLinkData(link, pathname))}
             </div>
 
-            <div>
-              <Pokemon />
-            </div>
           </div>
         </div>
       </nav>

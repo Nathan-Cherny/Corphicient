@@ -13,7 +13,6 @@ export default function SongCard({
   const notify = useNotification();
 
   useEffect(() => {
-    notify({"message": "yesah"})
     if (isCurrentSong) {
       audioRef.current?.play();
     } else {
