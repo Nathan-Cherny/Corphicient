@@ -26,8 +26,6 @@ export default function RandomPokemon() {
     alert(`YOU FOUND A SHINY ${pokemon}!! THE CHANCE FOR THAT IS 1/${shinyChance} OR ${(1/shinyChance) * 100}%`)
   }
 
-  
-
   const src = `https://play.pokemonshowdown.com/sprites/gen5ani${shinySegment}/${pokemon}.gif`;
 
   return <img onClick={() => {setUpdate(update + 1)}} className="h-25 py-5 hover:cursor-pointer hover:box-border transition" src={src} alt={pokemon} />;
