@@ -84,7 +84,8 @@ export default function Navbar() {
                 src={corphishLogo}
                 alt="Corphish Logo"
                 width={75}
-                height={75}
+                loading="eager"
+                height="auto"
               />
               <span className="hidden sm:inline font-sans">Corphicient</span>
             </Link>

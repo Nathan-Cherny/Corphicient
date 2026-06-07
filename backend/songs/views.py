@@ -84,7 +84,6 @@ def delete_playlist(request, pk):
     playlist.delete()
     return Response(status=status.HTTP_204_NO_CONTENT)
 
-
 def serve_audio(request, filename):
     path = os.path.join(settings.MEDIA_ROOT, filename)
     file_size = os.path.getsize(path)
