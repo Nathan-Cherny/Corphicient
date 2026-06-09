@@ -23,7 +23,7 @@ export default function SongCard({
   return (
     <div
       onClick={() => setCurrentSong(isCurrentSong ? null : song)}
-      className={`relative w-1/4 flex flex-col border p-5 transition-all duration-200 justify-between ${
+      className={`relative w-1/4 flex flex-col border transition-all duration-200 justify-between ${
         isCurrentSong
           ? "border-blue-500 border-2 shadow-lg shadow-blue-200"
           : "border-gray-300"
@@ -42,7 +42,6 @@ export default function SongCard({
       <h3 className="font-bold text-3xl text-center m-5">{song.name}</h3>
       <audio
         className="w-full"
-        controls
         ref={(el) => {
           // this sets the audioRef so that this SongCard gets the html, and also calls onAudioRef so SongsList can get it too. Neat!
           audioRef.current = el;

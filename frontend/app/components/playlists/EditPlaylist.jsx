@@ -3,7 +3,7 @@
 import { useState, useEffect, useMemo } from "react";
 import axiosClient from "@/app/axiosClient";
 
-export default function EditPlaylist({ playlistSongs, onSave }) {
+export default function EditPlaylist({ playlistSongs, onSave, maxHeight }) {
   const [songs, setSongs] = useState([]);
   const [selectedIds, setSelectedIds] = useState(new Set());
   const [search, setSearch] = useState("");
@@ -39,19 +39,18 @@ export default function EditPlaylist({ playlistSongs, onSave }) {
 
   function handleSave() {
     const selected = Array.from(selectedIds);
-    // const selected = songs.filter((s) => selectedIds.has(s.id));
     onSave?.(selected);
   }
 
   if (loading) return <p className="text-sm text-muted">Loading songs…</p>;
 
   return (
-    <div className="flex flex-col gap-3">
+    <div className="flex flex-col gap-3" style={{ minWidth: "150px", textWrap: "wrap", width: "fit", "overflowY": "auto", maxHeight: maxHeight ?? "100%"  }}>
       <div className="flex items-center justify-between">
-        <span className="text-sm text-muted">
-          <strong>{selectedIds.size}</strong> in playlist — click to add or remove
+        <span className="text-sm">
+          <strong>{selectedIds.size}</strong> in playlist
         </span>
-        <button onClick={handleSave} className="btn-primary">
+        <button onClick={handleSave} className="btn-primary bg-red-200 p-2" style={{"cursor": "pointer"}} >
           Save changes
         </button>
       </div>
@@ -85,24 +84,13 @@ export default function EditPlaylist({ playlistSongs, onSave }) {
                   toggle(song.id);
                 }
               }}
-              className={`song-row ${on ? "selected" : ""} border p-5 flex flex-row`}
+              className={`song-row h-full ${on ? "selected bg-green-500/50 font-bold" : ""} border p-5 flex flex-row hover:cursor-pointer`}
             >
-              <span className={`check-circle ${on ? "checked" : ""}`}>
-                {on && <CheckIcon />}
-              </span>
               <span className="flex-1 truncate">{song.name}</span>
             </li>
           );
         })}
       </ul>
     </div>
-  );
-}
-
-function CheckIcon() {
-  return (
-    <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-      <path d="M2 6l3 3 5-5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
   );
 }

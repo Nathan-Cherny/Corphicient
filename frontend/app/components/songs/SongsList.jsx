@@ -48,10 +48,7 @@ export default function SongsList({ songs, currentSong, setCurrentSong, settings
   }, [currentSong, getRandomSong]);
 
   return (
-    <div className="flex flex-wrap flex-col justify-center m-20 gap-7">
-      <p>
-        <i>Total Duration</i>: {getTotalDuration(songs)}
-      </p>
+    <div className="flex flex-wrap flex-col justify-center gap-7 ">
       <div className="flex flex-row flex-wrap justify-center gap-5">
         {songs.map((song, i) => (
             <SongCard
@@ -66,21 +63,4 @@ export default function SongsList({ songs, currentSong, setCurrentSong, settings
       </div>
     </div>
   );
-}
-
-function getTotalDuration(songs){
-  let totalSeconds = songs.map((song) => song.duration).reduce((acc, current) => acc + current, 0)
-  let timeData = convertSeconds(totalSeconds)
-  return `${timeData["hours"]} hours, ${timeData["minutes"]} minutes, ${timeData["seconds"]} seconds`
-}
-
-// this looks familar...
-function convertSeconds(totalSeconds) {
-  const hours = Math.floor(totalSeconds / 3600);
-  
-  const minutes = Math.floor((totalSeconds % 3600) / 60);
-  
-  const seconds = Math.floor(totalSeconds % 60);
-
-  return { hours, minutes, seconds };
 }
