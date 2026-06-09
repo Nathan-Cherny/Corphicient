@@ -10,9 +10,20 @@ class SongSerializer(serializers.ModelSerializer):
 
 
 class PlaylistSerializer(serializers.ModelSerializer):
-    songs = SongSerializer(many=True, read_only=True)
+    songs = serializers.PrimaryKeyRelatedField(many=True, queryset=Song.objects.all())
     
     class Meta:
         model = Playlist
         fields = ["id", "name", "songs"]
-        read_only_fields = []
+
+    def to_representation(self, instance):
+        rep = super().to_representation(instance)
+        rep["songs"] = SongSerializer(instance.songs.all(), many=True).data
+        return rep
+
+    def update(self, instance, validated_data):
+        songs = validated_data.pop("songs", None)
+        instance = super().update(instance, validated_data)
+        if songs is not None:
+            instance.songs.set(songs)
+        return instance

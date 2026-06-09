@@ -10,6 +10,33 @@ from . forms import *
 from . download import download_song
 import os
 
+def serve_audio(request, filename):
+    path = os.path.join(settings.MEDIA_ROOT, filename)
+    file_size = os.path.getsize(path)
+    range_header = request.META.get('HTTP_RANGE', '')
+    print(f"Range: {range_header}")
+
+    if range_header:
+        start, end = range_header.replace('bytes=', '').split('-')
+        start = int(start)
+        end = int(end) if end else file_size - 1
+        length = end - start + 1
+
+        with open(path, 'rb') as f:
+            f.seek(start)
+            data = f.read(length)
+
+        response = HttpResponse(data, status=206, content_type='audio/mpeg')
+        response['Content-Range'] = f'bytes {start}-{end}/{file_size}'
+        response['Accept-Ranges'] = 'bytes'
+        response['Content-Length'] = str(length)
+        return response
+
+    response = FileResponse(open(path, 'rb'), content_type='audio/mpeg')
+    response['Accept-Ranges'] = 'bytes'
+    response['Content-Length'] = str(file_size)
+    return response
+
 @api_view(['GET'])
 def get_songs(request):
     queryset = Song.objects.all()
@@ -84,29 +111,17 @@ def delete_playlist(request, pk):
     playlist.delete()
     return Response(status=status.HTTP_204_NO_CONTENT)
 
-def serve_audio(request, filename):
-    path = os.path.join(settings.MEDIA_ROOT, filename)
-    file_size = os.path.getsize(path)
-    range_header = request.META.get('HTTP_RANGE', '')
-    print(f"Range: {range_header}")
+@api_view(["PUT"])
+def update_playlist(request, pk):
+    try:
+        playlist = Playlist.objects.get(pk=pk)
+    except Playlist.DoesNotExist:
+        return Response({"error": "Playlist not found"}, status=status.HTTP_404_NOT_FOUND)
 
-    if range_header:
-        start, end = range_header.replace('bytes=', '').split('-')
-        start = int(start)
-        end = int(end) if end else file_size - 1
-        length = end - start + 1
+    serializer = PlaylistSerializer(playlist, data=request.data)
 
-        with open(path, 'rb') as f:
-            f.seek(start)
-            data = f.read(length)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
-        response = HttpResponse(data, status=206, content_type='audio/mpeg')
-        response['Content-Range'] = f'bytes {start}-{end}/{file_size}'
-        response['Accept-Ranges'] = 'bytes'
-        response['Content-Length'] = str(length)
-        return response
-
-    response = FileResponse(open(path, 'rb'), content_type='audio/mpeg')
-    response['Accept-Ranges'] = 'bytes'
-    response['Content-Length'] = str(file_size)
-    return response
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

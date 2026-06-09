@@ -1,6 +1,7 @@
 "use client";
 
 import { addModel, deleteModel } from "../communication/communication";
+import axiosClient from "@/app/axiosClient";
 
 export function addPlaylist(e){
     return addModel(e, "playlist")
@@ -8,4 +9,10 @@ export function addPlaylist(e){
 
 export function deletePlaylist(id){
     return deleteModel(id, "playlist")
+}
+
+export async function putPlaylist(id, selected, name) {
+    let payload = { songs: selected, name: name }
+    let response = await axiosClient(`playlists/${id}/update/`, payload, null, "PUT");
+    return response
 }

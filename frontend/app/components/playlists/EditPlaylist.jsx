@@ -1,41 +1,108 @@
 "use client"
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import axiosClient from "@/app/axiosClient";
 
-export default function EditPlaylist({ playlistSongs }) {
+export default function EditPlaylist({ playlistSongs, onSave }) {
   const [songs, setSongs] = useState([]);
-  const [selectedSongs, setSelectedSongs] = useState([]) 
+  const [selectedIds, setSelectedIds] = useState(new Set());
+  const [search, setSearch] = useState("");
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function getSongs() {
+      setLoading(true);
       const res = await axiosClient("/songs", null, null, "GET");
-
-      const songIds = playlistSongs.map((song) => song.id);
-
-      const updatedSongs = res.map((song) => ({
-        ...song,
-        includes: songIds.includes(song.id),
-      }));
-
-      setSongs(updatedSongs);
-      setSelectedSongs(playlistSongs.map((song) => song.name))
+      setSongs(res);
+      setSelectedIds(new Set(playlistSongs.map((s) => s.id)));
+      setLoading(false);
     }
-
     getSongs();
-    console.log(selectedSongs)
   }, [playlistSongs]);
 
+  const filtered = useMemo(() => {
+    const q = search.toLowerCase();
+    return songs.filter(
+      (s) =>
+        s.name.toLowerCase().includes(q) ||
+        s.artist?.toLowerCase().includes(q)
+    );
+  }, [songs, search]);
+
+  function toggle(id) {
+    setSelectedIds((prev) => {
+      const next = new Set(prev);
+      next.has(id) ? next.delete(id) : next.add(id);
+      return next;
+    });
+  }
+
+  function handleSave() {
+    const selected = Array.from(selectedIds);
+    // const selected = songs.filter((s) => selectedIds.has(s.id));
+    onSave?.(selected);
+  }
+
+  if (loading) return <p className="text-sm text-muted">Loading songs…</p>;
+
   return (
-    <select defaultValues={selectedSongs} multiple>
-      {songs.map((song) => (
-        <option
-          key={song.id}
-          value={song.id}
-        >
-          {song.name}
-        </option>
-      ))}
-    </select>
+    <div className="flex flex-col gap-3">
+      <div className="flex items-center justify-between">
+        <span className="text-sm text-muted">
+          <strong>{selectedIds.size}</strong> in playlist — click to add or remove
+        </span>
+        <button onClick={handleSave} className="btn-primary">
+          Save changes
+        </button>
+      </div>
+
+      <input
+        type="text"
+        placeholder="Search songs…"
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
+        className="input"
+      />
+
+      <ul className="flex flex-col gap-1.5 max-h-80 overflow-y-auto">
+        {filtered.length === 0 && (
+          <li className="text-sm text-center text-muted py-8">
+            No songs match your search.
+          </li>
+        )}
+        {filtered.map((song) => {
+          const on = selectedIds.has(song.id);
+          return (
+            <li
+              key={song.id}
+              role="checkbox"
+              aria-checked={on}
+              tabIndex={0}
+              onClick={() => toggle(song.id)}
+              onKeyDown={(e) => {
+                if (e.key === " " || e.key === "Enter") {
+                  e.preventDefault();
+                  toggle(song.id);
+                }
+              }}
+              className={`song-row ${on ? "selected" : ""} border p-5 flex flex-row`}
+            >
+              <span className={`check-circle ${on ? "checked" : ""}`}>
+                {on && <CheckIcon />}
+              </span>
+              <span className="flex-1 truncate">{song.name}</span>
+            </li>
+          );
+        })}
+      </ul>
+    </div>
+  );
+}
+
+function CheckIcon() {
+  return (
+    <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+      <path d="M2 6l3 3 5-5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
   );
 }
