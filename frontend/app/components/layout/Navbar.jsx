@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import corphishLogo from "@/public/corphish.png";
 
-import { Music, UserCheck } from "lucide-react";
+import { Music, UserCheck, Workflow } from "lucide-react";
 
 import Link from "next/link";
 
@@ -23,52 +23,15 @@ export default function Navbar() {
         icon: UserCheck,
         newTab: true,
       },
+      {
+        href: "/work_functions",
+        label: "Work Functions",
+        icon: Workflow,
+        newTab: true,
+      },
     ];
 
     setNavLinks(navLinksData);
-  }, []);
-
-  useEffect(() => {
-    return
-    const handleKeyDown = (e) => {
-      switch (e.key) {
-        case "i":
-          let result = prompt("Extract ID from Google URL");
-          let split = result.split("/");
-          let id = split[split.length - 2];
-          navigator.clipboard.writeText(id);
-          break;
-        case "x":
-          let yes = prompt("ai-ify").replaceAll("xSoTec", "PLACE");
-          for (let i of [
-            "Nathan",
-            "Jay",
-            "Eliana",
-            "nathan",
-            "jay",
-            "stephen",
-            "Stephen",
-            "Tom",
-            "eliana",
-          ]) {
-            yes = yes.replaceAll(i, "");
-          }
-          navigator.clipboard.writeText(yes);
-          break
-        case "z":
-          let ai = prompt("deai-ify").replaceAll("PLACE", "xSoTec");
-          navigator.clipboard.writeText(ai);
-          break
-        case "g":
-          let loop = prompt("loopObj -> globalObj");
-          loop = loop.replaceAll("loopObj", "globalObj")
-          navigator.clipboard.writeText(loop);
-          break
-      }
-    };
-
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
   }, []);
 
   return (
