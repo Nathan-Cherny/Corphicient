@@ -2,25 +2,91 @@
 
 import axios from "axios";
 import { PageMain } from "@/app/components/layout/PageMain";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 export default function Pokemon() {
+  const [allPokemon, setAllPokemon] = useState({});
+  const [typeChart, setTypeChart] = useState({});
+  const [pokemon, setPokemon] = useState("");
+  const [effectiveness, setEffectiveness] = useState(1)
+
   useEffect(() => {
-    async function getData() {
-      let pokedex = await axios.get(
+    async function getDexData() {
+      const res = await axios.get(
         "https://play.pokemonshowdown.com/data/pokedex.js",
       );
-      let pokedexData = `{"data": ${pokedex.data.split("=")[1].trim().slice(0, -1)}}`
-      console.log(pokedexData)
-      console.log(JSON.parse(pokedexData))
+
+      const objectText = res.data
+        .replace("exports.BattlePokedex =", "")
+        .trim()
+        .replace(/;$/, "");
+
+      const pokedex = Function(`return (${objectText})`)();
+
+      setAllPokemon(pokedex);
     }
 
-    getData()
+    async function getTypeData() {
+      const res = await axios.get(
+        "https://play.pokemonshowdown.com/data/typechart.js",
+      );
+
+      const objectText = res.data
+        .replace("exports.BattleTypeChart =", "")
+        .trim()
+        .replace(/;$/, "");
+
+      const typeData = Function(`return (${objectText})`)();
+
+      setTypeChart(typeData);
+    }
+
+    getDexData();
+    getTypeData();
   }, []);
 
   return (
     <PageMain>
-      <h1 className="mt-5">yo</h1>
+      <div style={{ marginTop: "5%" }}>
+        <button
+          onClick={() => {
+            var keys = Object.keys(allPokemon);
+            setPokemon(
+              allPokemon[keys[Math.floor(Math.random() * keys.length)]],
+            );
+          }}
+        >
+          Get Pokemon
+        </button>
+        <p>{pokemon.name}</p>
+        <input
+          id="supereffective"
+          onChange={() => calcEffectiveness(pokemon, typeChart, setEffectiveness)}
+          placeholder="Is this type supereffective?"
+        />
+        <p>Effectiveness: {effectiveness}</p>
+      </div>
     </PageMain>
   );
+}
+
+function calcEffectiveness(pokemon, typeChart, setEffectiveness){
+  if(!pokemon) return
+
+  let effectiveness = 1
+
+  let pokemonTypes = pokemon.types
+  let qType = document.getElementById("supereffective").value;
+  qType = qType.charAt(0).toUpperCase() + qType.slice(1)
+
+  for(let type of pokemonTypes){
+    let testEffective = typeChart[type.toLowerCase()].damageTaken[qType]
+    let specificEffectiveness = 1
+    if(testEffective == 1) specificEffectiveness = 2
+    if(testEffective == 2) specificEffectiveness = 0.5
+    effectiveness *= specificEffectiveness
+  }
+
+  setEffectiveness(effectiveness)
+
 }
