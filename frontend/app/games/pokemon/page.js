@@ -11,19 +11,10 @@ export default function Pokemon() {
   const [effectiveness, setEffectiveness] = useState(1);
 
   useEffect(() => {
-    async function getDexData() {
-      const res = await axios.get(
-        "https://play.pokemonshowdown.com/data/pokedex.js",
-      );
 
-      const objectText = res.data
-        .replace("exports.BattlePokedex =", "")
-        .trim()
-        .replace(/;$/, "");
-
-      const pokedex = Function(`return (${objectText})`)();
-
-      setAllPokemon(pokedex);
+    async function dexData(){
+      const res = await getDexData()
+      setAllPokemon(res);
     }
 
     async function getTypeData() {
@@ -41,16 +32,18 @@ export default function Pokemon() {
       setTypeChart(typeData);
     }
 
-    getDexData();
+    dexData()
     getTypeData();
   }, []);
 
-  useEffect(() => genPkmn(setPokemon, allPokemon), [allPokemon])
+  useEffect(() => genPkmn(setPokemon, allPokemon), [allPokemon]);
 
   return (
     <PageMain>
       <div style={{ marginTop: "5%" }}>
-        <button onClick={() => genPkmn(setPokemon, allPokemon)}>Get Pokemon</button>
+        <button onClick={() => genPkmn(setPokemon, allPokemon)}>
+          Get Pokemon
+        </button>
         <p>{pokemon.name}</p>
         <input
           id="supereffective"
@@ -65,10 +58,10 @@ export default function Pokemon() {
   );
 }
 
-function genPkmn(setPokemon, allPokemon) {
+export function genPkmn(setPokemon, allPokemon) {
   var keys = Object.keys(allPokemon);
-  let chosen = allPokemon[keys[Math.floor(Math.random() * keys.length)]]
-  if(!chosen) return 
+  let chosen = allPokemon[keys[Math.floor(Math.random() * keys.length)]];
+  if (!chosen) return;
   setPokemon(chosen);
 }
 
@@ -90,4 +83,14 @@ function calcEffectiveness(pokemon, typeChart, setEffectiveness) {
   }
 
   setEffectiveness(effectiveness);
+}
+
+export async function getDexData() {
+  const res = await axios.get(
+    "https://play.pokemonshowdown.com/data/pokedex.json",
+  );
+
+  let pokedex = res.data
+
+  return pokedex;
 }
