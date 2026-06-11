@@ -53,9 +53,9 @@ export default function Footer() {
           </div>
         </a>
 
-        <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end" }}>
-          <Pokemon />
-        </div>
+        {/* Awesome Pocket Monsters */}
+        <Pokemon />
+        
       </div>
 
     </footer>
