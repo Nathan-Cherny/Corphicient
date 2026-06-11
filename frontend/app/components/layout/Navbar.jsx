@@ -2,11 +2,11 @@
 
 import { usePathname } from "next/navigation";
 import { cn } from "../../lib/utils";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import Image from "next/image";
 import corphishLogo from "@/public/corphish.png";
 
-import { Music, UserCheck, Workflow, Joystick } from "lucide-react";
+import { Music, UserCheck, Workflow, Joystick, ChevronDown } from "lucide-react";
 
 import Link from "next/link";
 
@@ -30,11 +30,19 @@ export default function Navbar() {
         newTab: true,
       },
       {
-        href: "/games/pokemon",
-        label: "20 Questions Pkmn!",
+        href: "/games",
+        label: "Games",
         icon: Joystick,
         newTab: true,
-      },
+        dropdown: [
+          {
+            href: "/games/pokemon",
+            label: "20 Questions Pkmn!",
+            icon: Joystick,
+            newTab: true,
+          },
+        ]
+      }
     ];
 
     setNavLinks(navLinksData);
@@ -70,9 +78,75 @@ export default function Navbar() {
   );
 }
 
-function getHTMLFromLinkData(link, pathname) {
+function DropdownNavItem({ link, pathname }) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef(null);
+
+  useEffect(() => {
+    function handleClickOutside(e) {
+      if (ref.current && !ref.current.contains(e.target)) {
+        setOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
   const isActive = pathname === link.href;
 
+  return (
+    <div ref={ref} className="relative">
+      <button
+        onClick={() => setOpen((prev) => !prev)}
+        className={cn(
+          "relative flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all duration-200",
+          isActive || open
+            ? "text-white bg-green-500/50"
+            : "text-zinc-400 hover:text-white hover:bg-zinc-800/50",
+        )}
+      >
+        <link.icon className="w-4 h-4" />
+        <span className="hidden sm:inline">{link.label}</span>
+        <ChevronDown className={cn("w-3 h-3 hidden sm:inline transition-transform duration-200", open && "rotate-180")} />
+      </button>
+
+      {open && (
+        <div
+          style={{ backgroundColor: "rgb(20, 40, 40)" }}
+          className="absolute right-0 top-full mt-1 min-w-40 rounded-xl border border-[#00a0b5]/30 overflow-hidden py-1 z-50"
+        >
+          {link.dropdown.map((item) => {
+            const isSubActive = pathname === item.href;
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                target={item.newTab ? "_blank" : "_self"}
+                onClick={() => setOpen(false)}
+                className={cn(
+                  "flex items-center gap-2 px-4 py-2 text-sm font-medium transition-all duration-200",
+                  isSubActive
+                    ? "text-white bg-green-500/50"
+                    : "text-zinc-400 hover:text-white hover:bg-zinc-800/50",
+                )}
+              >
+                <item.icon className="w-4 h-4" />
+                <span>{item.label}</span>
+              </Link>
+            );
+          })}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function getHTMLFromLinkData(link, pathname) {
+  if (link.dropdown) {
+    return <DropdownNavItem key={link.href} link={link} pathname={pathname} />;
+  }
+
+  const isActive = pathname === link.href;
   return (
     <Link
       key={link.href}
@@ -81,11 +155,11 @@ function getHTMLFromLinkData(link, pathname) {
       className={cn(
         "relative flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all duration-200",
         isActive
-          ? "text-white  bg-green-500/50"
+          ? "text-white bg-green-500/50"
           : "text-zinc-400 hover:text-white hover:bg-zinc-800/50",
       )}
     >
-      <link.icon className="w-4 h-4"></link.icon>
+      <link.icon className="w-4 h-4" />
       <span className="hidden sm:inline">{link.label}</span>
     </Link>
   );
