@@ -12,6 +12,8 @@ export default function PlaylistList({}) {
   const [playlists, setPlaylists] = useState([]);
   const [currentSong, setCurrentSong] = useState(null)
 
+  const anom = true
+
   useEffect(() => {
     async function allPlaylists() {
       const res = await axiosClient(...request);
@@ -22,7 +24,7 @@ export default function PlaylistList({}) {
   }, [request[0]]);
 
   useEffect(() => {
-    document.title = currentSong ? `${currentSong.name} | ${activePlaylist.name} | Corphicient` : "Corphicient"
+    document.title = currentSong && !anom ? `${currentSong.name} | ${activePlaylist.name} | Corphicient` : "Corphicient"
   }, [currentSong]);
 
   return (
