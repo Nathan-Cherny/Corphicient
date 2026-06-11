@@ -6,7 +6,13 @@ import { useEffect, useState, useRef } from "react";
 import Image from "next/image";
 import corphishLogo from "@/public/corphish.png";
 
-import { Music, UserCheck, Workflow, Joystick, ChevronDown } from "lucide-react";
+import {
+  Music,
+  UserCheck,
+  Workflow,
+  Joystick,
+  ChevronDown,
+} from "lucide-react";
 
 import Link from "next/link";
 
@@ -41,8 +47,8 @@ export default function Navbar() {
             icon: Joystick,
             newTab: true,
           },
-        ]
-      }
+        ],
+      },
     ];
 
     setNavLinks(navLinksData);
@@ -50,7 +56,10 @@ export default function Navbar() {
 
   return (
     <>
-      <nav style={{ backgroundColor: "rgb(20, 40, 40)"}} className="absolute top-0 left-0 right-0 z-50 backdrop-blur-xl after:content-[''] after:absolute after:left-0 after:right-0 after:bottom-0 after:h-0.75 after:bg-[#00a0b5]">
+      <nav
+        style={{ backgroundColor: "rgb(20, 40, 40)" }}
+        className="absolute top-0 left-0 right-0 z-50 backdrop-blur-xl after:content-[''] after:absolute after:left-0 after:right-0 after:bottom-0 after:h-0.75 after:bg-[#00a0b5]"
+      >
         <div className="max-w-11/12 mx-auto px-2 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-1/8 py-1">
             <Link
@@ -70,7 +79,6 @@ export default function Navbar() {
             <div className="flex items-center gap-1">
               {navLinks.map((link) => getHTMLFromLinkData(link, pathname))}
             </div>
-
           </div>
         </div>
       </nav>
@@ -82,33 +90,33 @@ function DropdownNavItem({ link, pathname }) {
   const [open, setOpen] = useState(false);
   const ref = useRef(null);
 
-  useEffect(() => {
-    function handleClickOutside(e) {
-      if (ref.current && !ref.current.contains(e.target)) {
-        setOpen(false);
-      }
-    }
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
-
   const isActive = pathname === link.href;
 
   return (
     <div ref={ref} className="relative">
-      <button
-        onClick={() => setOpen((prev) => !prev)}
+      <Link
         className={cn(
           "relative flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all duration-200",
-          isActive || open
+          isActive
             ? "text-white bg-green-500/50"
             : "text-zinc-400 hover:text-white hover:bg-zinc-800/50",
         )}
+        href={link.href}
+        target={link.newTab ? "_blank" : "_self"}
       >
         <link.icon className="w-4 h-4" />
         <span className="hidden sm:inline">{link.label}</span>
-        <ChevronDown className={cn("w-3 h-3 hidden sm:inline transition-transform duration-200", open && "rotate-180")} />
-      </button>
+        <ChevronDown
+          onClick={(e) => {e.preventDefault(); e.stopPropagation(); setOpen((prev) => !prev)}}
+          style={{
+            transform: open ? "rotate(180deg)" : "rotate(0deg)",
+            transition: "transform 0ms",
+          }}
+          className={cn(
+            `w-3 h-3 hidden sm:inline transition-transform duration-200`
+          )}
+        />
+      </Link>
 
       {open && (
         <div
@@ -122,7 +130,7 @@ function DropdownNavItem({ link, pathname }) {
                 key={item.href}
                 href={item.href}
                 target={item.newTab ? "_blank" : "_self"}
-                onClick={() => setOpen(false)}
+                onClick={(e) => {setOpen(false)}}
                 className={cn(
                   "flex items-center gap-2 px-4 py-2 text-sm font-medium transition-all duration-200",
                   isSubActive
