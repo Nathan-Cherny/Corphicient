@@ -8,7 +8,7 @@ export default function Pokemon() {
   const [allPokemon, setAllPokemon] = useState({});
   const [typeChart, setTypeChart] = useState({});
   const [pokemon, setPokemon] = useState("");
-  const [effectiveness, setEffectiveness] = useState(1)
+  const [effectiveness, setEffectiveness] = useState(1);
 
   useEffect(() => {
     async function getDexData() {
@@ -45,23 +45,18 @@ export default function Pokemon() {
     getTypeData();
   }, []);
 
+  useEffect(() => genPkmn(setPokemon, allPokemon), [allPokemon])
+
   return (
     <PageMain>
       <div style={{ marginTop: "5%" }}>
-        <button
-          onClick={() => {
-            var keys = Object.keys(allPokemon);
-            setPokemon(
-              allPokemon[keys[Math.floor(Math.random() * keys.length)]],
-            );
-          }}
-        >
-          Get Pokemon
-        </button>
+        <button onClick={() => genPkmn(setPokemon, allPokemon)}>Get Pokemon</button>
         <p>{pokemon.name}</p>
         <input
           id="supereffective"
-          onChange={() => calcEffectiveness(pokemon, typeChart, setEffectiveness)}
+          onChange={() =>
+            calcEffectiveness(pokemon, typeChart, setEffectiveness)
+          }
           placeholder="Is this type supereffective?"
         />
         <p>Effectiveness: {effectiveness}</p>
@@ -70,23 +65,29 @@ export default function Pokemon() {
   );
 }
 
-function calcEffectiveness(pokemon, typeChart, setEffectiveness){
-  if(!pokemon) return
+function genPkmn(setPokemon, allPokemon) {
+  var keys = Object.keys(allPokemon);
+  let chosen = allPokemon[keys[Math.floor(Math.random() * keys.length)]]
+  if(!chosen) return 
+  setPokemon(chosen);
+}
 
-  let effectiveness = 1
+function calcEffectiveness(pokemon, typeChart, setEffectiveness) {
+  if (!pokemon) return;
 
-  let pokemonTypes = pokemon.types
+  let effectiveness = 1;
+
+  let pokemonTypes = pokemon.types;
   let qType = document.getElementById("supereffective").value;
-  qType = qType.charAt(0).toUpperCase() + qType.slice(1)
+  qType = qType.charAt(0).toUpperCase() + qType.slice(1);
 
-  for(let type of pokemonTypes){
-    let testEffective = typeChart[type.toLowerCase()].damageTaken[qType]
-    let specificEffectiveness = 1
-    if(testEffective == 1) specificEffectiveness = 2
-    if(testEffective == 2) specificEffectiveness = 0.5
-    effectiveness *= specificEffectiveness
+  for (let type of pokemonTypes) {
+    let testEffective = typeChart[type.toLowerCase()].damageTaken[qType];
+    let specificEffectiveness = 1;
+    if (testEffective == 1) specificEffectiveness = 2;
+    if (testEffective == 2) specificEffectiveness = 0.5;
+    effectiveness *= specificEffectiveness;
   }
 
-  setEffectiveness(effectiveness)
-
+  setEffectiveness(effectiveness);
 }

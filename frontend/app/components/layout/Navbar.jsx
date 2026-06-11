@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import corphishLogo from "@/public/corphish.png";
 
-import { Music, UserCheck, Workflow } from "lucide-react";
+import { Music, UserCheck, Workflow, Joystick } from "lucide-react";
 
 import Link from "next/link";
 
@@ -27,6 +27,12 @@ export default function Navbar() {
         href: "/work_functions",
         label: "Work Functions",
         icon: Workflow,
+        newTab: true,
+      },
+      {
+        href: "/games/pokemon",
+        label: "20 Questions Pkmn!",
+        icon: Joystick,
         newTab: true,
       },
     ];
