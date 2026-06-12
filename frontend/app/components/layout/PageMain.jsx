@@ -34,5 +34,5 @@ export function PageMain({ children }) {
 }
 
 const getBackgroundColor = () => {
-  return `rgba(255, 255, 255, 1)`;
+  return `rgba(175, 200, 200, 1)`;
 };

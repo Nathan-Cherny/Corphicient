@@ -8,10 +8,7 @@ export default function Footer() {
   return (
     <footer className="w-full mt-auto" style={{
       backgroundColor: "#0f1f1f",
-      borderTop: "3px solid transparent",
-      backgroundImage: "linear-gradient(#0f1f1f, #0f1f1f), linear-gradient(90deg, #ef4444, #ffffff, #ef4444)",
-      backgroundOrigin: "border-box",
-      backgroundClip: "padding-box, border-box",
+      borderTop: "3px solid orangered",
     }}>
       <div style={{
         display: "flex",

@@ -23,10 +23,11 @@ export default function SongCard({
   return (
     <div
       onClick={() => setCurrentSong(isCurrentSong ? null : song)}
+      style={{backgroundColor: "rgba(0, 0, 0, 0.25)"}}
       className={`relative w-1/4 flex flex-col border transition-all duration-200 justify-between ${
         isCurrentSong
-          ? "border-blue-500 border-2 shadow-lg shadow-blue-200"
-          : "border-gray-300"
+          ? "border-blue-500 border-4 shadow-lg shadow-blue-200"
+          : "border-gray-300 border-2"
       }
       hover:scale-105 hover:cursor-pointer`}
     >

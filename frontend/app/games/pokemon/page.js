@@ -62,7 +62,8 @@ export function genPkmn(setPokemon, allPokemon) {
   var keys = Object.keys(allPokemon);
   let chosen = allPokemon[keys[Math.floor(Math.random() * keys.length)]];
   if (!chosen) return;
-  while (chosen.num < 0){ // this makes sure i don't get any custom fan made pokemon... some of them are cool, though!
+
+  while (chosen.num < 0 || chosen.name.includes("-")){ // select only pokemon that i want
     chosen = allPokemon[keys[Math.floor(Math.random() * keys.length)]];
   }
   setPokemon(chosen);
