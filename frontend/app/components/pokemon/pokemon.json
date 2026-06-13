@@ -1,7 +1,7 @@
 {
-    "seenshinies": [
-        "ironthorns",
-        "fomantis",
-        "tinkatuff"
-    ]
+    "seenshinies": {
+        "ironthorns": 1,
+        "fomantis": 1,
+        "tinkatuff": 1
+    }
 }

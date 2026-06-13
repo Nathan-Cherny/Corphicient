@@ -6,7 +6,6 @@ import { addPlaylist } from ".././components/playlists/PlaylistFunctions";
 
 import PlaylistList from ".././components/playlists/PlaylistList";
 import { PageMain } from "../components/layout/PageMain";
-import { useEffect } from "react";
 
 export default function Music() {
   return (

@@ -2,8 +2,9 @@
 
 // imports from next
 import axiosClient from "../../axiosClient";
-import { act, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import PlaylistCard from "./PlaylistCard";
+import PlaylistListSettings from "./PlaylistListSettings";
 
 export default function PlaylistList({}) {
   const request = ["playlists/", null, "", "GET"];
@@ -33,6 +34,7 @@ export default function PlaylistList({}) {
         {playlists.map((pl, i) => (
           <button onClick={() => changePlaylist(pl.id, playlists, setCurrentSong, activePlaylist, setActivePlaylist)} key={i} id={pl.id} className="border bg-blue-50 p-5 hover:scale-105 hover:cursor-pointer">{pl.name}</button>
       ))}
+        <PlaylistListSettings/>
       </div>
 
       {activePlaylist && (
