@@ -5,6 +5,7 @@ import { cn } from "../../lib/utils";
 import { useEffect, useState, useRef } from "react";
 import Image from "next/image";
 import corphishLogo from "@/public/corphish.png";
+import FadeOverlay from "./FadeOverlay";
 
 import {
   Music,
@@ -12,13 +13,16 @@ import {
   Workflow,
   Joystick,
   ChevronDown,
+  ListIcon,
 } from "lucide-react";
 
 import Link from "next/link";
+import TODO from "../other/TODO";
 
 export default function Navbar() {
   const [navLinks, setNavLinks] = useState([]);
   const pathname = usePathname();
+  const [todoOpen, setTodoOpen] = useState(false);
 
   useEffect(() => {
     let navLinksData = [
@@ -48,6 +52,13 @@ export default function Navbar() {
             newTab: true,
           },
         ],
+      },
+      {
+        label: "TODO",
+        icon: ListIcon,
+        onClick: () => {
+          setTodoOpen(true);
+        },
       },
     ];
 
@@ -82,6 +93,9 @@ export default function Navbar() {
           </div>
         </div>
       </nav>
+      <FadeOverlay isOpen={todoOpen} onClose={() => setTodoOpen(false)}>
+        <TODO />
+      </FadeOverlay>
     </>
   );
 }
@@ -107,13 +121,17 @@ function DropdownNavItem({ link, pathname }) {
         <link.icon className="w-4 h-4" />
         <span className="hidden sm:inline">{link.label}</span>
         <ChevronDown
-          onClick={(e) => {e.preventDefault(); e.stopPropagation(); setOpen((prev) => !prev)}}
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            setOpen((prev) => !prev);
+          }}
           style={{
             transform: open ? "rotate(180deg)" : "rotate(0deg)",
             transition: "transform 0ms",
           }}
           className={cn(
-            `w-3 h-3 hidden sm:inline transition-transform duration-200`
+            `w-3 h-3 hidden sm:inline transition-transform duration-200`,
           )}
         />
       </Link>
@@ -127,10 +145,12 @@ function DropdownNavItem({ link, pathname }) {
             const isSubActive = pathname === item.href;
             return (
               <Link
-                key={item.href}
+                key={item.label}
                 href={item.href}
                 target={item.newTab ? "_blank" : "_self"}
-                onClick={(e) => {setOpen(false)}}
+                onClick={(e) => {
+                  setOpen(false);
+                }}
                 className={cn(
                   "flex items-center gap-2 px-4 py-2 text-sm font-medium transition-all duration-200",
                   isSubActive
@@ -150,14 +170,29 @@ function DropdownNavItem({ link, pathname }) {
 }
 
 function getHTMLFromLinkData(link, pathname) {
+  if (link.onClick) {
+    return (
+      <div
+        onClick={link.onClick}
+        key={link.label}
+        className={cn(
+          "relative flex items-center gap-2 px-4 py-2 rounded-full cursor-pointer text-sm font-medium transition-all duration-200 text-zinc-400 hover:text-white hover:bg-zinc-800/50",
+        )}
+      >
+        <link.icon className="w-4 h-4" />
+        <span className="hidden sm:inline">{link.label}</span>
+      </div>
+    );
+  }
+
   if (link.dropdown) {
-    return <DropdownNavItem key={link.href} link={link} pathname={pathname} />;
+    return <DropdownNavItem key={link.label} link={link} pathname={pathname} />;
   }
 
   const isActive = pathname === link.href;
   return (
     <Link
-      key={link.href}
+      key={link.label}
       href={link.href}
       target={link.newTab ? "_blank" : "_self"}
       className={cn(
