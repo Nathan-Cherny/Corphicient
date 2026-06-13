@@ -21,7 +21,7 @@ export default function SongsList({
   const currentAudioRef = useRef(null);
   const timeSkip = settings?.timeSkip || 5;
   const [progress, setProgress] = useState({ currentTime: 0, duration: 0 });
-    const notify = useNotification();
+  const notify = useNotification();
 
   const playNextSong = () => {
     setCurrentSong((prev) => {
@@ -77,7 +77,7 @@ export default function SongsList({
           break;
         case " ":
           e.preventDefault();
-          togglePause(audio, notify)
+          togglePause(audio, notify);
           break;
       }
     };
@@ -112,9 +112,16 @@ export default function SongsList({
   );
 }
 
-function CurrentSongProgressBar({ currentAudioRef, progress, currentSong, notify }) {
+function CurrentSongProgressBar({
+  currentAudioRef,
+  progress,
+  currentSong,
+  notify,
+}) {
+  if(!currentSong) progress = { currentTime: 0, duration: 0 }
   return (
     <div>
+      {/* Current Song Info */}
       <div className="flex flex-row gap-5">
         <h1>
           Playing <b>{currentSong?.name || "N/A"}</b>
@@ -123,9 +130,10 @@ function CurrentSongProgressBar({ currentAudioRef, progress, currentSong, notify
           {getReadableDurationSong(progress.currentTime, "small")} /{" "}
           {getReadableDurationSong(progress.duration, "small")}
         </h1>
-        <h1 onClick={() => togglePause(currentAudioRef.current, notify)}>
+        <h1 className="cursor-pointer" onClick={() => togglePause(currentAudioRef.current, notify)}>
           {currentAudioRef?.current?.paused ? <PauseCircle /> : <PlayCircle />}
         </h1>
+        <h1>Total Time Played: {getReadableDurationSong(currentSong?.secondsPlayed || 0)}</h1>
       </div>
       <div
         className="w-full h-2 rounded-full bg-gray-700 cursor-pointer relative overflow-hidden"
@@ -149,7 +157,10 @@ function CurrentSongProgressBar({ currentAudioRef, progress, currentSong, notify
 }
 
 function togglePause(audio, notify) {
-  if (!audio) {notify({"message": "Hey, silly, there's no song to play or resume!!"}); return}
+  if (!audio) {
+    notify({ message: "Hey, silly, there's no song to play or resume!!" });
+    return;
+  }
   if (audio.paused) audio.play();
   else audio.pause();
 }

@@ -3,6 +3,10 @@
 import FadeOverlay from "../layout/FadeOverlay";
 import { useState } from "react";
 
+import Form from "../forms/Forms";
+import { addSong } from "../songs/SongFunctions";
+import { addPlaylist } from "./PlaylistFunctions";
+
 export default function PlaylistListSettings({}) {
   const [settingsMenuOpen, setSettingsMenuOpen] = useState(false);
 
@@ -28,7 +32,12 @@ function SettingsMenu() {
   return (
     <div className="p-15 bg-white flex flex-col">
       <h1>Settings</h1>
-      <p>hey now</p>
+      <Form
+        formType="get_song_form"
+        nonFormFields={["secondsPlayed", "src", "duration"]}
+        submitFunction={addSong}
+      />
+      <Form formType="get_playlist_form" submitFunction={addPlaylist} />
     </div>
   );
 }

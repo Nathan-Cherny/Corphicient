@@ -52,7 +52,10 @@ export default function PlaylistCard({
         )}
 
         <div>
-          <h3 className="font-bold text-3xl text-center m-5">
+          <h3
+            className={`font-bold text-3xl text-center m-5 
+              ${playlist.name == "Hall Of Fame" ? "bg-[#FFD700] bg-clip-text text-transparent font-extrabold text-shadow-black" : ""}`}
+          >
             {playlist.name}
           </h3>
           <p className="w-full">
@@ -80,7 +83,7 @@ function getTotalDuration(songs) {
   let totalSeconds = songs
     .map((song) => song.duration)
     .reduce((acc, current) => acc + current, 0);
-  return getReadableDurationSong(totalSeconds)
+  return getReadableDurationSong(totalSeconds);
 }
 
 export function getReadableDurationSong(totalSeconds, format = "full") {
