@@ -2,20 +2,20 @@ import Pokemon from "../pokemon/getPokemon";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGithub } from "@fortawesome/free-brands-svg-icons";
 import { useState, useEffect } from "react";
+import FadeOverlay from "./FadeOverlay";
 
 export default function Footer() {
   const [lastCommit, setLastCommit] = useState(null);
   const repo = "https://github.com/Nathan-Cherny/Corphicient";
+  const [allCommitsOpen, setAllCommitsOpen] = useState(false);
 
   useEffect(() => {
     async function lastCommit() {
-      setLastCommit(await getLastCommit());
+      setLastCommit(await getCommits());
     }
 
     lastCommit();
   }, []);
-
-  console.log(lastCommit);
 
   return (
     <footer
@@ -72,39 +72,153 @@ export default function Footer() {
           </div>
         </a>
 
-        {/* Awesome Pocket Monsters */}
-        <Pokemon />
-
-        {lastCommit && (
+        {/* GitHub last commit */}
+        {lastCommit && lastCommit[0] && (
           <div
-            className="text-white flex flex-col items-center text-sm"
+            className="text-white flex flex-col items-center opacity-90 text-xs hover:opacity-100 cursor-pointer"
             onClick={() => window.open(lastCommit[0].html_url)}
           >
-            <h2>Last Commit</h2>
-            <hr className="w-full"/>
-            <p>
-              {new Date(lastCommit[0].commit.author.date).toLocaleString()}
-            </p>
-            <div className="flex flex-row items-center gap-3">
+            <div className="flex flex-col">
+              <h2 className="text-center text-xl">Last Commit</h2>
+              <p>
+                {new Date(lastCommit[0].commit.author.date).toLocaleString()} |{" "}
+                <b>
+                  {Math.floor(
+                    getHoursBetween(
+                      new Date(),
+                      new Date(lastCommit[0].commit.author.date),
+                    ),
+                  )}
+                </b>{" "}
+                hour(s) ago
+              </p>
+            </div>
+            <hr className="w-full my-2.5" />
+            <div className="flex flex-row items-center gap-3 w-full text-center">
               <div className="flex flex-col items-center">
                 <img
                   className="h-7.5 w-7.5"
                   src={lastCommit[0].committer.avatar_url}
                 />
-                <p>{lastCommit[0].commit.committer.name}</p>
+                <p className="text-[10px]">
+                  {lastCommit[0]?.commit.committer.name}
+                </p>
               </div>
-              <p>{lastCommit[0].commit.message}</p>
+              <p className="w-2/3">{lastCommit[0]?.commit.message}</p>
             </div>
+            <hr className="w-full my-2.5" />
+            <h3
+              className="hover:scale-105 duration-300"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                setAllCommitsOpen(true);
+              }}
+            >
+              See all commits...
+            </h3>
           </div>
         )}
+
+        <FadeOverlay
+          isOpen={allCommitsOpen}
+          onClose={() => setAllCommitsOpen(false)}
+        >
+          <GetAllCommits />
+        </FadeOverlay>
+
+        {/* Awesome Pocket Monsters */}
+        <Pokemon />
       </div>
     </footer>
   );
 }
 
-async function getLastCommit() {
+async function getCommits(all) {
+  all = all ? "per_page=100" : "per_page=1";
   let res = await fetch(
-    `https://api.github.com/repos/Nathan-Cherny/Corphicient/commits?per_page=1`,
+    `https://api.github.com/repos/Nathan-Cherny/Corphicient/commits?${all}`,
   );
   return await res.json();
+}
+
+const getHoursBetween = (date1, date2) =>
+  Math.abs(date1 - date2) / (1000 * 60 * 60);
+
+function GetAllCommits() {
+  const [allCommits, setAllCommits] = useState(null);
+
+  useEffect(() => {
+    async function allCommits() {
+      let res = await getCommits(true);
+      let commits = {};
+      res.forEach((r) => {
+        let date = r.commit.author.date.split("T")[0];
+        let msg = r.commit.message;
+
+        if (!commits[date]) {
+          commits[date] = [{"msg": msg, "url": r.html_url}];
+        } else {
+          commits[date].push({"msg": msg, "url": r.html_url});
+        }
+      });
+      setAllCommits(commits);
+    }
+
+    allCommits();
+  }, []);
+
+  if (!allCommits) return <h1>Loading...</h1>;
+
+  console.log(allCommits);
+
+  let dates = Object.keys(allCommits);
+  let datesInBetween = getDatesInRange(dates[dates.length - 1], dates[0]);
+
+  console.log(datesInBetween);
+
+  return (
+    <div className="bg-white flex flex-col p-2 justify-center text-center rounded-2xl">
+      <h1 className="text-4xl">All Commits</h1>
+      <p className="">Hover over a date to see the commits made!!</p>
+      <div className="grid grid-cols-7">
+        {datesInBetween.map((d) => (
+          <div key={d} className="group relative inline-block">
+            <div
+              
+              className="w-25 h-25 text-white flex text-center flex-col items-center justify-center border"
+              style={{ backgroundColor: getGreenForNumber(allCommits[d]) }}
+            >
+              <h2>{d}</h2>
+              <p>{allCommits[d]?.length || 0}</p>
+
+            </div>
+            <div key={allCommits[d]} className="absolute left-full top-1/2 z-10 ml-3 hidden -translate-y-1/2 transform rounded-md bg-gray-900 px-5 py-1 gap-3 text-sm text-white shadow-lg group-hover:flex flex-col">
+              {allCommits[d]?.map((c, i) => {
+                if(!c) return (<p key={`${d}-${i}`}>None</p>)
+                else return (<a key={`${d}-${i}`} href={c.url}>{c.msg}</a>)
+              })}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function getDatesInRange(startDate, endDate) {
+  const dates = [];
+  const currentDate = new Date(startDate);
+
+  while (currentDate <= new Date(endDate)) {
+    dates.push(new Date(currentDate).toISOString().split("T")[0]);
+    currentDate.setDate(currentDate.getDate() + 1);
+  }
+
+  return dates;
+}
+
+function getGreenForNumber(number) {
+  number = !number ? 0 : number.length;
+  return `rgb(0, ${number * 20}, 0)`;
 }
