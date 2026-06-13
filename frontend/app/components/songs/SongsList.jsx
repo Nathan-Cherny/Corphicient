@@ -75,6 +75,10 @@ export default function SongsList({
         case "ArrowLeft":
           audio.currentTime -= 5;
           break;
+        case "l":
+          if(audio.loop) audio.loop = false
+          else audio.loop = true
+          break;
         case " ":
           e.preventDefault();
           togglePause(audio, notify);
@@ -132,6 +136,9 @@ function CurrentSongProgressBar({
         </h1>
         <h1 className="cursor-pointer" onClick={() => togglePause(currentAudioRef.current, notify)}>
           {currentAudioRef?.current?.paused ? <PauseCircle /> : <PlayCircle />}
+        </h1>
+        <h1>
+          Loop: {currentAudioRef?.current?.loop ? "True" : "False"}
         </h1>
         <h1>Total Time Played: {getReadableDurationSong(currentSong?.secondsPlayed || 0)}</h1>
       </div>
