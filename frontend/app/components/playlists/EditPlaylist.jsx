@@ -1,13 +1,17 @@
 "use client"
 
 import { useState, useEffect, useMemo } from "react";
+import { useNotification } from "../layout/notification/NotificationContext";
 import axiosClient from "@/app/axiosClient";
 
 export default function EditPlaylist({ playlistSongs, onSave, maxHeight }) {
   const [songs, setSongs] = useState([]);
   const [selectedIds, setSelectedIds] = useState(new Set());
   const [search, setSearch] = useState("");
+  const notify = useNotification();
   const [loading, setLoading] = useState(true);
+
+  const [change, setChange] = useState(0)
 
   useEffect(() => {
     async function getSongs() {
@@ -18,7 +22,7 @@ export default function EditPlaylist({ playlistSongs, onSave, maxHeight }) {
       setLoading(false);
     }
     getSongs();
-  }, [playlistSongs]);
+  }, [playlistSongs, change]);
 
   const filtered = useMemo(() => {
     const q = search.toLowerCase();
@@ -40,12 +44,14 @@ export default function EditPlaylist({ playlistSongs, onSave, maxHeight }) {
   function handleSave() {
     const selected = Array.from(selectedIds);
     onSave?.(selected);
+    notify({"message": `Edited Playlist!`})
+    setChange(change + 1)
   }
 
   if (loading) return <p className="text-sm text-muted">Loading songs…</p>;
 
   return (
-    <div className="flex flex-col gap-3" style={{ minWidth: "150px", textWrap: "wrap", width: "fit", "overflowY": "auto", maxHeight: maxHeight ?? "100%"  }}>
+    <div className="flex flex-col gap-3" style={{ minWidth: "150px", minHeight: "300px", textWrap: "wrap", width: "fit", "overflowY": "auto", maxHeight: maxHeight ?? "100%"  }}>
       <div className="flex items-center justify-between">
         <span className="text-sm">
           <strong>{selectedIds.size}</strong> in playlist

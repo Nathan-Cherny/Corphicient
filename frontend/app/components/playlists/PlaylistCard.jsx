@@ -39,14 +39,8 @@ export default function PlaylistCard({
       >
         <Edit />
       </button>
-      <h3 className="font-bold text-3xl text-center m-5">{playlist.name}</h3>
-      <p className="w-full">
-        Total Duration: <i>{getTotalDuration(playlist.songs)}</i>
-      </p>
-      <div
-        className="flex flex-row"
-        style={{ marginTop: "5%", alignItems: "start" }}
-      >
+
+      <div className="flex flex-row gap-5">
         {showEdit && (
           <EditPlaylist
             maxHeight={songsListHeight}
@@ -56,12 +50,26 @@ export default function PlaylistCard({
             playlistSongs={playlist.songs}
           />
         )}
-        <div ref={songsListRef}>
-          <SongsList
-            currentSong={currentSong}
-            setCurrentSong={setCurrentSong}
-            songs={playlist.songs}
-          />
+
+        <div>
+          <h3 className="font-bold text-3xl text-center m-5">
+            {playlist.name}
+          </h3>
+          <p className="w-full">
+            Total Duration: <i>{getTotalDuration(playlist.songs)}</i>
+          </p>
+
+          <hr className="w-full border my-15" />
+
+          <div className="flex flex-row" style={{ alignItems: "start" }}>
+            <div ref={songsListRef}>
+              <SongsList
+                currentSong={currentSong}
+                setCurrentSong={setCurrentSong}
+                songs={playlist.songs}
+              />
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -72,10 +80,26 @@ function getTotalDuration(songs) {
   let totalSeconds = songs
     .map((song) => song.duration)
     .reduce((acc, current) => acc + current, 0);
-  let timeData = convertSeconds(totalSeconds);
-  return `${timeData["hours"]} hours, ${timeData["minutes"]} minutes, ${timeData["seconds"]} seconds`;
+  return getReadableDurationSong(totalSeconds)
 }
 
+export function getReadableDurationSong(totalSeconds, format = "full") {
+  const { hours = 0, minutes = 0, seconds = 0 } = convertSeconds(totalSeconds);
+
+  if (format === "small") {
+    const pad = (n) => n.toString().padStart(2, "0");
+    return hours > 0
+      ? `${pad(hours)}:${pad(minutes)}:${pad(seconds)}`
+      : `${pad(minutes)}:${pad(seconds)}`;
+  }
+
+  const parts = [];
+  if (hours) parts.push(`${hours} hour${hours !== 1 ? "s" : ""}`);
+  if (minutes) parts.push(`${minutes} minute${minutes !== 1 ? "s" : ""}`);
+  parts.push(`${seconds} second${seconds !== 1 ? "s" : ""}`);
+
+  return parts.join(", ");
+}
 // this looks familar...
 function convertSeconds(totalSeconds) {
   const hours = Math.floor(totalSeconds / 3600);

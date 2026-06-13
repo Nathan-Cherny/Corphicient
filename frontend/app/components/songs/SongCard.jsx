@@ -23,7 +23,7 @@ export default function SongCard({
   return (
     <div
       onClick={() => setCurrentSong(isCurrentSong ? null : song)}
-      style={{backgroundColor: "rgba(0, 0, 0, 0.25)"}}
+      style={{backgroundColor: "rgba(0, 0, 0, 0.15)"}}
       className={`relative w-1/4 flex flex-col border transition-all duration-200 justify-between ${
         isCurrentSong
           ? "border-blue-500 border-4 shadow-lg shadow-blue-200"
@@ -40,7 +40,7 @@ export default function SongCard({
       >
         X
       </button>
-      <h3 className="font-bold text-3xl text-center m-5">{song.name}</h3>
+      <h3 className="font-bold text-3xl text-center m-5 h-full flex items-center justify-center">{song.name}</h3>
       <audio
         className="w-full"
         ref={(el) => {
