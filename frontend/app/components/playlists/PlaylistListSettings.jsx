@@ -30,14 +30,19 @@ export default function PlaylistListSettings({}) {
 
 function SettingsMenu() {
   return (
-    <div className="p-15 bg-white flex flex-col">
-      <h1>Settings</h1>
+    <div className="p-15 bg-white flex flex-col items-center gap-5">
+      <h1 className="text-3xl">Settings</h1>
       <Form
         formType="get_song_form"
         nonFormFields={["secondsPlayed", "src", "duration"]}
         submitFunction={addSong}
+        name={"Add Song"}
       />
-      <Form formType="get_playlist_form" submitFunction={addPlaylist} />
+      <Form
+        formType="get_playlist_form"
+        submitFunction={addPlaylist}
+        name={"Add Playlist"}
+      />
     </div>
   );
 }

@@ -43,6 +43,7 @@ export default function Footer() {
           rel="noopener noreferrer"
           style={{
             display: "flex",
+            flexDirection: "column",
             alignItems: "center",
             gap: "12px",
             color: "#e2e8f0",
@@ -70,6 +71,7 @@ export default function Footer() {
               style={{ width: "50px", height: "50px" }}
             />
           </div>
+          <i className="text-[7.5px] text-center">Just 1 Commit A Day :) Have Fun!</i>
         </a>
 
         {/* GitHub last commit */}
