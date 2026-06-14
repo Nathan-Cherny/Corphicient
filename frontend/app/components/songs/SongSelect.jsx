@@ -8,8 +8,7 @@ export default function SongSelect({ songs, selectedIds, onToggle, search, onSea
     const q = search.toLowerCase();
     return songs.filter(
       (s) =>
-        s.name.toLowerCase().includes(q) ||
-        s.artist?.toLowerCase().includes(q)
+        s.name.toLowerCase().includes(q)
     );
   }, [songs, search]);
 
@@ -23,7 +22,7 @@ export default function SongSelect({ songs, selectedIds, onToggle, search, onSea
         className="input"
       />
 
-      <ul className="flex flex-col gap-1.5 max-h-80 overflow-y-auto">
+      <ul className="flex flex-col gap-1.5">
         {filtered.length === 0 && (
           <li className="text-sm text-center text-muted py-8">
             No songs match your search.

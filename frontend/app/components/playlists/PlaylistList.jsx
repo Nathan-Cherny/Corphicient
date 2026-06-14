@@ -12,6 +12,8 @@ export default function PlaylistList({}) {
   const [activePlaylist, setActivePlaylist] = useState(null)
   const [playlists, setPlaylists] = useState([]);
   const [currentSong, setCurrentSong] = useState(null)
+  const [prevCurrentSong, setPrevCurrentSong] = useState(null)
+  const [currentSongDate, setCurrentSongDate] = useState(null)
 
   const anom = true
 
@@ -25,6 +27,15 @@ export default function PlaylistList({}) {
   }, [request[0]]);
 
   useEffect(() => {
+    let date = new Date()
+
+    if(prevCurrentSong){
+      axiosClient(`songs/${prevCurrentSong?.id}/add_time_played/`, {"amount": (date - currentSongDate)/1000}, null, "PUT", false)
+    }
+
+    setCurrentSongDate(new Date())
+    setPrevCurrentSong(currentSong)
+
     document.title = currentSong && !anom ? `${currentSong.name} | ${activePlaylist.name} | Corphicient` : "Corphicient"
   }, [currentSong]);
 

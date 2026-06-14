@@ -27,6 +27,7 @@ urlpatterns = [
     path('add_song/', views.add_song, name='add_song'),
     path('get_song_form/', views.get_song_form, name='get_song_form'),
     path('delete_song/<int:pk>/', views.delete_song, name="delete_song"),
+    path('songs/<int:pk>/add_time_played/', views.add_time_played, name="add_time_played"),
     path('playlists/', views.get_playlists, name="get_playlists"),
     path('add_playlist/', views.add_playlist, name="get_playlists"),
     path('get_playlist_form/', views.get_playlist_form, name='get_playlist_form'),

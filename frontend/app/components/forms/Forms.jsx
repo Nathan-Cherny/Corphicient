@@ -43,6 +43,7 @@ export default function Form({ formType, nonFormFields = [], submitFunction, nam
 }
 
 function parseField(field) {
+  console.log(field.options)
   if (field.type == "select") {
     return (
       <>

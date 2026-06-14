@@ -27,7 +27,6 @@ const axiosClient = async (
     } else if (type === "GET") {
       res = await axios.get(endpoint, config);
     } else if (type === "PUT") {
-      console.log(JSON.stringify(data))
       res = await axios.put(endpoint, data, config);
     } else if (type === "DELETE") {
       res = await axios.delete(endpoint, data, config);

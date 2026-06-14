@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from songs.models import *
+from django.db.models import F
 from django.http import FileResponse, HttpResponse
 from django.conf import settings
 from rest_framework import generics, status
@@ -73,6 +74,16 @@ def delete_song(request, pk):
     os.remove(song.src)
     song.delete()
     return Response(status=status.HTTP_204_NO_CONTENT)
+
+@api_view(["PUT"])
+def add_time_played(request, pk):
+    obj = Song.objects.get(pk=pk)
+    print(request.data)
+    obj.secondsPlayed = F('secondsPlayed') + request.data.get('amount', 0)
+    obj.save()
+    obj.refresh_from_db()
+    return Response(request.data, status=status.HTTP_200_OK)
+
 
 @api_view(['GET'])
 def get_playlists(request):
