@@ -31,7 +31,7 @@ export default function SongCard({
       }
       hover:scale-105 hover:cursor-pointer`}
     >
-      <button
+      {/* <button
         onClick={(e) => {
           e.stopPropagation();
           Song.deleteSong(song.id);
@@ -39,7 +39,7 @@ export default function SongCard({
         className="absolute top-2 right-2 bg-red-500 text-white w-6 h-6 flex items-center justify-center hover:scale-110 hover:cursor-pointer transition-all duration-200"
       >
         X
-      </button>
+      </button> */}
       <h3 className="font-bold text-3xl text-center m-5 h-full flex items-center justify-center">{song.name}</h3>
       <audio
         className="w-full"

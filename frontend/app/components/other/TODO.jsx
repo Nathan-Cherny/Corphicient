@@ -13,7 +13,6 @@ export default function TODO() {
             Confirmation before i delete a song or playlist? or just move it?
           </li>
           <li>Song cards need to look better - bg color, maybe a picture?</li>
-          <li>Need to start collecting secondsPlayed</li>
         </ul>
       </div>
 
