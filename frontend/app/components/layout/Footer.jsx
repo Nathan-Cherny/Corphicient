@@ -11,7 +11,7 @@ export default function Footer() {
 
   useEffect(() => {
     async function lastCommit() {
-      setLastCommit(await getCommits());
+      setLastCommit(await getCommits(false, true));
     }
 
     lastCommit();
@@ -71,24 +71,26 @@ export default function Footer() {
               style={{ width: "50px", height: "50px" }}
             />
           </div>
-          <i className="text-[7.5px] text-center">Just 1 Commit A Day :) Have Fun!</i>
+          <i className="text-[7.5px] text-center">
+            Just 1 Commit A Day :) Have Fun!
+          </i>
         </a>
 
         {/* GitHub last commit */}
-        {lastCommit && lastCommit[0] && (
+        {lastCommit && lastCommit && (
           <div
             className="text-white flex flex-col items-center opacity-90 text-xs hover:opacity-100 cursor-pointer"
-            onClick={() => window.open(lastCommit[0].html_url)}
+            onClick={() => window.open(lastCommit.html_url)}
           >
             <div className="flex flex-col">
               <h2 className="text-center text-xl">Last Commit</h2>
               <p>
-                {new Date(lastCommit[0].commit.author.date).toLocaleString()} |{" "}
+                {new Date(lastCommit.commit.author.date).toLocaleString()} |{" "}
                 <b>
                   {Math.floor(
                     getHoursBetween(
                       new Date(),
-                      new Date(lastCommit[0].commit.author.date),
+                      new Date(lastCommit.commit.author.date),
                     ),
                   )}
                 </b>{" "}
@@ -100,13 +102,17 @@ export default function Footer() {
               <div className="flex flex-col items-center">
                 <img
                   className="h-7.5 w-7.5"
-                  src={lastCommit[0].committer.avatar_url}
+                  src={lastCommit.committer.avatar_url}
                 />
                 <p className="text-[10px]">
-                  {lastCommit[0]?.commit.committer.name}
+                  {lastCommit?.commit.committer.name}
                 </p>
               </div>
-              <p className="w-2/3">{lastCommit[0]?.commit.message}</p>
+              <p className="w-2/3">{lastCommit?.commit.message}</p>
+              <div className="flex flex-col items-center text-[10px]">
+                <p className="text-green-500 ">↑ {lastCommit?.stats.additions}</p>
+                <p className="text-red-500">↓: {lastCommit?.stats.deletions}</p>
+              </div>
             </div>
             <hr className="w-full my-2.5" />
             <h3
@@ -136,12 +142,20 @@ export default function Footer() {
   );
 }
 
-async function getCommits(all) {
-  all = all ? "per_page=100" : "per_page=1";
+async function getCommits(all, advanced = false) {
+  let pageQuery = all ? "per_page=100" : "per_page=1";
   let res = await fetch(
-    `https://api.github.com/repos/Nathan-Cherny/Corphicient/commits?${all}`,
+    `https://api.github.com/repos/Nathan-Cherny/Corphicient/commits?${pageQuery}`,
   );
-  return await res.json();
+  res = await res.json();
+  if (!all)
+    res = await (
+      await fetch(
+        `https://api.github.com/repos/Nathan-Cherny/Corphicient/commits/${res[0].sha}`,
+      )
+    ).json();
+  console.log(res);
+  return res;
 }
 
 const getHoursBetween = (date1, date2) =>
@@ -159,9 +173,9 @@ function GetAllCommits() {
         let msg = r.commit.message;
 
         if (!commits[date]) {
-          commits[date] = [{"msg": msg, "url": r.html_url}];
+          commits[date] = [{ msg: msg, url: r.html_url }];
         } else {
-          commits[date].push({"msg": msg, "url": r.html_url});
+          commits[date].push({ msg: msg, url: r.html_url });
         }
       });
       setAllCommits(commits);
@@ -187,18 +201,24 @@ function GetAllCommits() {
         {datesInBetween.map((d) => (
           <div key={d} className="group relative inline-block">
             <div
-              
               className="w-25 h-25 text-white flex text-center flex-col items-center justify-center border"
               style={{ backgroundColor: getGreenForNumber(allCommits[d]) }}
             >
               <h2>{d}</h2>
               <p>{allCommits[d]?.length || 0}</p>
-
             </div>
-            <div key={allCommits[d]} className="absolute left-full top-1/2 z-10 ml-3 hidden -translate-y-1/2 transform rounded-md bg-gray-900 px-5 py-1 gap-3 text-sm text-white shadow-lg group-hover:flex flex-col">
+            <div
+              key={allCommits[d]}
+              className="absolute left-full top-1/2 z-10 ml-3 hidden -translate-y-1/2 transform rounded-md bg-gray-900 px-5 py-1 gap-3 text-sm text-white shadow-lg group-hover:flex flex-col"
+            >
               {allCommits[d]?.map((c, i) => {
-                if(!c) return (<p key={`${d}-${i}`}>None</p>)
-                else return (<a key={`${d}-${i}`} href={c.url}>{c.msg}</a>)
+                if (!c) return <p key={`${d}-${i}`}>None</p>;
+                else
+                  return (
+                    <a key={`${d}-${i}`} href={c.url}>
+                      {c.msg}
+                    </a>
+                  );
               })}
             </div>
           </div>
