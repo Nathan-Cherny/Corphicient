@@ -12,7 +12,7 @@ export default function FadeOverlay({ isOpen, onClose, children }) {
       
       {/* Foreground Content */}
       <div className="fixed inset-0 z-50 flex items-center justify-center pointer-events-none duration-300">
-        <div className="pointer-events-auto">
+        <div className="pointer-events-auto min-w-1/2">
           {children}
         </div>
       </div>

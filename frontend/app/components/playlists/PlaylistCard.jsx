@@ -6,6 +6,10 @@ import { Edit, Eraser } from "lucide-react";
 import EditPlaylist from "./EditPlaylist";
 
 import { useState, useEffect, useRef } from "react";
+import PieChartVis from "../visual/PieChart";
+import { getRandomColor } from "../visual/colors";
+import FadeOverlay from "../layout/FadeOverlay";
+import { PieChart } from "lucide-react";
 
 export default function PlaylistCard({
   playlist,
@@ -15,6 +19,7 @@ export default function PlaylistCard({
   const [showEdit, setShowEdit] = useState(false);
   const [songsListHeight, setSongsListHeight] = useState(null);
   const songsListRef = useRef(null);
+  const [pieChartOpen, setPieChartOpen] = useState(false)
 
   useEffect(() => {
     if (!songsListRef.current) return;
@@ -61,6 +66,15 @@ export default function PlaylistCard({
           <p className="w-full">
             Total Duration: <i>{getTotalDuration(playlist.songs)}</i>
           </p>
+          <div className="w-full flex flex-row gap-5">
+            <p>Total Time Spent Listening to Songs: <i>{getTotalPlayed(playlist.songs)}</i></p>
+            <PieChart className="cursor-pointer hover:scale-105" onClick={() => setPieChartOpen(true)}/>
+          </div>
+
+          <FadeOverlay isOpen={pieChartOpen} onClose={() => setPieChartOpen(false)}>
+            <PieChartVis data={playlist.songs.map(s => ({name: s.name, secondsPlayed: s.secondsPlayed, fill: getRandomColor()}))} playlistName={playlist.name}/>
+          </FadeOverlay>
+
 
           <hr className="w-full border my-15" />
 
@@ -86,6 +100,13 @@ function getTotalDuration(songs) {
   return getReadableDurationSong(totalSeconds);
 }
 
+function getTotalPlayed(songs) {
+  let totalSeconds = songs
+    .map((song) => song.secondsPlayed)
+    .reduce((acc, current) => acc + current, 0);
+  return getReadableDurationSong(totalSeconds);
+}
+
 export function getReadableDurationSong(totalSeconds, format = "full") {
   const { hours = 0, minutes = 0, seconds = 0 } = convertSeconds(totalSeconds);
 
@@ -103,6 +124,7 @@ export function getReadableDurationSong(totalSeconds, format = "full") {
 
   return parts.join(", ");
 }
+
 // this looks familar...
 function convertSeconds(totalSeconds) {
   const hours = Math.floor(totalSeconds / 3600);
