@@ -15,6 +15,7 @@ export default function PlaylistCard({
   playlist,
   currentSong,
   setCurrentSong,
+  settings
 }) {
   const [showEdit, setShowEdit] = useState(false);
   const [songsListHeight, setSongsListHeight] = useState(null);
@@ -84,6 +85,7 @@ export default function PlaylistCard({
                 currentSong={currentSong}
                 setCurrentSong={setCurrentSong}
                 songs={playlist.songs}
+                settings={settings}
               />
             </div>
           </div>

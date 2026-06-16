@@ -111,7 +111,8 @@ export default function Footer() {
               <p className="w-2/3">{lastCommit?.commit.message}</p>
               <div className="flex flex-col items-center text-[10px]">
                 <p className="text-green-500 ">↑ {lastCommit?.stats.additions}</p>
-                <p className="text-red-500">↓: {lastCommit?.stats.deletions}</p>
+                <p className="text-red-500">↓ {lastCommit?.stats.deletions}</p>
+                <p>📄 {lastCommit?.files.length}</p>
               </div>
             </div>
             <hr className="w-full my-2.5" />

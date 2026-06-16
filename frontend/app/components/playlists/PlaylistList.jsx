@@ -15,6 +15,10 @@ export default function PlaylistList({}) {
   const [prevCurrentSong, setPrevCurrentSong] = useState(null)
   const [currentSongDate, setCurrentSongDate] = useState(null)
 
+  const [settings, setSettings] = useState({
+    "timeSkip": 5
+  })
+
   const anom = true
 
   useEffect(() => {
@@ -45,11 +49,11 @@ export default function PlaylistList({}) {
         {playlists.map((pl, i) => (
           <button onClick={() => changePlaylist(pl.id, playlists, setCurrentSong, activePlaylist, setActivePlaylist)} key={i} id={pl.id} className="border bg-blue-50 p-5 hover:scale-105 hover:cursor-pointer">{pl.name}</button>
       ))}
-        <PlaylistListSettings/>
+        <PlaylistListSettings settings={settings} setSettings={setSettings}/>
       </div>
 
       {activePlaylist && (
-        <PlaylistCard playlist={activePlaylist} currentSong={currentSong} setCurrentSong={setCurrentSong} />
+        <PlaylistCard playlist={activePlaylist} currentSong={currentSong} setCurrentSong={setCurrentSong} settings={settings}/>
       )}
     </div>
   );

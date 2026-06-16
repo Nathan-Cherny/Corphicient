@@ -70,10 +70,10 @@ export default function SongsList({
           audio.currentTime = 0;
           break;
         case "ArrowRight":
-          audio.currentTime += 5;
+          audio.currentTime += timeSkip;
           break;
         case "ArrowLeft":
-          audio.currentTime -= 5;
+          audio.currentTime -= timeSkip;
           break;
         case "l":
           if(audio.loop) audio.loop = false

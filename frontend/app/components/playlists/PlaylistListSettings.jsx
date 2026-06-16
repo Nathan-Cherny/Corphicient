@@ -7,7 +7,7 @@ import Form from "../forms/Forms";
 import { addSong } from "../songs/SongFunctions";
 import { addPlaylist } from "./PlaylistFunctions";
 
-export default function PlaylistListSettings({}) {
+export default function PlaylistListSettings({settings, setSettings}) {
   const [settingsMenuOpen, setSettingsMenuOpen] = useState(false);
 
   return (
@@ -22,13 +22,13 @@ export default function PlaylistListSettings({}) {
         isOpen={settingsMenuOpen}
         onClose={() => setSettingsMenuOpen(false)}
       >
-        <SettingsMenu />
+        <SettingsMenu settings={settings} setSettings={setSettings} />
       </FadeOverlay>
     </>
   );
 }
 
-function SettingsMenu() {
+function SettingsMenu({settings, setSettings}) {
   return (
     <div className="p-15 bg-white flex flex-col items-center gap-5">
       <h1 className="text-3xl">Settings</h1>
@@ -43,6 +43,8 @@ function SettingsMenu() {
         submitFunction={addPlaylist}
         name={"Add Playlist"}
       />
+      <h1>Timeskip</h1>
+      <input type="number" onChange={(e) => {settings.timeSkip = e.target.valueAsNumber; setSettings(settings)}} defaultValue={settings.timeSkip}></input>
     </div>
   );
 }
