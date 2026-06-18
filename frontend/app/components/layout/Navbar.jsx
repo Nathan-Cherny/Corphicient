@@ -13,6 +13,7 @@ import {
   Workflow,
   Joystick,
   ChevronDown,
+  CircleQuestionMark,
   ListIcon,
 } from "lucide-react";
 
@@ -52,6 +53,12 @@ export default function Navbar() {
             newTab: true,
           },
         ],
+      },
+      {
+        label: "About",
+        icon: CircleQuestionMark,
+        newTab: true,
+        href: "/about"
       },
       {
         label: "TODO",
