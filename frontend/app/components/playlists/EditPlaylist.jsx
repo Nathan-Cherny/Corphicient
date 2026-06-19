@@ -6,7 +6,7 @@ import { useNotification } from "../layout/notification/NotificationContext";
 import axiosClient from "@/app/axiosClient";
 import SongSelect from "../songs/SongSelect";
 
-export default function EditPlaylist({ playlistSongs, onSave, maxHeight }) {
+export default function EditPlaylist({ playlistSongs, onSave }) {
   const [songs, setSongs] = useState([]);
   const [selectedIds, setSelectedIds] = useState(new Set());
   const [search, setSearch] = useState("");
@@ -43,8 +43,8 @@ export default function EditPlaylist({ playlistSongs, onSave, maxHeight }) {
 
   return (
     <div
-      className="flex flex-col gap-3"
-      style={{ minWidth: "150px", minHeight: "300px", textWrap: "wrap", width: "fit", overflowY: "auto", maxHeight: maxHeight ?? "100%" }}
+      className="flex flex-col gap-3 bg-white p-5"
+      style={{ minWidth: "150px", minHeight: "300px", textWrap: "wrap", width: "fit", overflowY: "auto", height: "750px"}}
     >
       <div className="flex items-center justify-between">
         <span className="text-sm">

@@ -11,7 +11,13 @@ export default function Footer() {
 
   useEffect(() => {
     async function lastCommit() {
-      setLastCommit(await getCommits(false, true));
+      try{
+        setLastCommit(await getCommits(false, true));
+      }
+      catch(e){
+        console.log(`Couldn't get lastCommit: ${e.message}`)
+        setLastCommit(null)
+      }
     }
 
     lastCommit();
@@ -77,7 +83,7 @@ export default function Footer() {
         </a>
 
         {/* GitHub last commit */}
-        {lastCommit && lastCommit && (
+        {lastCommit && (
           <div
             className="text-white flex flex-col items-center opacity-90 text-xs hover:opacity-100 cursor-pointer"
             onClick={() => window.open(lastCommit.html_url)}

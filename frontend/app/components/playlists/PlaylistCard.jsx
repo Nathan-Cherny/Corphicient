@@ -15,21 +15,12 @@ export default function PlaylistCard({
   playlist,
   currentSong,
   setCurrentSong,
-  settings
+  settings,
 }) {
   const [showEdit, setShowEdit] = useState(false);
-  const [songsListHeight, setSongsListHeight] = useState(null);
   const songsListRef = useRef(null);
-  const [pieChartOpen, setPieChartOpen] = useState(false)
+  const [pieChartOpen, setPieChartOpen] = useState(false);
 
-  useEffect(() => {
-    if (!songsListRef.current) return;
-    const observer = new ResizeObserver(([entry]) => {
-      setSongsListHeight(entry.contentRect.height);
-    });
-    observer.observe(songsListRef.current);
-    return () => observer.disconnect();
-  }, []);
 
   return (
     <div className="relative flex flex-col border p-5">
@@ -47,15 +38,15 @@ export default function PlaylistCard({
       </button>
 
       <div className="flex flex-row gap-5">
-        {showEdit && (
+        
+        <FadeOverlay isOpen={showEdit} onClose={() => setShowEdit(false)}>
           <EditPlaylist
-            maxHeight={songsListHeight}
             onSave={async (selected) => {
               await Playlist.putPlaylist(playlist.id, selected, playlist.name);
             }}
             playlistSongs={playlist.songs}
           />
-        )}
+        </FadeOverlay>
 
         <div>
           <h3
@@ -68,14 +59,29 @@ export default function PlaylistCard({
             Total Duration: <i>{getTotalDuration(playlist.songs)}</i>
           </p>
           <div className="w-full flex flex-row gap-5">
-            <p>Total Time Spent Listening to Songs: <i>{getTotalPlayed(playlist.songs)}</i></p>
-            <PieChart className="cursor-pointer hover:scale-105" onClick={() => setPieChartOpen(true)}/>
+            <p>
+              Total Time Spent Listening to Songs:{" "}
+              <i>{getTotalPlayed(playlist.songs)}</i>
+            </p>
+            <PieChart
+              className="cursor-pointer hover:scale-105"
+              onClick={() => setPieChartOpen(true)}
+            />
           </div>
 
-          <FadeOverlay isOpen={pieChartOpen} onClose={() => setPieChartOpen(false)}>
-            <PieChartVis data={playlist.songs.map(s => ({name: s.name, secondsPlayed: s.secondsPlayed, fill: getRandomColor()}))} playlistName={playlist.name}/>
+          <FadeOverlay
+            isOpen={pieChartOpen}
+            onClose={() => setPieChartOpen(false)}
+          >
+            <PieChartVis
+              data={playlist.songs.map((s) => ({
+                name: s.name,
+                secondsPlayed: s.secondsPlayed,
+                fill: getRandomColor(),
+              }))}
+              playlistName={playlist.name}
+            />
           </FadeOverlay>
-
 
           <hr className="w-full border my-15" />
 
