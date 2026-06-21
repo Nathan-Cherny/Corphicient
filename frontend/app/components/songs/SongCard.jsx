@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import * as Song from "./SongFunctions";
 import { Edit, Eraser } from "lucide-react";
-import FadeOverlay from "../layout/FadeOverlay";
 import { useNotification } from "../layout/notification/NotificationContext";
 import EditSong from "./EditSong";
 
@@ -11,10 +10,10 @@ export default function SongCard({
   setCurrentSong,
   onSongEnd,
   onAudioRef,
+  setSongToEdit
 }) {
   const audioRef = useRef(null);
   const notify = useNotification();
-  const [showEdit, setShowEdit] = useState(false);
 
   useEffect(() => {
     if (isCurrentSong) {
@@ -52,12 +51,8 @@ export default function SongCard({
         }}
         className="absolute top-1 left-1 text-black w-4 h-4 flex items-center justify-center hover:scale-110 hover:cursor-pointer transition-all duration-200"
       >
-        <Edit onClick={() => setShowEdit((prev) => !prev)} />
+        <Edit onClick={() => setSongToEdit(song)} />
       </button>
-
-      <FadeOverlay isOpen={showEdit} onClose={() => setShowEdit(false)}>
-        <EditSong />
-      </FadeOverlay>
 
       <h3 className="font-bold text-3xl text-center m-5 h-full flex items-center justify-center">
         {song.name}

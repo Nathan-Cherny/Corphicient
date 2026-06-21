@@ -1,9 +1,9 @@
 "use client";
 
-export default function EditSong({}) {
+export default function EditSong({song}) {
   return (
     <div className="flex flex-col gap-3 bg-white p-5">
-      <p>test</p>
+      <h1>Edit {song.name}</h1>
     </div>
   );
 }

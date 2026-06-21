@@ -44,7 +44,7 @@ export default function EditPlaylist({ playlistSongs, onSave }) {
   return (
     <div
       className="flex flex-col gap-3 bg-white p-5"
-      style={{ minWidth: "150px", minHeight: "300px", textWrap: "wrap", width: "fit", overflowY: "auto", height: "750px"}}
+      style={{ minWidth: "150px", minHeight: "300px", textWrap: "wrap", width: "fit", overflowY: "auto", maxHeight: "750px"}}
     >
       <div className="flex items-center justify-between">
         <span className="text-sm">

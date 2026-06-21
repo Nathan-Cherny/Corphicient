@@ -6,6 +6,8 @@ import { useState, useEffect, useRef } from "react";
 import SongCard, { playSong } from "./SongCard";
 import { getReadableDurationSong } from "../playlists/PlaylistCard";
 import { useNotification } from "../layout/notification/NotificationContext";
+import FadeOverlay from "../layout/FadeOverlay";
+import EditSong from "./EditSong";
 
 import { PauseCircle, PlayCircle } from "lucide-react";
 
@@ -22,6 +24,8 @@ export default function SongsList({
   const timeSkip = settings?.timeSkip || 5;
   const [progress, setProgress] = useState({ currentTime: 0, duration: 0 });
   const notify = useNotification();
+
+  const [songToEdit, setSongToEdit] = useState(null)
 
   const playNextSong = () => {
     setCurrentSong((prev) => {
@@ -76,8 +80,8 @@ export default function SongsList({
           audio.currentTime -= timeSkip;
           break;
         case "l":
-          if(audio.loop) audio.loop = false
-          else audio.loop = true
+          if (audio.loop) audio.loop = false;
+          else audio.loop = true;
           break;
         case " ":
           e.preventDefault();
@@ -92,6 +96,10 @@ export default function SongsList({
 
   return (
     <div className="flex flex-wrap flex-col justify-center gap-7 ">
+      <FadeOverlay isOpen={songToEdit} onClose={() => setSongToEdit(null)}>
+        <EditSong song={songToEdit} />
+      </FadeOverlay>
+
       <CurrentSongProgressBar
         currentAudioRef={currentAudioRef}
         progress={progress}
@@ -109,6 +117,7 @@ export default function SongsList({
             onAudioRef={(ref) => {
               currentAudioRef.current = ref;
             }} // this allows the currentAudioRef to change if a new song becomes currentSong
+            setSongToEdit={setSongToEdit}
           />
         ))}
       </div>
@@ -122,7 +131,7 @@ function CurrentSongProgressBar({
   currentSong,
   notify,
 }) {
-  if(!currentSong) progress = { currentTime: 0, duration: 0 }
+  if (!currentSong) progress = { currentTime: 0, duration: 0 };
   return (
     <div>
       {/* Current Song Info */}
@@ -134,13 +143,17 @@ function CurrentSongProgressBar({
           {getReadableDurationSong(progress.currentTime, "small")} /{" "}
           {getReadableDurationSong(progress.duration, "small")}
         </h1>
-        <h1 className="cursor-pointer" onClick={() => togglePause(currentAudioRef.current, notify)}>
+        <h1
+          className="cursor-pointer"
+          onClick={() => togglePause(currentAudioRef.current, notify)}
+        >
           {currentAudioRef?.current?.paused ? <PauseCircle /> : <PlayCircle />}
         </h1>
+        <h1>Loop: {currentAudioRef?.current?.loop ? "True" : "False"}</h1>
         <h1>
-          Loop: {currentAudioRef?.current?.loop ? "True" : "False"}
+          Total Time Played:{" "}
+          {getReadableDurationSong(currentSong?.secondsPlayed || 0)}
         </h1>
-        <h1>Total Time Played: {getReadableDurationSong(currentSong?.secondsPlayed || 0)}</h1>
       </div>
       <div
         className="w-full h-2 rounded-full bg-gray-700 cursor-pointer relative overflow-hidden"
