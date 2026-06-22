@@ -41,10 +41,10 @@ export default function PlaylistCard({
         
         <FadeOverlay isOpen={showEdit} onClose={() => setShowEdit(false)}>
           <EditPlaylist
-            onSave={async (selected) => {
-              await Playlist.putPlaylist(playlist.id, selected, playlist.name);
+            onSave={async (selected, name) => {
+              await Playlist.putPlaylist(playlist.id, selected, name);
             }}
-            playlistSongs={playlist.songs}
+            playlist={playlist}
           />
         </FadeOverlay>
 
