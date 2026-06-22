@@ -120,14 +120,14 @@
                   </p>
                 </div>
                 <p className="w-1/2">{lastCommit?.commit.message}</p>
-                <div className="flex flex-col items-center text-[10px] w-1/4 gap-1">
-                  <div className="text-green-500 w-full justify-around flex items-center">
+                <div className="flex flex-col items-center text-[10px] gap-1">
+                  <div className="text-green-500 w-full justify-around flex items-center gap-5">
                     <ArrowUpFromLine className="w-3 h-3"/> <p>{lastCommit?.stats.additions}</p>
                   </div>
-                  <div className="text-red-500 w-full justify-around flex items-center">
+                  <div className="text-red-500 w-full justify-around flex items-center gap-5">
                     <ArrowDownFromLine className="w-3 h-3"/> <p>{lastCommit?.stats.deletions}</p>
                   </div>
-                  <div className="text-orange-500 w-full justify-around flex items-center">
+                  <div className="text-orange-500 w-full justify-around flex items-center gap-5">
                     <File className="w-3 h-3"/> <p>{lastCommit?.files.length}</p>
                   </div>
                 </div>

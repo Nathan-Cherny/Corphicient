@@ -1,24 +1,44 @@
 "use client";
 
-import Form from "../forms/Forms";
+import { useState } from "react";
+import { useNotification } from "../layout/notification/NotificationContext";
 
-export default function EditSong({ song }) {
+export default function EditSong({ song, onSave }) {
+  const notify = useNotification();
+  const [inputName, setInputName] = useState(song.name);
+
+  function handleSave() {
+    onSave?.(song.id, inputName);
+    notify({ message: `Edited Song ${inputName}!` });
+  }
+
   return (
     <div className="flex flex-col gap-3 bg-white p-5">
-      <Form
-        formType="get_song_form"
-        nonFormFields={["secondsPlayed", "src", "duration"]}
-        submitFunction={() => {
-          console.log("test");
-        }}
-        name={`Edit ${song.name}`}
+      <h1>Edit {song.name}</h1>
+
+      <button
+        onClick={handleSave}
+        className="btn-primary bg-red-200 p-2"
+        style={{ cursor: "pointer" }}
       >
-        <CropSong/>
-      </Form>
+        Save changes
+      </button>
+
+      <div className="flex flex-row gap-5">
+        <label htmlFor="name">Change Name</label>
+        <input
+          name="name"
+          type="text"
+          onChange={(e) => setInputName(e.target.value)}
+          value={inputName}
+        />
+      </div>
+
+      <CropSong />
     </div>
   );
 }
 
-function CropSong(){
-  return <div>crop</div>
+function CropSong() {
+  return <div>crop</div>;
 }

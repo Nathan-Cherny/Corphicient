@@ -11,8 +11,8 @@ export function deletePlaylist(id){
     return deleteModel(id, "playlist")
 }
 
-export async function putPlaylist(id, selected, name) {
+export async function patchPlaylist(id, selected, name) {
     let payload = { songs: selected, name: name }
-    let response = await axiosClient(`playlists/${id}/update/`, payload, null, "PUT");
+    let response = await axiosClient(`playlists/${id}/update/`, payload, null, "PATCH");
     return response
 }

@@ -41,11 +41,9 @@ export default function Form({
       >
         {form_data.fields?.map((field) => {
           return (
-            <>
-              <div key={field.name} className="p-2 m-2">
-                {parseField(field)}
-              </div>
-            </>
+            <div key={field.name} className="p-2 m-2">
+              {parseField(field)}
+            </div>
           );
         })}
         {children}

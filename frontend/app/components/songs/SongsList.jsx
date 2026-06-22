@@ -4,6 +4,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import SongCard, { playSong } from "./SongCard";
+import * as Song from "./SongFunctions";
 import { getReadableDurationSong } from "../playlists/PlaylistCard";
 import { useNotification } from "../layout/notification/NotificationContext";
 import FadeOverlay from "../layout/FadeOverlay";
@@ -25,7 +26,7 @@ export default function SongsList({
   const [progress, setProgress] = useState({ currentTime: 0, duration: 0 });
   const notify = useNotification();
 
-  const [songToEdit, setSongToEdit] = useState(null)
+  const [songToEdit, setSongToEdit] = useState(null);
 
   const playNextSong = () => {
     setCurrentSong((prev) => {
@@ -97,7 +98,12 @@ export default function SongsList({
   return (
     <div className="flex flex-wrap flex-col justify-center gap-7 ">
       <FadeOverlay isOpen={songToEdit} onClose={() => setSongToEdit(null)}>
-        <EditSong song={songToEdit} />
+        <EditSong
+          song={songToEdit}
+          onSave={async (id, name) => {
+            await Song.patchSong(id, name);
+          }}
+        />
       </FadeOverlay>
 
       <CurrentSongProgressBar
