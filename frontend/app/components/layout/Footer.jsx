@@ -135,7 +135,7 @@ export default function Footer() {
               </p>
             </div>
             <hr className="w-full my-2.5" />
-            <div className="flex flex-row items-center gap-3 w-full text-center">
+            <div className="flex flex-row items-center gap-3 w-full text-center justify-between">
               <div className="flex flex-col items-center">
                 <img
                   className="h-7.5 w-7.5"
