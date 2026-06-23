@@ -6,7 +6,6 @@ import { useEffect, useState, useRef } from "react";
 import Image from "next/image";
 import corphishLogo from "@/public/corphish.png";
 import FadeOverlay from "./FadeOverlay";
-import { getReadableDurationSong } from "../playlists/PlaylistCard";
 
 import {
   Music,
@@ -71,28 +70,6 @@ export default function Navbar() {
     ];
 
     setNavLinks(navLinksData);
-  }, []);
-
-  useEffect(() => {
-    const handleKeyDown = (e) => {
-      if (e.key == "x"){
-        if(!localStorage.xDateRecord){
-          window.localStorage.xDateRecord = new Date()
-        }
-        else{
-          let gap = new Date() - new Date(window.localStorage.xDateRecord)
-          gap = Math.ceil((gap)/900000) * 900000
-          gap = gap/1000
-          let gapToRecord = (Math.ceil((gap)/900)) / 4
-
-          alert(`${gapToRecord}\n\n${getReadableDurationSong(gap)}`)
-          delete window.localStorage.xDateRecord
-        }
-      }
-    };
-
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
   }, []);
 
   return (
