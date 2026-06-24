@@ -30,6 +30,7 @@ urlpatterns = [
     path('delete_song/<int:pk>/', views.delete_song, name="delete_song"),
     path('songs/<int:pk>/update/', views.update_song, name="update_song"),
     path('songs/<int:pk>/add_time_played/', views.add_time_played, name="add_time_played"),
+    path('songs/<int:pk>/crop/', views.crop_song, name="crop_song"),
 
     path('playlists/', views.get_playlists, name="get_playlists"),
     path('add_playlist/', views.add_playlist, name="get_playlists"),

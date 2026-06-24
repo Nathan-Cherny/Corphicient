@@ -6,9 +6,10 @@ import { useNotification } from "../layout/notification/NotificationContext";
 export default function EditSong({ song, onSave }) {
   const notify = useNotification();
   const [inputName, setInputName] = useState(song.name);
+  const [cropParams, setCropParams] = useState([null, null]);
 
   function handleSave() {
-    onSave?.(song.id, inputName);
+    onSave?.(song.id, inputName, cropParams);
     notify({ message: `Edited Song ${inputName}!` });
   }
 
@@ -34,11 +35,27 @@ export default function EditSong({ song, onSave }) {
         />
       </div>
 
-      <CropSong />
+      <CropSong cropParams={cropParams} setCropParams={setCropParams} />
     </div>
   );
 }
 
-function CropSong() {
-  return <div>crop</div>;
+function CropSong({ cropParams, setCropParams }) {
+  return (
+    <div className="flex flex-row gap-5">
+      <label htmlFor="name">Crop Song</label>
+      <input
+        name="start"
+        placeholder="start"
+        type="number"
+        onChange={(e) => setCropParams([e.target.value, cropParams[1]])}
+      />
+      <input
+        name="end"
+        placeholder="end"
+        type="number"
+        onChange={(e) => setCropParams([cropParams[0], e.target.value])}
+      />
+    </div>
+  );
 }

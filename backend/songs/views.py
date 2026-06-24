@@ -10,6 +10,7 @@ from .serializer import *
 from .forms import *
 from .download import download_song
 import os
+from .crop import cropSong
 
 # STATIC MEDIA
 
@@ -111,6 +112,20 @@ def update_song(request, pk):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(["PATCH"])
+def crop_song(request, pk):
+    try:
+        print(request.data)
+        song = Song.objects.get(pk=pk)
+        cropSong(song.src, request.data['cropParams'], song.name)
+    except Song.DoesNotExist:
+        return Response(
+            {"error": "Song not found"}, status=status.HTTP_404_NOT_FOUND
+        )
+    
+
+    return Response({"test": song.__getattribute__('src')}, status=status.HTTP_200_OK)
 
 
 # PLAYLISTS

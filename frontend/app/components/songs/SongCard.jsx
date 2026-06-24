@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from "react";
 import * as Song from "./SongFunctions";
 import { Edit, Eraser } from "lucide-react";
 import { useNotification } from "../layout/notification/NotificationContext";
-import EditSong from "./EditSong";
 
 export default function SongCard({
   song,
