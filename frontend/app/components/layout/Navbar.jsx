@@ -15,6 +15,7 @@ import {
   ChevronDown,
   CircleQuestionMark,
   ListIcon,
+  NotebookPenIcon
 } from "lucide-react";
 
 import Link from "next/link";
@@ -28,6 +29,8 @@ export default function Navbar() {
   useEffect(() => {
     let navLinksData = [
       { href: "/music_player", label: "Music Player", icon: Music },
+      { href: "/notes", label: "Notes", icon: NotebookPenIcon},
+      {lineDiv: true},
       {
         href: "http://localhost:8000/admin/",
         label: "Admin",
@@ -177,6 +180,12 @@ function DropdownNavItem({ link, pathname }) {
 }
 
 function getHTMLFromLinkData(link, pathname) {
+  if(link.lineDiv){
+    return (
+      <div className="text-gray-500 text-xl mx-0.5" key="|">|</div>
+    )
+  }
+
   if (link.onClick) {
     return (
       <div
