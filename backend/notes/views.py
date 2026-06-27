@@ -5,19 +5,46 @@ from django.http import FileResponse, HttpResponse
 from django.conf import settings
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from .serializer import *
+from ..songs.forms import FormSerializer
+from rest_framework import generics, status
 
 # Create your views here.
+
 @api_view(["POST"])
-def add_song(request):
+def add_section(request):
     data = request.data
 
-    serializer = SongSerializer(data=data)
+    serializer = SectionSerializer(data=data)
 
     if serializer.is_valid():
 
-        song_data = download_song(data["href"], data["name"])
-        serializer.save(src=song_data["location"], duration=song_data["duration"])
+        serializer.save()
 
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(["GET"])
+def get_section_form(request):
+    serializer = FormSerializer(Note)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
+@api_view(["POST"])
+def add_note(request):
+    data = request.data
+
+    serializer = NoteSerializer(data=data)
+
+    if serializer.is_valid():
+
+        serializer.save()
+
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(["GET"])
+def get_note_form(request):
+    serializer = FormSerializer(Section)
+    return Response(serializer.data, status=status.HTTP_200_OK)
