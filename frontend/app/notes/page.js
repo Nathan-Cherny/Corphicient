@@ -1,6 +1,7 @@
 "use client";
 
 import { PageMain } from "../components/layout/PageMain";
+import Section from "../components/notes/Section";
 
 export default function About() {
   return (
@@ -14,6 +15,8 @@ export default function About() {
         <p>Ex: section for 'passwords' that has all my passwords (OBVIOUSLY DONT UPLOAD THE JSON TO GITHUB LOL)</p>
         <p>allow searching for notes so i can find a password among all my passwords</p>
         <p>this isn't the same as TODO, that's on google calendar because there's dates specifically tied to each todo. this is more of just memory</p>
+      
+        <Section/>
       </div>
     </PageMain>
   );

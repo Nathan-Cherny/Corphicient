@@ -6,7 +6,7 @@ from django.conf import settings
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from .serializer import *
-from ..songs.forms import FormSerializer
+from .forms import FormSerializer
 from rest_framework import generics, status
 
 # Create your views here.
