@@ -1,7 +1,7 @@
 "use client";
 
 import { PageMain } from "../components/layout/PageMain";
-import Section from "../components/notes/Section";
+import Section from "../components/notes/section/Section";
 
 export default function About() {
   return (

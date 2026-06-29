@@ -2,7 +2,7 @@
 
 import axiosClient from "@/app/axiosClient";
 import { useEffect, useState } from "react";
-import Form from "../forms/Forms";
+import Form from "../../forms/Forms";
 
 export default function Section({}) {
   const request = ["get_section_form/", null, "", "GET"];
@@ -22,12 +22,7 @@ export default function Section({}) {
 
   return (
     <div>
-        <Form
-            formType="get_section_form"
-            nonFormFields={[]}
-            submitFunction={() => {console.log("test")}}
-            name={"Add Section"}
-            />
+      <p>test</p> 
     </div>
   )
 }
