@@ -39,6 +39,7 @@ urlpatterns = [
     path('delete_playlist/<int:pk>/', delete_playlist, name="delete_playlist"),
     path("playlists/<int:pk>/update/", update_playlist, name="update_playlist"),
 
+    path("get_sections/", get_sections, name="get_sections"),
     path("get_section_form/", get_section_form, name="get_section_form")
 ]
 

@@ -11,6 +11,13 @@ from rest_framework import generics, status
 
 # Create your views here.
 
+@api_view(["GET"])
+def get_sections(request):
+    queryset = Section.objects.all()
+    serializer = SectionSerializer(queryset, many=True)
+    return Response(serializer.data)
+
+
 @api_view(["POST"])
 def add_section(request):
     data = request.data

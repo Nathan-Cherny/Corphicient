@@ -10,7 +10,7 @@ class NoteSerializer(serializers.ModelSerializer):
 
 
 class SectionSerializer(serializers.ModelSerializer):
-    Notes = serializers.PrimaryKeyRelatedField(many=True, queryset=Note.objects.all())
+    notes = serializers.PrimaryKeyRelatedField(many=True, queryset=Note.objects.all())
     
     class Meta:
         model = Section
@@ -18,12 +18,12 @@ class SectionSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         rep = super().to_representation(instance)
-        rep["notes"] = NoteSerializer(instance.Notes.all(), many=True).data
-        return rep
+        rep["notes"] = NoteSerializer(instance.notes.all(), many=True).data
+        return rep  
 
     def update(self, instance, validated_data):
-        Notes = validated_data.pop("Notes", None)
+        notes = validated_data.pop("notes", None)
         instance = super().update(instance, validated_data)
-        if Notes is not None:
-            instance.Notes.set(Notes)
+        if notes is not None:
+            instance.notes.set(notes)
         return instance

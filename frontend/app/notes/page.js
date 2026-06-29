@@ -2,6 +2,8 @@
 
 import { PageMain } from "../components/layout/PageMain";
 import Section from "../components/notes/section/Section";
+import SectionList from "../components/notes/section/SectionList";
+import SectionSettings from "../components/notes/section/SectionSettings";
 
 export default function About() {
   return (
@@ -16,7 +18,9 @@ export default function About() {
         <p>allow searching for notes so i can find a password among all my passwords</p>
         <p>this isn't the same as TODO, that's on google calendar because there's dates specifically tied to each todo. this is more of just memory</p>
       
+        <SectionList/>
         <Section/>
+        <SectionSettings/>
       </div>
     </PageMain>
   );
