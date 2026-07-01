@@ -34,7 +34,7 @@ def add_section(request):
 
 @api_view(["GET"])
 def get_section_form(request):
-    serializer = FormSerializer(Note)
+    serializer = FormSerializer(Section)
     return Response(serializer.data, status=status.HTTP_200_OK)
 
 @api_view(["POST"])
@@ -53,5 +53,5 @@ def add_note(request):
 
 @api_view(["GET"])
 def get_note_form(request):
-    serializer = FormSerializer(Section)
+    serializer = FormSerializer(Note)
     return Response(serializer.data, status=status.HTTP_200_OK)

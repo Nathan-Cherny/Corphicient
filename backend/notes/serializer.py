@@ -11,15 +11,16 @@ class NoteSerializer(serializers.ModelSerializer):
 
 class SectionSerializer(serializers.ModelSerializer):
     notes = serializers.PrimaryKeyRelatedField(many=True, queryset=Note.objects.all())
-    
+
     class Meta:
         model = Section
         fields = ["id", "name", "notes"]
 
+
     def to_representation(self, instance):
         rep = super().to_representation(instance)
         rep["notes"] = NoteSerializer(instance.notes.all(), many=True).data
-        return rep  
+        return rep
 
     def update(self, instance, validated_data):
         notes = validated_data.pop("notes", None)

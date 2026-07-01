@@ -9,7 +9,7 @@ export default function SectionSettings({}) {
         formType="get_section_form/"
         nonFormFields={["secondsPlayed", "src", "duration"]}
         submitFunction={() => {console.log("test")}}
-        name={"Add Song"}
+        name={"Add Section"}
       />
     </div>
   );
