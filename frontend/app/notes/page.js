@@ -19,7 +19,6 @@ export default function About() {
         <p>this isn't the same as TODO, that's on google calendar because there's dates specifically tied to each todo. this is more of just memory</p>
       
         <SectionList/>
-        <Section/>
         <SectionSettings/>
       </div>
     </PageMain>

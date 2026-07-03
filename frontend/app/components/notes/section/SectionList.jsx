@@ -17,6 +17,8 @@ export default function SectionList({}) {
     allSections();
   }, [request[0]]);
 
+  console.log(sections)
+
   return (
     <div>
       {sections.map((s, i) => (
