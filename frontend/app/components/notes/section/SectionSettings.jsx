@@ -11,6 +11,13 @@ export default function SectionSettings({}) {
         submitFunction={() => {console.log("test")}}
         name={"Add Section"}
       />
+
+      <Form
+        formType="get_note_form/"
+        nonFormFields={[]}
+        submitFunction={() => {console.log("test")}}
+        name={"Add Note"}
+      />
     </div>
   );
 }
