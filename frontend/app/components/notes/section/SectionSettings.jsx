@@ -10,14 +10,14 @@ export default function SectionSettings({}) {
       <Form
         formType="get_section_form/"
         nonFormFields={["secondsPlayed", "src", "duration"]}
-        submitFunction={addNote}
+        submitFunction={addSection}
         name={"Add Section"}
       />
 
       <Form
         formType="get_note_form/"
         nonFormFields={[]}
-        submitFunction={addSection}
+        submitFunction={addNote}
         name={"Add Note"}
       />
     </div>
