@@ -1,6 +1,8 @@
 "use client";
 
 import Form from "../../forms/Forms";
+import { addSection } from "./SectionFunctions";
+import { addNote } from "../notes/NoteFunctions";
 
 export default function SectionSettings({}) {
   return (
@@ -8,14 +10,14 @@ export default function SectionSettings({}) {
       <Form
         formType="get_section_form/"
         nonFormFields={["secondsPlayed", "src", "duration"]}
-        submitFunction={() => {console.log("test")}}
+        submitFunction={addNote}
         name={"Add Section"}
       />
 
       <Form
         formType="get_note_form/"
         nonFormFields={[]}
-        submitFunction={() => {console.log("test")}}
+        submitFunction={addSection}
         name={"Add Note"}
       />
     </div>
