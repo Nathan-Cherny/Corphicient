@@ -40,6 +40,7 @@ urlpatterns = [
     path("playlists/<int:pk>/update/", update_playlist, name="update_playlist"),
 
     path("get_sections/", get_sections, name="get_sections"),
+    path("add_section/", add_section, name="add_section"),
     path("get_section_form/", get_section_form, name="get_section_form"),
 
     path("add_note/", add_note, name="add_note"),
