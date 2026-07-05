@@ -9,10 +9,13 @@ export default function About() {
   return (
     <PageMain>
       <div className="m-20 flex flex-col gap-5 text-center justify-center w-1/3">
-        <h1 className="text-6xl">Notes</h1>
+      
+        <div className="flex flex-row justify-center gap-5">
+          <h1 className="text-6xl">Notes</h1>
+          <SectionSettings/>
+        </div>
       
         <SectionList/>
-        <SectionSettings/>
       </div>
     </PageMain>
   );
