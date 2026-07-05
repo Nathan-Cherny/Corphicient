@@ -55,3 +55,13 @@ def add_note(request):
 def get_note_form(request):
     serializer = FormSerializer(Note)
     return Response(serializer.data, status=status.HTTP_200_OK)
+
+@api_view(["DELETE"])
+def delete_note(request, pk):
+    try:
+        note = Note.objects.get(pk=pk)
+    except Note.DoesNotExist:
+        return Response({"error": "Note not found"}, status=status.HTTP_404_NOT_FOUND)
+
+    note.delete()
+    return Response(status=status.HTTP_204_NO_CONTENT)
