@@ -264,8 +264,8 @@ function GetAllCommits() {
         {datesInBetween.map((d) => (
           <div key={d} className="group relative inline-block">
             <div
-              className="w-full h-25 text-white flex text-center flex-col items-center justify-center border"
-              style={{ backgroundColor: getGreenForNumber(allCommits[d]) }}
+              className="w-full h-25 flex text-center flex-col items-center justify-center border border-white"
+              style={{ backgroundColor: `rgb(0, ${getGreenForNumber(allCommits[d])}, 0)`, color: (getGreenForNumber(allCommits[d]) > 150) ? "black" : "white"}}
             >
               <h2>{d}</h2>
               <p>{allCommits[d]?.length || 0}</p>
@@ -305,5 +305,7 @@ function getDatesInRange(startDate, endDate) {
 
 function getGreenForNumber(number) {
   number = !number ? 0 : number.length;
-  return `rgb(0, ${number * 20}, 0)`;
+  let boost = (number > 0) ? 2 : 0
+  let green = (boost * number) * 20
+  return green
 }
