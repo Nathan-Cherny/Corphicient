@@ -38,6 +38,24 @@ def get_section_form(request):
     return Response(serializer.data, status=status.HTTP_200_OK)
 
 @api_view(["POST"])
+def add_note_to_section(request, pk):
+    try:
+        section = Section.objects.get(pk=pk)
+    except Section.DoesNotExist:
+        return Response({"error": "Section not found"}, status=status.HTTP_404_NOT_FOUND)
+
+    serializer = NoteSerializer(data=request.data)
+
+    if serializer.is_valid():
+        note = serializer.save()
+        section.notes.add(note)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    
+
+@api_view(["POST"])
 def add_note(request):
     data = request.data
 
