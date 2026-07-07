@@ -59,6 +59,7 @@ function parseField(field) {
       <>
         <label htmlFor={field.name}>{field.name}</label>
         <select
+          defaultValue={[]}
           multiple
           required={field.required}
           className="border mx-5"

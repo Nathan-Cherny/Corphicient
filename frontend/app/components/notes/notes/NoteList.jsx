@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import Note from "./Note";
 
 export default function NoteList({ notes }) {
-  console.log(notes);
 
   return (<div>
     {notes.map((n, i) => (

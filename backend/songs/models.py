@@ -13,7 +13,7 @@ class Song(models.Model):
     
 class Playlist(models.Model):
     name = models.CharField(max_length=100)
-    songs = models.ManyToManyField(Song, blank=True)
+    songs = models.ManyToManyField(Song, blank=True, null=True)
 
     def __str__(self):
         return self.name
