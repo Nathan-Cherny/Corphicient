@@ -10,7 +10,7 @@ class SongSerializer(serializers.ModelSerializer):
 
 
 class PlaylistSerializer(serializers.ModelSerializer):
-    songs = serializers.PrimaryKeyRelatedField(many=True, queryset=Song.objects.all())
+    songs = serializers.PrimaryKeyRelatedField(many=True, queryset=Song.objects.all(), required=False)
     
     class Meta:
         model = Playlist

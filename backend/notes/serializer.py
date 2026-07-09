@@ -10,7 +10,7 @@ class NoteSerializer(serializers.ModelSerializer):
 
 
 class SectionSerializer(serializers.ModelSerializer):
-    notes = serializers.PrimaryKeyRelatedField(many=True, queryset=Note.objects.all())
+    notes = serializers.PrimaryKeyRelatedField(many=True, queryset=Note.objects.all(), required=False)
 
     class Meta:
         model = Section
