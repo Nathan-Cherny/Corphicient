@@ -9,7 +9,7 @@ class Note(models.Model):
     
 class Section(models.Model):
     name = models.CharField(max_length=100)
-    notes = models.ManyToManyField(Note, blank=True, null=True)
+    notes = models.ManyToManyField(Note, blank=True)
 
     def __str__(self):
         return self.name
