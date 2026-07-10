@@ -37,16 +37,18 @@ export default function Form({
       <h1 className="text-center text-xl">{name}</h1>
       <form
         onSubmit={(e) => submitFunction(e)}
-        className="flex items-center flex-col"
+        className=""
       >
-        {form_data.fields?.map((field) => {
-          return (
-            <div key={field.name} className="p-2 m-2">
-              {parseField(field)}
-            </div>
-          );
-        })}
-        {children}
+        <div className="grid grid-cols-2">
+          {form_data.fields?.map((field) => {
+            return (
+              <div key={field.name} className="p-2 m-2 flex flex-col">
+                {parseField(field)}
+              </div>
+            );
+          })}
+          {children}
+        </div>
         <input type="submit" value={"Submit"} />
       </form>
     </div>
@@ -72,6 +74,21 @@ function parseField(field) {
             </option>
           ))}
         </select>
+      </>
+    );
+  }
+
+  if (field.max_length >= 750) {
+    return (
+      <>
+        <label htmlFor={field.name}>{field.name}</label>
+        <textarea
+          required={field.required}
+          className="border mx-5"
+          id={field.name}
+          type={field.type}
+          name={field.name}
+        />
       </>
     );
   }

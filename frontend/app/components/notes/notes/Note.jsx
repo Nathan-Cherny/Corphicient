@@ -18,7 +18,7 @@ export default function Note({ note }) {
       </button>
       
         <h1 className="text-lg underline mb-1">{note.name}</h1>
-        <p>{note.note}</p>
+        <p className="whitespace-pre-line">{note.note}</p>
     </div>
   )
 }

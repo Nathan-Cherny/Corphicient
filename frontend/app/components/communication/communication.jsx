@@ -5,6 +5,7 @@ import axiosClient from "@/app/axiosClient";
 export async function addModel(e, model){
     e.preventDefault()
     let payload = new FormData(e.target)
+    console.log(JSON.stringify(payload))
     let response = await axiosClient(`add_${model}/`, payload, null, "POST");
     return response
 }

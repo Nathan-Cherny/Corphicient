@@ -32,7 +32,7 @@ function SectionSettingsMenu({}) {
   <div className="p-5 bg-white">
     <Form
       formType="get_section_form/"
-      nonFormFields={["secondsPlayed", "src", "duration"]}
+      nonFormFields={[]}
       submitFunction={addSection}
       name={"Add Section"}
     />
