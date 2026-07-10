@@ -4,9 +4,12 @@ import { useEffect, useState } from "react";
 import * as NoteFns from "./NoteFunctions";
 
 export default function Note({ note }) {
-
   return (
-    <div className="bg-black/25 p-5 relative">
+    <form className="bg-black/25 p-5 relative" id={`${note.id}-form`} onSubmit={(e) => {
+      console.log('test')
+      e.def
+      NoteFns.updateNote(e, note.id)
+    }}>
       <button
         onClick={(e) => {
           e.stopPropagation();
@@ -16,9 +19,18 @@ export default function Note({ note }) {
       >
         X
       </button>
-      
-        <h1 className="text-lg underline mb-1">{note.name}</h1>
-        <p className="whitespace-pre-line">{note.note}</p>
-    </div>
-  )
+
+      <h1 className="text-lg underline mb-1">{note.name}</h1>
+      <textarea
+        name="note"
+        defaultValue={note.note}
+        onKeyDown={(e) => {
+          if(e.key == "Enter" && !e.shiftKey){
+            document.getElementById(`${note.id}-form`).submit()
+          }
+        }}
+        className="field-sizing-content w-full bg-black/5 p-5"
+      />
+    </form>
+  );
 }

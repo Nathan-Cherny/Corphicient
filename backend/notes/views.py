@@ -83,3 +83,20 @@ def delete_note(request, pk):
 
     note.delete()
     return Response(status=status.HTTP_204_NO_CONTENT)
+
+@api_view(["PATCH"])
+def update_note(request, pk):
+    try:
+        note = Note.objects.get(pk=pk)
+    except Note.DoesNotExist:
+        return Response(
+            {"error": "Note not found"}, status=status.HTTP_404_NOT_FOUND
+        )
+
+    serializer = NoteSerializer(note, data=request.data, partial=True)
+
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

@@ -47,6 +47,7 @@ urlpatterns = [
     path("add_note/", add_note, name="add_note"),
     path("get_note_form/", get_note_form, name="get_note_form"),
     path("delete_note/<int:pk>/", delete_note, name="delete_note"),
+    path("note/<int:pk>/update/", update_note, name="update_note"),
 
 ]
 
