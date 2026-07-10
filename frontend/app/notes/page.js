@@ -12,6 +12,8 @@ export default function About() {
       
         <div className="flex flex-row justify-center gap-5">
           <h1 className="text-6xl">Notes</h1>
+          <p>test</p>
+          <h1>test</h1>
           <SectionSettings/>
         </div>
       
