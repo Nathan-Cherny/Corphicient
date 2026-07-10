@@ -261,14 +261,14 @@ function GetAllCommits() {
   let percentage = daysWithAtLeast1Commit / totalDays
 
   return (
-    <div className="bg-white flex flex-col p-2 justify-center text-center rounded-2xl">
+    <div className="bg-white flex flex-col p-2 justify-center text-center rounded-2xl max-h-100">
       <h1 className="text-4xl">All Commits</h1>
       <div className="flex flex-row text-sm justify-center gap-5">
         <p><b>{daysWithAtLeast1Commit}</b> days with at least 1 commit out of <b>{totalDays}</b> Total Days</p>
         <p><b>~{(Math.round(percentage * 100))}%</b> Of Days Committed</p>
       </div>
-      <div className="grid grid-cols-7">
-        {datesInBetween.map((d) => (
+      <div className="grid grid-cols-7 overflow-y-scroll">
+        {datesInBetween.reverse().map((d) => (
           <div key={d} className="group relative inline-block">
             <div
               className="w-full h-25 flex text-center flex-col items-center justify-center border border-white"
