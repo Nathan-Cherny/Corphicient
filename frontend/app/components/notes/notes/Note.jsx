@@ -6,8 +6,6 @@ import * as NoteFns from "./NoteFunctions";
 export default function Note({ note }) {
   return (
     <form className="bg-black/25 p-5 relative" id={`${note.id}-form`} onSubmit={(e) => {
-      console.log('test')
-      e.def
       NoteFns.updateNote(e, note.id)
     }}>
       <button
@@ -26,7 +24,8 @@ export default function Note({ note }) {
         defaultValue={note.note}
         onKeyDown={(e) => {
           if(e.key == "Enter" && !e.shiftKey){
-            document.getElementById(`${note.id}-form`).submit()
+            e.preventDefault()
+            e.currentTarget.form?.requestSubmit()
           }
         }}
         className="field-sizing-content w-full bg-black/5 p-5"

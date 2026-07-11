@@ -19,9 +19,9 @@ export function updateNote(e, id) {
 
     let response = await axiosClient(
       `note/${id}/update/`,
-      new FormData(note),
+      new FormData(e.currentTarget),
       null,
-      "PUT",
+      "PATCH",
     );
     return response;
   }
