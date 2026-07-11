@@ -2,11 +2,15 @@
 
 import { useEffect, useState } from "react";
 import * as NoteFns from "./NoteFunctions";
+import { useNotification } from "../../layout/notification/NotificationContext";
 
 export default function Note({ note }) {
+  const notify = useNotification();
+
   return (
     <form className="bg-black/25 p-5 relative" id={`${note.id}-form`} onSubmit={(e) => {
-      NoteFns.updateNote(e, note.id)
+      var res = NoteFns.updateNote(e, note.id)
+      notify({message: `Updated Note '${note.name}'`})
     }}>
       <button
         onClick={(e) => {

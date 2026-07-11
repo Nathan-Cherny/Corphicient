@@ -12,7 +12,6 @@ export function deleteNote(id) {
 }
 
 export function updateNote(e, id) {
-    console.log(e.target)
 
   async function sectionAddNote() {
     e.preventDefault();
