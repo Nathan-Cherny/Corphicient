@@ -4,17 +4,19 @@ import { useEffect, useState } from "react";
 import NoteList from "../notes/NoteList";
 import FadeOverlay from "../../layout/FadeOverlay";
 import Form from "../../forms/Forms";
+import { useNotification } from "../../layout/notification/NotificationContext";
 import { addNoteToSection } from "../notes/NoteFunctions";
 
 import { PlusIcon } from "lucide-react";
 
 export default function Section({ section }) {
   const [addNoteMenuOpen, setAddNoteMenuOpen] = useState(false);
+  const notify = useNotification();  
 
   if (!section) section = {};
 
   return (
-    <div className="bg-white/50 p-5 relative">
+    <div className="bg-white/50 p-5 h-full border relative">
       <FadeOverlay
         isOpen={addNoteMenuOpen}
         onClose={() => setAddNoteMenuOpen(false)}
@@ -23,7 +25,7 @@ export default function Section({ section }) {
           <Form
             formType="get_note_form/"
             nonFormFields={[]}
-            submitFunction={(e) => addNoteToSection(e, section.id)}
+            submitFunction={(e) => {addNoteToSection(e, section.id); notify({message: `Added Note`})}}
             name={`Add Note To ${section.name}`}
           />
         </div>

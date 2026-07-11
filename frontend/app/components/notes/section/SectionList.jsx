@@ -18,9 +18,9 @@ export default function SectionList({}) {
   }, [request[0]]);
 
   return (
-    <div>
+    <div className="grid grid-cols-2">
       {sections.map((s, i) => (
-        <div key={i}>
+        <div className="w-full h-full" key={i}>
           <Section section={s}/>
         </div>
       ))}
