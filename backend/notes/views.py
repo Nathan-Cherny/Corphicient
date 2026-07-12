@@ -53,6 +53,16 @@ def add_note_to_section(request, pk):
 
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+@api_view(["DELETE"])
+def delete_section(request, pk):
+    try:
+        section = Section.objects.get(pk=pk)
+    except Section.DoesNotExist:
+        return Response({"error": "Section not found"}, status=status.HTTP_404_NOT_FOUND)
+
+    section.delete()
+    return Response(status=status.HTTP_204_NO_CONTENT)
+
     
 
 @api_view(["POST"])

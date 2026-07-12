@@ -43,6 +43,7 @@ urlpatterns = [
     path("add_section/", add_section, name="add_section"),
     path("get_section_form/", get_section_form, name="get_section_form"),
     path("section/<int:pk>/add_note/", add_note_to_section, name="add_note_to_section"),
+    path("delete_section/<int:pk>/", delete_section, name="delete_section"),
 
     path("add_note/", add_note, name="add_note"),
     path("get_note_form/", get_note_form, name="get_note_form"),
