@@ -25,37 +25,47 @@ export default function EditSong({ song, onSave }) {
         Save changes
       </button>
 
-      <div className="flex flex-row gap-5">
-        <label htmlFor="name">Change Name</label>
-        <input
-          name="name"
-          type="text"
-          onChange={(e) => setInputName(e.target.value)}
-          value={inputName}
+      <div className="flex flex-col gap-10">
+        <div className="flex flex-col gap-3">
+          <label htmlFor="name">Change Name</label>
+          <input
+            name="name"
+            type="text"
+            onChange={(e) => setInputName(e.target.value)}
+            value={inputName}
+          />
+        </div>
+
+        <CropSong
+          cropParams={cropParams}
+          setCropParams={setCropParams}
+          src={song.src}
         />
       </div>
 
-      <CropSong cropParams={cropParams} setCropParams={setCropParams} />
     </div>
   );
 }
 
-function CropSong({ cropParams, setCropParams }) {
+function CropSong({ cropParams, setCropParams, src }) {
   return (
-    <div className="flex flex-row gap-5">
+    <div className="flex flex-col gap-3">
       <label htmlFor="name">Crop Song</label>
-      <input
-        name="start"
-        placeholder="start"
-        type="number"
-        onChange={(e) => setCropParams([e.target.value, cropParams[1]])}
-      />
-      <input
-        name="end"
-        placeholder="end"
-        type="number"
-        onChange={(e) => setCropParams([cropParams[0], e.target.value])}
-      />
+      <audio className="w-full" src={`http://localhost:8000/${src}`} controls></audio>
+      <div className="flex flex-row">
+        <input
+          name="start"
+          placeholder="start"
+          type="number"
+          onChange={(e) => setCropParams([e.target.value, cropParams[1]])}
+        />
+        <input
+          name="end"
+          placeholder="end"
+          type="number"
+          onChange={(e) => setCropParams([cropParams[0], e.target.value])}
+        />
+      </div>
     </div>
   );
 }
