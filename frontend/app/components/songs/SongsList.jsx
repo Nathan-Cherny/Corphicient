@@ -63,32 +63,22 @@ export default function SongsList({
     };
   }, [currentAudioRef.current, currentSong]);
 
+    const hotkeysMap = {
+      "s": (e, audio) => {playNextSong()},
+      "0": (e, audio) => {audio.currentTime = 0},
+      "ArrowRight": (e, audio) => {audio.currentTime += timeSkip},
+      "ArrowLeft": (e, audio) => {audio.currentTime -= timeSkip},
+      "l": (e, audio) => {if (audio.loop) audio.loop = false; else audio.loop = true},
+      " ": (e, audio) => {e.preventDefault(); togglePause(audio, notify)},
+    }
+
   useEffect(() => {
     const handleKeyDown = (e) => {
       if (!currentSong) return;
       let audio = currentAudioRef.current;
-      switch (e.key) {
-        case "s":
-          playNextSong();
-          break;
-        case "0":
-          audio.currentTime = 0;
-          break;
-        case "ArrowRight":
-          audio.currentTime += timeSkip;
-          break;
-        case "ArrowLeft":
-          audio.currentTime -= timeSkip;
-          break;
-        case "l":
-          if (audio.loop) audio.loop = false;
-          else audio.loop = true;
-          break;
-        case " ":
-          e.preventDefault();
-          togglePause(audio, notify);
-          break;
-      }
+      let key = e.key
+
+      if (key in hotkeysMap) hotkeysMap[key](e, audio) 
     };
 
     window.addEventListener("keydown", handleKeyDown);
@@ -97,6 +87,11 @@ export default function SongsList({
 
   return (
     <div className="flex flex-wrap flex-col justify-center gap-7 ">
+      <div className="flex flex-row gap-5">
+        {Object.keys(hotkeysMap).map((key) => (
+          <div className="p-5 border" key={key}>{key}</div>
+        ))}
+      </div>
       <FadeOverlay isOpen={songToEdit} onClose={() => setSongToEdit(null)}>
         <EditSong
           song={songToEdit}
