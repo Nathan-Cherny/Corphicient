@@ -14,7 +14,7 @@ class SectionSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Section
-        fields = ["id", "name", "notes"]
+        fields = ["id", "name", "notes", "color"]
 
 
     def to_representation(self, instance):

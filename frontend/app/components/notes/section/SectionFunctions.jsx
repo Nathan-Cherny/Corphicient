@@ -10,3 +10,20 @@ export function addSection(e){
 export function deleteSection(id){
     return deleteModel(id, "section")
 }
+
+export function updateSection(e, id) {
+
+  async function sectionUpdate() {
+    e.preventDefault();
+
+    let response = await axiosClient(
+      `section/${id}/update/`,
+      new FormData(e.currentTarget),
+      null,
+      "PATCH",
+    );
+    return response;
+  }
+
+  return sectionUpdate();
+}

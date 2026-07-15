@@ -19,7 +19,7 @@ export default function Section({ section }) {
   if (!section) section = {};
 
   return (
-    <div className="bg-white/50 p-5 h-full border relative">
+    <div className={`bg-[${section.color}] p-5 h-full border relative`}>
       <FadeOverlay
         isOpen={addNoteMenuOpen}
         onClose={() => setAddNoteMenuOpen(false)}
@@ -42,9 +42,17 @@ export default function Section({ section }) {
         onClose={() => setColorMenuOpen(false)}
       >
         <div className="bg-white p-5 flex flex-col items-center">
-          <h1>Set Color For Section</h1>
-          <input defaultValue={"red"} className="w-20 h-10" type="color"/>
-          <input type="submit" value={"Submit"} />
+          <form onSubmit={(e) => {
+            e.preventDefault()
+            SectionFns.updateSection(e, section.id)
+          }}>
+            <h1 className="text-xl">Set Color For Section</h1>
+            <div className="flex flex-row gap-5 items-center">
+              <input name="color" defaultValue={section.color} className="w-20 h-10" type="color" onChange={(e) => {document.getElementById("colorLabel").innerHTML = e.target.value}}/>
+              <p id="colorLabel">{section.color}</p>
+            </div>
+            <input type="submit" value={"Submit"} />
+          </form>
         </div>
       </FadeOverlay>
 
