@@ -9,10 +9,11 @@ import { addNoteToSection } from "../notes/NoteFunctions";
 
 import * as SectionFns from "./SectionFunctions";
 
-import { PlusIcon } from "lucide-react";
+import { Palette, PlusIcon } from "lucide-react";
 
 export default function Section({ section }) {
   const [addNoteMenuOpen, setAddNoteMenuOpen] = useState(false);
+  const [colorMenuOpen, setColorMenuOpen] = useState(false);
   const notify = useNotification();
 
   if (!section) section = {};
@@ -36,6 +37,17 @@ export default function Section({ section }) {
         </div>
       </FadeOverlay>
 
+      <FadeOverlay
+        isOpen={colorMenuOpen}
+        onClose={() => setColorMenuOpen(false)}
+      >
+        <div className="bg-white p-5 flex flex-col items-center">
+          <h1>Set Color For Section</h1>
+          <input defaultValue={"red"} className="w-20 h-10" type="color"/>
+          <input type="submit" value={"Submit"} />
+        </div>
+      </FadeOverlay>
+
       <button
         onClick={(e) => {
           setAddNoteMenuOpen(true);
@@ -44,6 +56,7 @@ export default function Section({ section }) {
       >
         <PlusIcon />
       </button>
+
       <button
         type="button"
         onClick={(e) => {
@@ -55,6 +68,15 @@ export default function Section({ section }) {
         className="absolute top-2 right-10 bg-red-500 text-white w-6 h-6 flex items-center justify-center hover:scale-110 hover:cursor-pointer transition-all duration-200"
       >
         X
+      </button>
+
+      <button
+        onClick={(e) => {
+          setColorMenuOpen(true);
+        }}
+        className="absolute top-2 right-18 bg-green-500 text-white w-6 h-6 p-0.5 flex items-center justify-center hover:scale-110 hover:cursor-pointer transition-all duration-200"
+      >
+        <Palette />
       </button>
 
       <h1 className="text-3xl mb-5">{section.name}</h1>

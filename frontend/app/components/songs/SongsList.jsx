@@ -10,7 +10,7 @@ import { useNotification } from "../layout/notification/NotificationContext";
 import FadeOverlay from "../layout/FadeOverlay";
 import EditSong from "./EditSong";
 
-import { PauseCircle, PlayCircle } from "lucide-react";
+import { PauseCircle, PlayCircle, Palette } from "lucide-react";
 
 /**
  * The part of the Playlist that displays Songs. Manages going from song to song and such
