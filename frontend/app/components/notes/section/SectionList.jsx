@@ -15,7 +15,7 @@ export default function SectionList({}) {
     }
 
     allSections();
-  }, [request[0]]);
+  }, [sections]);
 
   return (
     <div className="grid grid-cols-2 gap-5">

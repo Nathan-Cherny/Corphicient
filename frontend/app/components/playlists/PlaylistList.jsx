@@ -28,7 +28,7 @@ export default function PlaylistList({}) {
     }
 
     allPlaylists();
-  }, [request[0]]);
+  }, []);
 
   useEffect(() => {
     let date = new Date()
