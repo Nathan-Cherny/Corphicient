@@ -9,7 +9,7 @@ export default function Note({ note }) {
 
   return (
     <form
-      className="bg-black/25 p-5 relative"
+      className="bg-white/25 p-5 relative border mt-5"
       id={`${note.id}-form`}
       onSubmit={(e) => {
         var res = NoteFns.updateNote(e, note.id);
@@ -48,7 +48,7 @@ export default function Note({ note }) {
             e.currentTarget.form?.requestSubmit();
           }
         }}
-        className="field-sizing-content w-full bg-black/5 p-5"
+        className="field-sizing-content w-full border-black border-t  p-5"
       />
     </form>
   );
