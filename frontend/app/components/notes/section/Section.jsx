@@ -9,10 +9,11 @@ import { addNoteToSection } from "../notes/NoteFunctions";
 
 import * as SectionFns from "./SectionFunctions";
 
-import { Palette, PlusIcon } from "lucide-react";
+import { Palette, PlusIcon, ChevronDown, ChevronUp } from "lucide-react";
 
 export default function Section({ section }) {
   const [addNoteMenuOpen, setAddNoteMenuOpen] = useState(false);
+  const [collapsed, setCollapsed] = useState(false)
   const [colorMenuOpen, setColorMenuOpen] = useState(false);
   const notify = useNotification();
 
@@ -87,8 +88,19 @@ export default function Section({ section }) {
         <Palette />
       </button>
 
+      <button
+        onClick={(e) => {
+          setCollapsed(!collapsed);
+          console.log(collapsed)
+        }}
+        className="absolute top-2 right-26 border border-black bg-orange-500 text-white w-6 h-6 p-0.5 flex items-center justify-center hover:scale-110 hover:cursor-pointer transition-all duration-200"
+      >
+        {collapsed ? <ChevronUp/> : <ChevronDown/>}
+      </button>
+
       <h1 className="text-3xl mb-5">{section.name}</h1>
-      <NoteList notes={section.notes}></NoteList>
+
+      { collapsed && <NoteList notes={section.notes}></NoteList> }
     </div>
   );
 }
