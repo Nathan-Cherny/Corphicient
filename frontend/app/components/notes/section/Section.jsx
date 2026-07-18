@@ -13,14 +13,21 @@ import { Palette, PlusIcon, ChevronDown, ChevronUp } from "lucide-react";
 
 export default function Section({ section }) {
   const [addNoteMenuOpen, setAddNoteMenuOpen] = useState(false);
-  const [collapsed, setCollapsed] = useState(false)
+  const [collapsed, setCollapsed] = useState(false);
   const [colorMenuOpen, setColorMenuOpen] = useState(false);
   const notify = useNotification();
 
   if (!section) section = {};
 
   return (
-    <div style={{backgroundColor: section.color}} className={`p-5 shadow-2xl rounded-2xl h-full border relative`}>
+    <div
+      style={{ backgroundColor: section.color }}
+      onClick={(e) => {
+        if(!e.ctrlKey) return
+        setCollapsed(!collapsed);
+      }}
+      className={`p-5 shadow-2xl rounded-2xl h-full border relative cursor-pointer`}
+    >
       <FadeOverlay
         isOpen={addNoteMenuOpen}
         onClose={() => setAddNoteMenuOpen(false)}
@@ -43,13 +50,25 @@ export default function Section({ section }) {
         onClose={() => setColorMenuOpen(false)}
       >
         <div className="bg-white p-5 flex flex-col items-center">
-          <form onSubmit={(e) => {
-            e.preventDefault()
-            SectionFns.updateSection(e, section.id)
-          }}>
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              e.stopPropagation()
+              SectionFns.updateSection(e, section.id);
+            }}
+          >
             <h1 className="text-xl">Set Color For Section</h1>
             <div className="flex flex-row gap-5 items-center">
-              <input name="color" defaultValue={section.color} className="w-20 h-10" type="color" onChange={(e) => {document.getElementById("colorLabel").innerHTML = e.target.value}}/>
+              <input
+                name="color"
+                defaultValue={section.color}
+                className="w-20 h-10"
+                type="color"
+                onChange={(e) => {
+                  document.getElementById("colorLabel").innerHTML =
+                    e.target.value;
+                }}
+              />
               <p id="colorLabel">{section.color}</p>
             </div>
             <input type="submit" value={"Submit"} />
@@ -59,6 +78,8 @@ export default function Section({ section }) {
 
       <button
         onClick={(e) => {
+          e.preventDefault()
+          e.stopPropagation()
           setAddNoteMenuOpen(true);
         }}
         className="absolute top-2 right-2 border border-black bg-blue-500 text-white w-6 h-6 flex items-center justify-center hover:scale-110 hover:cursor-pointer transition-all duration-200"
@@ -70,7 +91,7 @@ export default function Section({ section }) {
         type="button"
         onClick={(e) => {
           e.stopPropagation();
-          if (!confirm(`Delete Section ${section.name}?`)) return
+          if (!confirm(`Delete Section ${section.name}?`)) return;
           SectionFns.deleteSection(section.id);
           notify({ message: `Deleted Section` });
         }}
@@ -82,25 +103,16 @@ export default function Section({ section }) {
       <button
         onClick={(e) => {
           setColorMenuOpen(true);
+          e.stopPropagation()
         }}
         className="absolute top-2 right-18 border border-black bg-green-500 text-white w-6 h-6 p-0.5 flex items-center justify-center hover:scale-110 hover:cursor-pointer transition-all duration-200"
       >
         <Palette />
       </button>
 
-      <button
-        onClick={(e) => {
-          setCollapsed(!collapsed);
-          console.log(collapsed)
-        }}
-        className="absolute top-2 right-26 border border-black bg-orange-500 text-white w-6 h-6 p-0.5 flex items-center justify-center hover:scale-110 hover:cursor-pointer transition-all duration-200"
-      >
-        {collapsed ? <ChevronUp/> : <ChevronDown/>}
-      </button>
-
       <h1 className="text-3xl mb-5">{section.name}</h1>
 
-      { collapsed && <NoteList notes={section.notes}></NoteList> }
+      {collapsed && <NoteList notes={section.notes}></NoteList>}
     </div>
   );
 }

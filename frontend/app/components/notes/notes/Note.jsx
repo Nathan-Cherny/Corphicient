@@ -11,6 +11,7 @@ export default function Note({ note }) {
     <form
       className="bg-white/25 p-5 relative border mt-5"
       id={`${note.id}-form`}
+      onClick={(e) => {e.preventDefault(); e.stopPropagation();}}
       onSubmit={(e) => {
         var res = NoteFns.updateNote(e, note.id);
         notify({ message: `Updated Note '${note.name}'` });
