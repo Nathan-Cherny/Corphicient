@@ -11,7 +11,7 @@ import * as SectionFns from "./SectionFunctions";
 
 import { Palette, PlusIcon, ChevronDown, ChevronUp } from "lucide-react";
 
-export default function Section({ section }) {
+export default function Section({ section, setUpdate }) {
   const [addNoteMenuOpen, setAddNoteMenuOpen] = useState(false);
   const [collapsed, setCollapsed] = useState(false);
   const [colorMenuOpen, setColorMenuOpen] = useState(false);
@@ -39,6 +39,7 @@ export default function Section({ section }) {
             submitFunction={(e) => {
               addNoteToSection(e, section.id);
               notify({ message: `Added Note` });
+              setUpdate(prev => prev+1)
             }}
             name={`Add Note To ${section.name}`}
           />
@@ -55,6 +56,7 @@ export default function Section({ section }) {
               e.preventDefault();
               e.stopPropagation()
               SectionFns.updateSection(e, section.id);
+              setUpdate(prev => prev+1)
             }}
           >
             <h1 className="text-xl">Set Color For Section</h1>
@@ -75,7 +77,7 @@ export default function Section({ section }) {
           </form>
         </div>
       </FadeOverlay>
-
+      
       <button
         onClick={(e) => {
           e.preventDefault()
@@ -93,6 +95,7 @@ export default function Section({ section }) {
           e.stopPropagation();
           if (!confirm(`Delete Section ${section.name}?`)) return;
           SectionFns.deleteSection(section.id);
+          setUpdate(prev => prev+1)
           notify({ message: `Deleted Section` });
         }}
         className="absolute top-2 right-10 border border-black bg-red-500 text-white w-6 h-6 flex items-center justify-center hover:scale-110 hover:cursor-pointer transition-all duration-200"
@@ -113,7 +116,6 @@ export default function Section({ section }) {
       <button
         onClick={(e) => {
           setCollapsed(!collapsed);
-          console.log(collapsed)
         }}
         className="absolute top-2 right-26 border border-black bg-orange-500 text-white w-6 h-6 p-0.5 flex items-center justify-center hover:scale-110 hover:cursor-pointer transition-all duration-200"
       >
