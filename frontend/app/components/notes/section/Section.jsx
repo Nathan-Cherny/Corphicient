@@ -110,6 +110,16 @@ export default function Section({ section }) {
         <Palette />
       </button>
 
+      <button
+        onClick={(e) => {
+          setCollapsed(!collapsed);
+          console.log(collapsed)
+        }}
+        className="absolute top-2 right-26 border border-black bg-orange-500 text-white w-6 h-6 p-0.5 flex items-center justify-center hover:scale-110 hover:cursor-pointer transition-all duration-200"
+      >
+        {collapsed ? <ChevronUp/> : <ChevronDown/>}
+      </button>
+
       <h1 className="text-3xl mb-5">{section.name}</h1>
 
       {collapsed && <NoteList notes={section.notes}></NoteList>}
