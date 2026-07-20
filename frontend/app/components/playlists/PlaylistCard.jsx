@@ -16,6 +16,7 @@ export default function PlaylistCard({
   currentSong,
   setCurrentSong,
   settings,
+  setUpdate
 }) {
   const [showEdit, setShowEdit] = useState(false);
   const songsListRef = useRef(null);
@@ -42,6 +43,7 @@ export default function PlaylistCard({
         <FadeOverlay isOpen={showEdit} onClose={() => setShowEdit(false)}>
           <EditPlaylist
             onSave={async (selected, name) => {
+              setUpdate(prev => prev+1)
               await Playlist.patchPlaylist(playlist.id, selected, name);
             }}
             playlist={playlist}
@@ -91,6 +93,7 @@ export default function PlaylistCard({
                 setCurrentSong={setCurrentSong}
                 songs={playlist.songs}
                 settings={settings}
+                setUpdate={setUpdate}
               />
             </div>
           </div>

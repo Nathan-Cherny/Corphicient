@@ -2,7 +2,7 @@
 
 // imports from next
 import axiosClient from "../../axiosClient";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useSyncExternalStore } from "react";
 import PlaylistCard from "./PlaylistCard";
 import PlaylistListSettings from "./PlaylistListSettings";
 
@@ -15,6 +15,8 @@ export default function PlaylistList({}) {
   const [prevCurrentSong, setPrevCurrentSong] = useState(null)
   const [currentSongDate, setCurrentSongDate] = useState(null)
 
+  const [update, setUpdate] = useState(0)
+
   const [settings, setSettings] = useState({
     "timeSkip": 5
   })
@@ -24,11 +26,13 @@ export default function PlaylistList({}) {
   useEffect(() => {
     async function allPlaylists() {
       const res = await axiosClient(...request);
-      setPlaylists(res || []);
+
+      setPlaylists(structuredClone(res || []));
     }
 
     allPlaylists();
-  }, []);
+  }, [update]);
+
 
   useEffect(() => {
     let date = new Date()
@@ -40,6 +44,7 @@ export default function PlaylistList({}) {
     setCurrentSongDate(new Date())
     setPrevCurrentSong(currentSong)
 
+    setUpdate(prev => prev+1)
     document.title = currentSong && !anom ? `${currentSong.name} | ${activePlaylist.name} | Corphicient` : "Corphicient"
   }, [currentSong]);
 
@@ -53,7 +58,7 @@ export default function PlaylistList({}) {
       </div>
 
       {activePlaylist && (
-        <PlaylistCard playlist={activePlaylist} currentSong={currentSong} setCurrentSong={setCurrentSong} settings={settings}/>
+        <PlaylistCard playlist={activePlaylist} currentSong={currentSong} setCurrentSong={setCurrentSong} settings={settings} setUpdate={setUpdate} />
       )}
     </div>
   );

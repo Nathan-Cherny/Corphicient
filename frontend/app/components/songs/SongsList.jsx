@@ -20,6 +20,7 @@ export default function SongsList({
   currentSong,
   setCurrentSong,
   settings,
+  setUpdate
 }) {
   const currentAudioRef = useRef(null);
   const timeSkip = settings?.timeSkip || 5;
