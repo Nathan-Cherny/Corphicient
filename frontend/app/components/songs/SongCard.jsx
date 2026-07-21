@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import * as Song from "./SongFunctions";
 import { Edit, Eraser } from "lucide-react";
 import { useNotification } from "../layout/notification/NotificationContext";
+import { getRandomColor } from "../visual/colors";
 
 export default function SongCard({
   song,
@@ -13,6 +14,8 @@ export default function SongCard({
 }) {
   const audioRef = useRef(null);
   const notify = useNotification();
+  const [color1, setColor] = useState(getRandomColor({a:0.25}))
+  const [color2, setColor2] = useState(getRandomColor({a:0.25}))
 
   useEffect(() => {
     if (isCurrentSong) {
@@ -25,13 +28,13 @@ export default function SongCard({
   return (
     <div
       onClick={() => setCurrentSong(isCurrentSong ? null : song)}
-      style={{ backgroundColor: "rgba(0, 0, 0, 0.15)" }}
-      className={`relative w-1/4 flex flex-col border transition-all duration-200 justify-between ${
+      className={`relative w-full flex flex-col p-1 border shadow-[5px_5px_2px_0px_rgba(0,0,0,1)] transition-all duration-200 justify-between ${
         isCurrentSong
-          ? "border-blue-500 border-4 shadow-lg shadow-blue-200"
-          : "border-gray-300 border-2"
-      }
-      hover:scale-105 hover:cursor-pointer`}
+        ? "border-blue-500 border-4"
+        : ""
+        }
+        hover:scale-105 hover:cursor-pointer`}
+        style={{ background: `linear-gradient(263deg, ${color1}, ${color2}`}}
     >
       {/* <button
         onClick={(e) => {

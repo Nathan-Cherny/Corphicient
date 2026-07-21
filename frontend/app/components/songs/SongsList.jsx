@@ -88,11 +88,11 @@ export default function SongsList({
 
   return (
     <div className="flex flex-wrap flex-col justify-center gap-7 ">
-      <div className="flex flex-row gap-5">
+      {/* <div className="flex flex-row gap-5">
         {Object.keys(hotkeysMap).map((key) => (
           <div className="p-5 border" key={key}>{key}</div>
         ))}
-      </div>
+      </div> */}
       <FadeOverlay isOpen={songToEdit} onClose={() => setSongToEdit(null)}>
         <EditSong
           song={songToEdit}
@@ -108,7 +108,7 @@ export default function SongsList({
         currentSong={currentSong}
         notify={notify}
       />
-      <div className="flex flex-row flex-wrap justify-center gap-5">
+      <div className="grid grid-cols-5 gap-5">
         {songs.map((song, i) => (
           <SongCard
             key={i}
