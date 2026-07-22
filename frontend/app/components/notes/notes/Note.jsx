@@ -9,7 +9,7 @@ export default function Note({ note }) {
 
   return (
     <form
-      className="bg-white/25 p-5 relative border mt-5"
+      className="bg-white/25 p-5 relative border shadow-[2px_2px_0px_0px] mt-5"
       id={`${note.id}-form`}
       onClick={(e) => {e.preventDefault(); e.stopPropagation();}}
       onSubmit={(e) => {

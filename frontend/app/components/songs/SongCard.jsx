@@ -14,8 +14,8 @@ export default function SongCard({
 }) {
   const audioRef = useRef(null);
   const notify = useNotification();
-  const [color1, setColor] = useState(getRandomColor({a:0.25}))
-  const [color2, setColor2] = useState(getRandomColor({a:0.25}))
+  const [color1, setColor] = useState(getRandomColor({a:0.1}))
+  const [color2, setColor2] = useState(getRandomColor({a:0.1}))
 
   useEffect(() => {
     if (isCurrentSong) {
