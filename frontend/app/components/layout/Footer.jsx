@@ -13,33 +13,6 @@ export default function Footer() {
   const [lastCommit, setLastCommit] = useState(null);
   const repo = "https://github.com/Nathan-Cherny/Corphicient";
   const [allCommitsOpen, setAllCommitsOpen] = useState(false);
-  const [xDateRecord, setXDateRecord] = useState(null);
-
-  useEffect(() => {
-    setXDateRecord(window.localStorage.xDateRecord);
-    const handleKeyDown = (e) => {
-      if (e.key == "x") {
-        if (!localStorage.xDateRecord) {
-          let date = new Date();
-          setXDateRecord(date);
-          window.localStorage.xDateRecord = date;
-        } else {
-          let date = xDateRecord || window.localStorage.xDateRecord
-          let gap = new Date() - new Date(date);
-          gap = Math.ceil(gap / 900000) * 900000;
-          gap = gap / 1000;
-          let gapToRecord = Math.ceil(gap / 900) / 4;
-
-          alert(`${gapToRecord}\n\n${getReadableDurationSong(gap)}`);
-          delete window.localStorage.xDateRecord;
-          setXDateRecord(null);
-        }
-      }
-    };
-
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, []);
 
   useEffect(() => {
     async function lastCommit() {
@@ -183,14 +156,6 @@ export default function Footer() {
 
         {/* Awesome Pocket Monsters */}
         <Pokemon />
-
-        {/* Record Work Hours */}
-        {xDateRecord && (
-          <div className="text-center text-white text-xs">
-            <p>Last Recorded</p>
-            <p>{new Date(xDateRecord).toLocaleString().split(",")[1]}</p>
-          </div>
-        )}
       </div>
     </footer>
   );
