@@ -17,10 +17,8 @@ export default function TODO() {
         <div className="flex flex-col gap-5">
           <h1 className="text-center text-3xl font-bold">Music</h1>
           <ul>
-            <li>crop song functionality, crop on add, crop on edit</li>
             <li>Make forms for adding/editing songs and playlists better</li>
             <li>Song cards need to look better - bg color, maybe a picture?</li>
-            <li>move delete to be in the edit page for songs and playlists</li>
             <li>show all hotkeys</li>
           </ul>
         </div>
@@ -32,7 +30,6 @@ export default function TODO() {
             <li>Due dates/tasks will be handled by Google Calendar</li>
             <li>TODOs are handled by calendar, Notes should be here and organized by section (health, whatever)</li>
             <li>Passwords here?</li>
-            <li>Ugh google contacts to get the birthday calendar</li>
           </ul>
         </div>
 
