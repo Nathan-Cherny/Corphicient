@@ -11,7 +11,7 @@ import * as SectionFns from "./SectionFunctions";
 
 import { Palette, PlusIcon, ChevronDown, ChevronUp } from "lucide-react";
 
-export default function Section({ section, setUpdate }) {
+export default function Section({ section, setUpdate, collapse }) {
   const [addNoteMenuOpen, setAddNoteMenuOpen] = useState(false);
   const [collapsed, setCollapsed] = useState(false);
   const [colorMenuOpen, setColorMenuOpen] = useState(false);
@@ -124,7 +124,7 @@ export default function Section({ section, setUpdate }) {
 
       <h1 className="text-3xl mb-5">{section.name}</h1>
 
-      {collapsed && <NoteList notes={section.notes}></NoteList>}
+      {(collapsed || collapse) && <NoteList notes={section.notes}></NoteList>}
     </div>
   );
 }
