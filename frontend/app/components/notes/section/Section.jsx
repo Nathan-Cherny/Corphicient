@@ -13,9 +13,15 @@ import { Palette, PlusIcon, ChevronDown, ChevronUp } from "lucide-react";
 
 export default function Section({ section, setUpdate, collapse }) {
   const [addNoteMenuOpen, setAddNoteMenuOpen] = useState(false);
-  const [collapsed, setCollapsed] = useState(false);
+  const [collapsed, setCollapsed] = useState(!!collapse);
   const [colorMenuOpen, setColorMenuOpen] = useState(false);
   const notify = useNotification();
+
+  useEffect(() => {
+    if (collapse !== null && collapse !== undefined) {
+      setCollapsed(collapse);
+    }
+  }, [collapse]);
 
   if (!section) section = {};
 
@@ -124,7 +130,7 @@ export default function Section({ section, setUpdate, collapse }) {
 
       <h1 className="text-3xl mb-5">{section.name}</h1>
 
-      {(collapsed || collapse) && <NoteList notes={section.notes}></NoteList>}
+      {(collapsed ) && <NoteList notes={section.notes}></NoteList>}
     </div>
   );
 }
