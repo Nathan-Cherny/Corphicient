@@ -230,7 +230,7 @@ function GetAllCommits() {
       <h1 className="text-4xl">All Commits</h1>
       <div className="flex flex-row text-sm justify-center gap-5">
         <p><b>{daysWithAtLeast1Commit}</b> days with at least 1 commit out of <b>{totalDays}</b> Total Days</p>
-        <p><b>~{(Math.round(percentage * 100))}%</b> Of Days Committed</p>
+        <p><b>{(percentage * 100).toFixed(2)}%</b> Of Days Committed</p>
       </div>
       <div className="grid grid-cols-7 overflow-y-scroll">
         {datesInBetween.reverse().map((d) => (

@@ -8,7 +8,7 @@ class Note(models.Model):
         return self.name
     
 class Section(models.Model):
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100, blank=True)
     notes = models.ManyToManyField(Note, blank=True)
     color = models.CharField(max_length=7, default="#44BBBB")
 
