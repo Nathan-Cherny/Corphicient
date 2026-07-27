@@ -15,33 +15,38 @@ export default function EditSong({ song, onSave }) {
 
   return (
     <div className="flex flex-col gap-3 bg-white p-5">
-      <h1>Edit {song.name}</h1>
+      <div className="flex flex-row justify-center items-center gap-10">
+        <h1 className="text-xl text-center">Edit <b>{song.name}</b></h1>
+        <button
+          onClick={handleSave}
+          className="btn-primary bg-red-200 p-2 rounded-4xl shadow-2xl"
+          style={{ cursor: "pointer" }}
+        >
+          Save changes
+        </button>
 
-      <button
-        onClick={handleSave}
-        className="btn-primary bg-red-200 p-2"
-        style={{ cursor: "pointer" }}
-      >
-        Save changes
-      </button>
+      </div>
 
-      <div className="flex flex-col gap-10">
-        <div className="flex flex-col gap-3">
-          <label htmlFor="name">Change Name</label>
-          <input
-            name="name"
-            type="text"
-            onChange={(e) => setInputName(e.target.value)}
-            value={inputName}
+      <div className="bg-black/15 w-full p-5">
+        <div className="flex flex-col gap-10">
+          <div className="flex flex-col gap-3">
+            <label htmlFor="name"><b>Change Name</b></label>
+            <input
+              name="name"
+              type="text"
+              onChange={(e) => setInputName(e.target.value)}
+              value={inputName}
+            />
+          </div>
+
+          <CropSong
+            cropParams={cropParams}
+            setCropParams={setCropParams}
+            src={song.src}
           />
         </div>
-
-        <CropSong
-          cropParams={cropParams}
-          setCropParams={setCropParams}
-          src={song.src}
-        />
       </div>
+
 
     </div>
   );
@@ -50,7 +55,7 @@ export default function EditSong({ song, onSave }) {
 function CropSong({ cropParams, setCropParams, src }) {
   return (
     <div className="flex flex-col gap-3">
-      <label htmlFor="name">Crop Song</label>
+      <label htmlFor="name"><b>Crop Song</b></label>
       <audio className="w-full" src={`http://localhost:8000/${src}`} controls></audio>
       <div className="flex flex-row">
         <input

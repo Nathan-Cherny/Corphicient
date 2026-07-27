@@ -58,7 +58,10 @@ export default function EditPlaylist({ playlist, onSave }) {
         maxHeight: "750px",
       }}
     >
-      <h1>Edit {playlistName}</h1>
+      <div className="flex flex-row">
+        <h1 className="text-2xl text-center">Edit <b>{playlistName}</b></h1>
+
+      </div>
       <div className="flex items-center justify-between">
         <span className="text-sm">
           <strong>{selectedIds.size}</strong> in playlist
