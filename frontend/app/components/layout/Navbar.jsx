@@ -32,14 +32,8 @@ export default function Navbar() {
       { href: "/notes", label: "Notes", icon: NotebookPenIcon},
       {lineDiv: true},
       {
-        href: "http://localhost:8000/admin/",
-        label: "Admin",
-        icon: UserCheck,
-        newTab: true,
-      },
-      {
         href: "/work_functions",
-        label: "Work Functions",
+        label: "Work",
         icon: Workflow,
         newTab: true,
       },
@@ -56,6 +50,13 @@ export default function Navbar() {
             newTab: true,
           },
         ],
+      },
+      {lineDiv: true},
+      {
+        href: "http://localhost:8000/admin/",
+        label: "Admin",
+        icon: UserCheck,
+        newTab: true,
       },
       {
         label: "About",
