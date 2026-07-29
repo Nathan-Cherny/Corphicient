@@ -99,7 +99,7 @@ export default function Navbar() {
             </Link>
 
             <div className="flex items-center gap-1">
-              {navLinks.map((link) => getHTMLFromLinkData(link, pathname))}
+              {navLinks.map((link, i) => getHTMLFromLinkData(link, pathname, i))}
             </div>
           </div>
         </div>
@@ -180,10 +180,10 @@ function DropdownNavItem({ link, pathname }) {
   );
 }
 
-function getHTMLFromLinkData(link, pathname) {
+function getHTMLFromLinkData(link, pathname, key) {
   if(link.lineDiv){
     return (
-      <div className="text-gray-500 text-xl mx-0.5" key="|">|</div>
+      <div className="text-gray-500 text-xl mx-0.5" key={key}>|</div>
     )
   }
 
@@ -191,7 +191,7 @@ function getHTMLFromLinkData(link, pathname) {
     return (
       <div
         onClick={link.onClick}
-        key={link.label}
+        key={key}
         className={cn(
           "relative flex items-center gap-2 px-4 py-2 rounded-full cursor-pointer text-sm font-medium transition-all duration-200 text-zinc-400 hover:text-white hover:bg-zinc-800/50",
         )}
@@ -203,13 +203,13 @@ function getHTMLFromLinkData(link, pathname) {
   }
 
   if (link.dropdown) {
-    return <DropdownNavItem key={link.label} link={link} pathname={pathname} />;
+    return <DropdownNavItem key={key} link={link} pathname={pathname} />;
   }
 
   const isActive = pathname === link.href;
   return (
     <Link
-      key={link.label}
+      key={key}
       href={link.href}
       target={link.newTab ? "_blank" : "_self"}
       className={cn(
