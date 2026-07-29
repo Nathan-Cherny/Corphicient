@@ -3,6 +3,7 @@
 import axiosClient from "@/app/axiosClient";
 import Section from "./Section";
 import { useEffect, useState } from "react";
+import SectionSettings from "./SectionSettings";
 
 export default function SectionList({}) {
   const [update, setUpdate] = useState(0);
@@ -21,19 +22,20 @@ export default function SectionList({}) {
 
   return (
     <div>
-      <div className="flex flex-row justify-center">
+      <div className="flex flex-row justify-center items-center *:m-5 *:py-2">
         <button
           onClick={() => setAllCollapse(false)}
-          className="px-5 py-2 m-5 bg-red-500/25 shadow-2xl rounded-2xl cursor-pointer border-red-500 border"
+          className="px-5 bg-red-500/25 shadow-2xl rounded-2xl cursor-pointer border-red-500 border"
         >
           Collapse All
         </button>
         <button
           onClick={() => setAllCollapse(true)}
-          className="px-5 py-2 m-5 bg-blue-500/25 shadow-2xl rounded-2xl cursor-pointer border-blue-500 border"
+          className="px-5 bg-blue-500/25 shadow-2xl rounded-2xl cursor-pointer border-blue-500 border"
         >
           Expand All
         </button>
+        <SectionSettings className="py-2"/>
       </div>
       <div className="grid grid-cols-2 gap-5">
         {sections.map((s) => (
