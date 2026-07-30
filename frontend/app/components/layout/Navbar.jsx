@@ -15,7 +15,9 @@ import {
   ChevronDown,
   CircleQuestionMark,
   ListIcon,
-  NotebookPenIcon
+  NotebookPenIcon,
+  FileSpreadsheet,
+  Calendar
 } from "lucide-react";
 
 import Link from "next/link";
@@ -29,8 +31,21 @@ export default function Navbar() {
   useEffect(() => {
     let navLinksData = [
       { href: "/music_player", label: "Music Player", icon: Music },
-      { href: "/notes", label: "Notes", icon: NotebookPenIcon},
-      {lineDiv: true},
+      { href: "/notes", label: "Notes", icon: NotebookPenIcon },
+      { lineDiv: true },
+      {
+        href: "https://calendar.google.com/calendar/u/0/r",
+        label: "Calendar",
+        icon: Calendar,
+        newTab: true
+      },
+      {
+        href: "https://docs.google.com/spreadsheets/d/1CLfYgpP7-9IrHClDjFJYu0IAehzd8r_HSsX1yJDZAUQ/edit?gid=386309940#gid=386309940",
+        label: "$ SS",
+        icon: FileSpreadsheet,
+        newTab: true
+      },
+      { lineDiv: true },
       {
         href: "/work_functions",
         label: "Work",
@@ -51,7 +66,7 @@ export default function Navbar() {
           },
         ],
       },
-      {lineDiv: true},
+      { lineDiv: true },
       {
         href: "http://localhost:8000/admin/",
         label: "Admin",
@@ -99,7 +114,9 @@ export default function Navbar() {
             </Link>
 
             <div className="flex items-center gap-1">
-              {navLinks.map((link, i) => getHTMLFromLinkData(link, pathname, i))}
+              {navLinks.map((link, i) =>
+                getHTMLFromLinkData(link, pathname, i),
+              )}
             </div>
           </div>
         </div>
@@ -121,9 +138,9 @@ function DropdownNavItem({ link, pathname }) {
     <div ref={ref} className="relative">
       <Link
         className={cn(
-          "relative flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all duration-200",
+          "relative flex items-center gap-2 px-4 py-2  text-sm font-medium transition-all duration-200",
           isActive
-            ? "text-white bg-green-500/50"
+            ? "text-white border-b"
             : "text-zinc-400 hover:text-white hover:bg-zinc-800/50",
         )}
         href={link.href}
@@ -165,7 +182,7 @@ function DropdownNavItem({ link, pathname }) {
                 className={cn(
                   "flex items-center gap-2 px-4 py-2 text-sm font-medium transition-all duration-200",
                   isSubActive
-                    ? "text-white bg-green-500/50"
+                    ? "text-white h-1 bg-linear-to-r from-transparent via-gray-300 to-transparent"
                     : "text-zinc-400 hover:text-white hover:bg-zinc-800/50",
                 )}
               >
@@ -181,10 +198,12 @@ function DropdownNavItem({ link, pathname }) {
 }
 
 function getHTMLFromLinkData(link, pathname, key) {
-  if(link.lineDiv){
+  if (link.lineDiv) {
     return (
-      <div className="text-gray-500 text-xl mx-0.5" key={key}>|</div>
-    )
+      <div className="text-gray-500 text-xl mx-0.5" key={key}>
+        |
+      </div>
+    );
   }
 
   if (link.onClick) {
@@ -193,7 +212,7 @@ function getHTMLFromLinkData(link, pathname, key) {
         onClick={link.onClick}
         key={key}
         className={cn(
-          "relative flex items-center gap-2 px-4 py-2 rounded-full cursor-pointer text-sm font-medium transition-all duration-200 text-zinc-400 hover:text-white hover:bg-zinc-800/50",
+          "relative flex items-center gap-2 px-4 py-2  cursor-pointer text-sm font-medium transition-all duration-200 text-zinc-400 hover:text-white hover:bg-zinc-800/50",
         )}
       >
         <link.icon className="w-4 h-4" />
@@ -213,9 +232,9 @@ function getHTMLFromLinkData(link, pathname, key) {
       href={link.href}
       target={link.newTab ? "_blank" : "_self"}
       className={cn(
-        "relative flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all duration-200",
+        "relative flex items-center gap-2 px-4 py-2 text-sm font-medium transition-all duration-200",
         isActive
-          ? "text-white bg-green-500/50"
+          ? "text-white"
           : "text-zinc-400 hover:text-white hover:bg-zinc-800/50",
       )}
     >

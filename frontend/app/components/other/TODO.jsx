@@ -29,7 +29,7 @@ export default function TODO() {
             <li>the idea is by next semester im not using the TODO sheet anymore</li>
             <li>Due dates/tasks will be handled by Google Calendar</li>
             <li>TODOs are handled by calendar, Notes should be here and organized by section (health, whatever)</li>
-            <li>Passwords here?</li>
+            <li>Passwords here? Password Gen</li>
           </ul>
         </div>
 
