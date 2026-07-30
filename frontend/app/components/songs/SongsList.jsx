@@ -148,7 +148,8 @@ function CurrentSongInfo({ currentAudioRef, progress, currentSong, notify}) {
       {/* Current Song Info */}
       <div className="flex flex-row justify-around items-stretch mb-5">
         <img
-          className="w-100 h-100 p-1 object-contain border-gray-300 border shadow-2xl rounded-xl bg-gray-100/30"
+          onClick={() => togglePause(currentAudioRef.current, notify)}
+          className="w-150 h-100 p-1 object-contain border-black border shadow-2xl rounded-xl bg-black/40 cursor-pointer"
           src={(currentSong?.thumbnail) ?  `http://localhost:8000${currentSong?.thumbnail}` : `http://localhost:8000/media/thumbnail/corphishbop.jpg`}
         />
         <div className="flex flex-col gap-5 justify-around items-center w-100">
