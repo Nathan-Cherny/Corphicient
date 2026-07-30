@@ -10,7 +10,16 @@ import { useNotification } from "../layout/notification/NotificationContext";
 import FadeOverlay from "../layout/FadeOverlay";
 import EditSong from "./EditSong";
 
-import { PauseCircle, PlayCircle, Palette } from "lucide-react";
+import {
+  PauseCircle,
+  PlayCircle,
+  Repeat,
+  RepeatOff,
+  ArrowRight,
+  ArrowLeft,
+  SkipForward,
+  SkipBack,
+} from "lucide-react";
 
 /**
  * The part of the Playlist that displays Songs. Manages going from song to song and such
@@ -29,6 +38,17 @@ export default function SongsList({
 
   const [songToEdit, setSongToEdit] = useState(null);
 
+  // helper functions
+
+  function togglePause(audio, notify) {
+    if (!audio) {
+      notify({ message: "Hey, silly, there's no song to play or resume!!" });
+      return;
+    }
+    if (audio.paused) audio.play();
+    else audio.pause();
+  }
+
   const playNextSong = () => {
     setCurrentSong((prev) => {
       const otherSongs = songs.filter((s) => s.id != currentSong.id);
@@ -40,6 +60,37 @@ export default function SongsList({
   const getRandomSong = (otherSongs) => {
     return otherSongs[Math.floor(Math.random() * otherSongs.length)];
   };
+
+  const hotkeysMap = {
+    s: (e, audio) => {
+      if(!audio) return
+      playNextSong();
+    },
+    0: (e, audio) => {
+      if(!audio) return
+      audio.currentTime = 0;
+    },
+    ArrowRight: (e, audio) => {
+      if(!audio) return
+      audio.currentTime += timeSkip;
+    },
+    ArrowLeft: (e, audio) => {
+      if(!audio) return
+      audio.currentTime -= timeSkip;
+    },
+    l: (e, audio) => {
+      if(!audio) return
+      if (audio.loop) audio.loop = false;
+      else audio.loop = true;
+    },
+    " ": (e, audio) => {
+      if(!audio) return
+      e.preventDefault();
+      togglePause(audio, notify);
+    },
+  };
+
+  // use effects
 
   useEffect(() => {
     const audio = currentAudioRef.current;
@@ -64,29 +115,6 @@ export default function SongsList({
     };
   }, [currentAudioRef.current, currentSong]);
 
-  const hotkeysMap = {
-    s: (e, audio) => {
-      playNextSong();
-    },
-    0: (e, audio) => {
-      audio.currentTime = 0;
-    },
-    ArrowRight: (e, audio) => {
-      audio.currentTime += timeSkip;
-    },
-    ArrowLeft: (e, audio) => {
-      audio.currentTime -= timeSkip;
-    },
-    l: (e, audio) => {
-      if (audio.loop) audio.loop = false;
-      else audio.loop = true;
-    },
-    " ": (e, audio) => {
-      e.preventDefault();
-      togglePause(audio, notify);
-    },
-  };
-
   useEffect(() => {
     const handleKeyDown = (e) => {
       if (!currentSong) return;
@@ -102,11 +130,6 @@ export default function SongsList({
 
   return (
     <div className="flex flex-wrap flex-col justify-center gap-7 ">
-      {/* <div className="flex flex-row gap-5">
-        {Object.keys(hotkeysMap).map((key) => (
-          <div className="p-5 border" key={key}>{key}</div>
-        ))}
-      </div> */}
       <FadeOverlay isOpen={songToEdit} onClose={() => setSongToEdit(null)}>
         <EditSong
           song={songToEdit}
@@ -121,6 +144,7 @@ export default function SongsList({
         progress={progress}
         currentSong={currentSong}
         notify={notify}
+        hotkeysMap={hotkeysMap}
       />
       <div className="grid grid-cols-5 gap-5">
         {songs.map((song, i) => (
@@ -141,33 +165,33 @@ export default function SongsList({
   );
 }
 
-function CurrentSongInfo({ currentAudioRef, progress, currentSong, notify}) {
+function CurrentSongInfo({
+  currentAudioRef,
+  progress,
+  currentSong,
+  notify,
+  hotkeysMap,
+}) {
   if (!currentSong) progress = { currentTime: 0, duration: 0 };
   return (
     <div>
       {/* Current Song Info */}
-      <div className="flex flex-row justify-around items-stretch mb-5">
+      <div className="flex flex-row justify-around items-stretch mb-5 *:text-center">
         <img
-          onClick={() => togglePause(currentAudioRef.current, notify)}
+          onClick={(e) => hotkeysMap[" "](e, currentAudioRef.current)}
           className="w-150 h-100 p-1 object-contain border-black border shadow-2xl rounded-xl bg-black/40 cursor-pointer"
-          src={(currentSong?.thumbnail) ?  `http://localhost:8000${currentSong?.thumbnail}` : `http://localhost:8000/media/thumbnail/corphishbop.jpg`}
+          src={
+            currentSong?.thumbnail
+              ? `http://localhost:8000${currentSong?.thumbnail}`
+              : `http://localhost:8000/media/thumbnail/corphishbop.jpg`
+          }
         />
-        <div className="flex flex-col gap-5 justify-around items-center w-100">
-          <h1 className="text-2xl">
+        <div className="flex flex-col gap-5 justify-evenly items-center w-100">
+          <h1 className="text-3xl">
             Playing <b>{currentSong?.name || "N/A"}</b>
           </h1>
-          <div className="flex flex-col gap-15">
-            <h1
-              className="cursor-pointer"
-              onClick={() => togglePause(currentAudioRef.current, notify)}
-            >
-              {currentAudioRef?.current?.paused ? (
-                <PauseCircle />   
-              ) : (
-                <PlayCircle />
-              )}
-            </h1>
-            <h1>Loop: {currentAudioRef?.current?.loop ? "True" : "False"}</h1>
+          <div className="flex flex-col gap-15 items-center">
+            <HotKeyButtons hotkeysMap={hotkeysMap} currentAudioRef={currentAudioRef} />
             <h1>
               Total Time Played:{" "}
               {getReadableDurationSong(currentSong?.secondsPlayed || 0)}
@@ -200,11 +224,69 @@ function CurrentSongInfo({ currentAudioRef, progress, currentSong, notify}) {
   );
 }
 
-function togglePause(audio, notify) {
-  if (!audio) {
-    notify({ message: "Hey, silly, there's no song to play or resume!!" });
-    return;
-  }
-  if (audio.paused) audio.play();
-  else audio.pause();
+function HotKeyButtons({hotkeysMap, currentAudioRef}) {
+  return <div className="flex flex-row gap-5">
+    <h1
+      className="cursor-pointer"
+      title="Toggle Playing"
+      onClick={(e) => hotkeysMap[" "](e, currentAudioRef.current)}
+    >
+      {currentAudioRef?.current?.paused ? (
+        <PauseCircle />
+      ) : (
+        <PlayCircle />
+      )}
+    </h1>
+
+    <h1
+      className="cursor-pointer"
+      title="Toggle Loop"
+      onClick={(e) => {
+        hotkeysMap["l"](e, currentAudioRef.current);
+      } }
+    >
+      {currentAudioRef?.current?.loop ? <RepeatOff /> : <Repeat />}
+    </h1>
+
+    <h1
+      className="cursor-pointer"
+      title="Start From Beginning"
+      onClick={(e) => {
+        hotkeysMap[0](e, currentAudioRef.current);
+      } }
+    >
+      <SkipBack />
+    </h1>
+
+    <h1
+      className="cursor-pointer"
+      title="Play Next Song"
+      onClick={(e) => {
+        hotkeysMap["s"](e, currentAudioRef.current);
+      } }
+    >
+      <SkipForward />
+    </h1>
+
+    <h1
+      className="cursor-pointer"
+      title="Skip Backward"
+      onClick={(e) => {
+        hotkeysMap["ArrowLeft"](e, currentAudioRef.current);
+      } }
+    >
+      <ArrowLeft />
+    </h1>
+
+    <h1
+      className="cursor-pointer"
+      title="Skip Forward"
+      onClick={(e) => {
+        hotkeysMap["ArrowRight"](e, currentAudioRef.current);
+      } }
+    >
+      <ArrowRight />
+    </h1>
+  </div>;
 }
+
