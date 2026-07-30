@@ -102,7 +102,7 @@ export default function SongsList({
         />
       </FadeOverlay>
 
-      <CurrentSongProgressBar
+      <CurrentSongInfo
         currentAudioRef={currentAudioRef}
         progress={progress}
         currentSong={currentSong}
@@ -127,7 +127,7 @@ export default function SongsList({
   );
 }
 
-function CurrentSongProgressBar({
+function CurrentSongInfo({
   currentAudioRef,
   progress,
   currentSong,
@@ -137,25 +137,28 @@ function CurrentSongProgressBar({
   return (
     <div>
       {/* Current Song Info */}
-      <div className="flex flex-row gap-5">
-        <h1>
-          Playing <b>{currentSong?.name || "N/A"}</b>
-        </h1>
-        <h1>
-          {getReadableDurationSong(progress.currentTime, "small")} /{" "}
-          {getReadableDurationSong(progress.duration, "small")}
-        </h1>
-        <h1
-          className="cursor-pointer"
-          onClick={() => togglePause(currentAudioRef.current, notify)}
-        >
-          {currentAudioRef?.current?.paused ? <PauseCircle /> : <PlayCircle />}
-        </h1>
-        <h1>Loop: {currentAudioRef?.current?.loop ? "True" : "False"}</h1>
-        <h1>
-          Total Time Played:{" "}
-          {getReadableDurationSong(currentSong?.secondsPlayed || 0)}
-        </h1>
+      <div className="flex flex-row justify-around items-center mb-5">
+        <img className="w-100 h-auto border-gray-300 border shadow-2xl" src="https://pamsdailydish.com/wp-content/uploads/2015/04/Bunch-Bananas-1.jpg" />
+        <div className="flex flex-row gap-15">
+          <h1>
+            Playing <b>{currentSong?.name || "N/A"}</b>
+          </h1>
+          <h1>
+            {getReadableDurationSong(progress.currentTime, "small")} /{" "}
+            {getReadableDurationSong(progress.duration, "small")}
+          </h1>
+          <h1
+            className="cursor-pointer"
+            onClick={() => togglePause(currentAudioRef.current, notify)}
+          >
+            {currentAudioRef?.current?.paused ? <PauseCircle /> : <PlayCircle />}
+          </h1>
+          <h1>Loop: {currentAudioRef?.current?.loop ? "True" : "False"}</h1>
+          <h1>
+            Total Time Played:{" "}
+            {getReadableDurationSong(currentSong?.secondsPlayed || 0)}
+          </h1>
+        </div>
       </div>
       <div
         className="w-full h-2 rounded-full bg-gray-700 cursor-pointer relative overflow-hidden"
