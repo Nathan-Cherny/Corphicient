@@ -20,7 +20,7 @@ export default function SongsList({
   currentSong,
   setCurrentSong,
   settings,
-  setUpdate
+  setUpdate,
 }) {
   const currentAudioRef = useRef(null);
   const timeSkip = settings?.timeSkip || 5;
@@ -64,22 +64,36 @@ export default function SongsList({
     };
   }, [currentAudioRef.current, currentSong]);
 
-    const hotkeysMap = {
-      "s": (e, audio) => {playNextSong()},
-      "0": (e, audio) => {audio.currentTime = 0},
-      "ArrowRight": (e, audio) => {audio.currentTime += timeSkip},
-      "ArrowLeft": (e, audio) => {audio.currentTime -= timeSkip},
-      "l": (e, audio) => {if (audio.loop) audio.loop = false; else audio.loop = true},
-      " ": (e, audio) => {e.preventDefault(); togglePause(audio, notify)},
-    }
+  const hotkeysMap = {
+    s: (e, audio) => {
+      playNextSong();
+    },
+    0: (e, audio) => {
+      audio.currentTime = 0;
+    },
+    ArrowRight: (e, audio) => {
+      audio.currentTime += timeSkip;
+    },
+    ArrowLeft: (e, audio) => {
+      audio.currentTime -= timeSkip;
+    },
+    l: (e, audio) => {
+      if (audio.loop) audio.loop = false;
+      else audio.loop = true;
+    },
+    " ": (e, audio) => {
+      e.preventDefault();
+      togglePause(audio, notify);
+    },
+  };
 
   useEffect(() => {
     const handleKeyDown = (e) => {
       if (!currentSong) return;
       let audio = currentAudioRef.current;
-      let key = e.key
+      let key = e.key;
 
-      if (key in hotkeysMap) hotkeysMap[key](e, audio) 
+      if (key in hotkeysMap) hotkeysMap[key](e, audio);
     };
 
     window.addEventListener("keydown", handleKeyDown);
@@ -127,55 +141,59 @@ export default function SongsList({
   );
 }
 
-function CurrentSongInfo({
-  currentAudioRef,
-  progress,
-  currentSong,
-  notify,
-}) {
+function CurrentSongInfo({ currentAudioRef, progress, currentSong, notify}) {
   if (!currentSong) progress = { currentTime: 0, duration: 0 };
   return (
     <div>
       {/* Current Song Info */}
-      <div className="flex flex-row justify-around items-center mb-5">
-        <img className="w-100 h-auto border-gray-300 border shadow-2xl" src="https://pamsdailydish.com/wp-content/uploads/2015/04/Bunch-Bananas-1.jpg" />
-        <div className="flex flex-row gap-15">
-          <h1>
+      <div className="flex flex-row justify-around items-stretch mb-5">
+        <img
+          className="w-100 h-100 p-1 object-contain border-gray-300 border shadow-2xl rounded-xl bg-gray-100/30"
+          src={(currentSong?.thumbnail) ?  `http://localhost:8000${currentSong?.thumbnail}` : `http://localhost:8000/media/thumbnail/corphishbop.jpg`}
+        />
+        <div className="flex flex-col gap-5 justify-around items-center w-100">
+          <h1 className="text-2xl">
             Playing <b>{currentSong?.name || "N/A"}</b>
           </h1>
-          <h1>
-            {getReadableDurationSong(progress.currentTime, "small")} /{" "}
-            {getReadableDurationSong(progress.duration, "small")}
-          </h1>
-          <h1
-            className="cursor-pointer"
-            onClick={() => togglePause(currentAudioRef.current, notify)}
-          >
-            {currentAudioRef?.current?.paused ? <PauseCircle /> : <PlayCircle />}
-          </h1>
-          <h1>Loop: {currentAudioRef?.current?.loop ? "True" : "False"}</h1>
-          <h1>
-            Total Time Played:{" "}
-            {getReadableDurationSong(currentSong?.secondsPlayed || 0)}
-          </h1>
+          <div className="flex flex-col gap-15">
+            <h1
+              className="cursor-pointer"
+              onClick={() => togglePause(currentAudioRef.current, notify)}
+            >
+              {currentAudioRef?.current?.paused ? (
+                <PauseCircle />   
+              ) : (
+                <PlayCircle />
+              )}
+            </h1>
+            <h1>Loop: {currentAudioRef?.current?.loop ? "True" : "False"}</h1>
+            <h1>
+              Total Time Played:{" "}
+              {getReadableDurationSong(currentSong?.secondsPlayed || 0)}
+            </h1>
+          </div>
         </div>
       </div>
-      <div
-        className="w-full h-2 rounded-full bg-gray-700 cursor-pointer relative overflow-hidden"
-        onClick={(e) => {
-          if (!currentAudioRef.current || !progress.duration) return;
-          const rect = e.currentTarget.getBoundingClientRect();
-          const clickX = e.clientX - rect.left;
-          const ratio = clickX / rect.width;
-          currentAudioRef.current.currentTime = ratio * progress.duration;
-        }}
-      >
+      <div className="flex flex-row items-center gap-2">
+        <p>{getReadableDurationSong(progress.currentTime, "small")}</p>
         <div
-          className="h-full bg-linear-to-r from-green-500 via-teal-500 to-blue-500"
-          style={{
-            width: `${progress.duration ? (progress.currentTime / progress.duration) * 100 : 0}%`,
+          className="w-full h-2 rounded-full bg-gray-700 cursor-pointer relative overflow-hidden"
+          onClick={(e) => {
+            if (!currentAudioRef.current || !progress.duration) return;
+            const rect = e.currentTarget.getBoundingClientRect();
+            const clickX = e.clientX - rect.left;
+            const ratio = clickX / rect.width;
+            currentAudioRef.current.currentTime = ratio * progress.duration;
           }}
-        />
+        >
+          <div
+            className="h-full bg-linear-to-r from-green-500 via-teal-500 to-blue-500"
+            style={{
+              width: `${progress.duration ? (progress.currentTime / progress.duration) * 100 : 0}%`,
+            }}
+          />
+        </div>
+        <p>{getReadableDurationSong(progress.duration, "small")}</p>
       </div>
     </div>
   );

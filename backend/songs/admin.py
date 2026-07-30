@@ -3,7 +3,7 @@ from .models import *
 
 @admin.register(Song)
 class SongAdmin(admin.ModelAdmin):
-    list_display = ('name', 'src')
+    list_display = ('name', 'src', 'thumbnail',)
     search_fields = ('name',)
 
 @admin.register(Playlist)
