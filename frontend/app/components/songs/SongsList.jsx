@@ -232,9 +232,9 @@ function HotKeyButtons({hotkeysMap, currentAudioRef}) {
       onClick={(e) => hotkeysMap[" "](e, currentAudioRef.current)}
     >
       {currentAudioRef?.current?.paused ? (
-        <Pause />
-      ) : (
         <Play />
+      ) : (
+        <Pause />
       )}
     </h1>
 
