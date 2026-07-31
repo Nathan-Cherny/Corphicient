@@ -11,8 +11,8 @@ import FadeOverlay from "../layout/FadeOverlay";
 import EditSong from "./EditSong";
 
 import {
-  PauseCircle,
-  PlayCircle,
+  Pause,
+  Play,
   Repeat,
   RepeatOff,
   ArrowRight,
@@ -225,16 +225,16 @@ function CurrentSongInfo({
 }
 
 function HotKeyButtons({hotkeysMap, currentAudioRef}) {
-  return <div className="flex flex-row gap-5">
+  return <div className="flex flex-row gap-5 *:hover:scale-105 *:border *:p-1 *:rounded-xl *:bg-white/20 *:active:scale-95 *:select-none">
     <h1
       className="cursor-pointer"
       title="Toggle Playing"
       onClick={(e) => hotkeysMap[" "](e, currentAudioRef.current)}
     >
       {currentAudioRef?.current?.paused ? (
-        <PauseCircle />
+        <Pause />
       ) : (
-        <PlayCircle />
+        <Play />
       )}
     </h1>
 
@@ -242,16 +242,18 @@ function HotKeyButtons({hotkeysMap, currentAudioRef}) {
       className="cursor-pointer"
       title="Toggle Loop"
       onClick={(e) => {
+        e.preventDefault()
         hotkeysMap["l"](e, currentAudioRef.current);
       } }
     >
-      {currentAudioRef?.current?.loop ? <RepeatOff /> : <Repeat />}
+      {currentAudioRef?.current?.loop ? <Repeat /> : <RepeatOff />}
     </h1>
 
     <h1
       className="cursor-pointer"
       title="Start From Beginning"
       onClick={(e) => {
+        e.preventDefault()
         hotkeysMap[0](e, currentAudioRef.current);
       } }
     >
@@ -262,6 +264,7 @@ function HotKeyButtons({hotkeysMap, currentAudioRef}) {
       className="cursor-pointer"
       title="Play Next Song"
       onClick={(e) => {
+        e.preventDefault()
         hotkeysMap["s"](e, currentAudioRef.current);
       } }
     >
@@ -272,6 +275,7 @@ function HotKeyButtons({hotkeysMap, currentAudioRef}) {
       className="cursor-pointer"
       title="Skip Backward"
       onClick={(e) => {
+        e.preventDefault()
         hotkeysMap["ArrowLeft"](e, currentAudioRef.current);
       } }
     >
@@ -282,6 +286,7 @@ function HotKeyButtons({hotkeysMap, currentAudioRef}) {
       className="cursor-pointer"
       title="Skip Forward"
       onClick={(e) => {
+        e.preventDefault()
         hotkeysMap["ArrowRight"](e, currentAudioRef.current);
       } }
     >
