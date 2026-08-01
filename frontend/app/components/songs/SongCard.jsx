@@ -12,6 +12,7 @@ export default function SongCard({
   onAudioRef,
   setSongToEdit
 }) {
+  const BACKGROUND_COLOR_OPACITY = 0.25
   const audioRef = useRef(null);
   const notify = useNotification();
 
@@ -23,6 +24,17 @@ export default function SongCard({
     }
   }, [isCurrentSong]);
 
+  if (song.color.includes(",")){
+    // rgb
+    var background = song.color.split(",")
+    background.push(BACKGROUND_COLOR_OPACITY)
+    background = `rgba(${background.join(",")})`
+  }
+  else{
+    // hexcode
+    var background = song.color
+  }
+
   return (
     <div
       onClick={() => setCurrentSong(isCurrentSong ? null : song)}
@@ -32,7 +44,7 @@ export default function SongCard({
         : ""
         }
         hover:scale-105 hover:cursor-pointer`}
-        style={{ background: `${song.color}`}}
+        style={{ background: background}}
     >
 
       <button
