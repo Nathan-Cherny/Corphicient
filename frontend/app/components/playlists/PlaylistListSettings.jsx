@@ -35,7 +35,7 @@ function SettingsMenu({settings, setSettings}) {
       <div className="bg-black/15 flex flex-col gap-5 items-stretch p-5 mt-5">
         <Form
           formType="get_song_form"
-          nonFormFields={["secondsPlayed", "src", "duration"]}
+          nonFormFields={["secondsPlayed", "src", "duration", "color"]}
           submitFunction={addSong}
           name={"Add Song"}
         />

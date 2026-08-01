@@ -4,7 +4,8 @@ from django.db.models import F
 from django.http import FileResponse, HttpResponse
 from django.conf import settings
 from rest_framework import generics, status
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, parser_classes
+from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.response import Response
 from .serializer import *
 from .forms import *
@@ -54,8 +55,10 @@ def get_songs(request):
 
 
 @api_view(["POST"])
+@parser_classes([MultiPartParser, FormParser])
 def add_song(request):
     data = request.data
+    thumbnail = request.FILES.get("thumbnail")
 
     serializer = SongSerializer(data=data)
 
@@ -63,7 +66,7 @@ def add_song(request):
 
         song_data = download_song(data["href"], data["name"])
         # color = get_song_color(data["thumbnail"])
-        serializer.save(src=song_data["location"], duration=song_data["duration"])
+        serializer.save(src=song_data["location"], duration=song_data["duration"], thumbnail=thumbnail)
 
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
