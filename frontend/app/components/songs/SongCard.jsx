@@ -29,10 +29,11 @@ export default function SongCard({
   }
 
   var background = song.color.split(",")
-  background.push(BACKGROUND_COLOR_OPACITY)
 
-  var bgColor1 = `rgba(${background.join(",")})`
-  var bgColor2 = `rgba(${background.slice(0, 3).map(s => s -= 30).join(",")})`
+  var bgColor1 = `rgba(${[...background, BACKGROUND_COLOR_OPACITY].join(",")})`
+  var bgColor2 = `rgba(${[...background.map(s => s -= 35), BACKGROUND_COLOR_OPACITY].join(",")})`
+
+  console.log(bgColor2)
 
   return (
     <div
