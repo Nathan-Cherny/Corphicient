@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import * as NoteFns from "./NoteFunctions";
 import { useNotification } from "../../layout/notification/NotificationContext";
-import { Eraser } from "lucide-react";
+import { Eraser, Save } from "lucide-react";
 
 export default function Note({ note }) {
   const notify = useNotification();
@@ -21,7 +21,6 @@ export default function Note({ note }) {
       <button
         type="button"
         onClick={(e) => {
-          e.stopPropagation();
           NoteFns.deleteNote(note.id);
           notify({message: `Deleted Note`})
         }}
@@ -33,13 +32,24 @@ export default function Note({ note }) {
       <button
         type="button"
         onClick={(e) => {
-          e.stopPropagation();
+          e.preventDefault();
+          e.currentTarget.form?.requestSubmit();
+          notify({ message: `Updated Note '${note.name}'` });
+        }}
+        className="absolute top-2 right-10 bg-indigo-500 text-white w-6 h-6 flex items-center justify-center hover:scale-110 hover:cursor-pointer transition-all duration-200"
+      >
+        <Save className="p-[0.5]"/>
+      </button>
+
+      <button
+        type="button"
+        onClick={(e) => {
           const form = e.currentTarget.form;
           if (!form) return;
 
           form.elements.note.value = "";
         }}
-        className="absolute top-2 right-10 bg-indigo-500 text-white w-6 h-6 flex items-center justify-center hover:scale-110 hover:cursor-pointer transition-all duration-200"
+        className="absolute top-2 right-18 bg-green-500 text-white w-6 h-6 flex items-center justify-center hover:scale-110 hover:cursor-pointer transition-all duration-200"
       >
         <Eraser className="p-[0.5]"/>
       </button>
