@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import * as NoteFns from "./NoteFunctions";
 import { useNotification } from "../../layout/notification/NotificationContext";
+import { Eraser } from "lucide-react";
 
 export default function Note({ note }) {
   const notify = useNotification();
@@ -27,6 +28,20 @@ export default function Note({ note }) {
         className="absolute top-2 right-2 bg-red-500 text-white w-6 h-6 flex items-center justify-center hover:scale-110 hover:cursor-pointer transition-all duration-200"
       >
         X
+      </button>
+
+      <button
+        type="button"
+        onClick={(e) => {
+          e.stopPropagation();
+          const form = e.currentTarget.form;
+          if (!form) return;
+
+          form.elements.note.value = "";
+        }}
+        className="absolute top-2 right-10 bg-indigo-500 text-white w-6 h-6 flex items-center justify-center hover:scale-110 hover:cursor-pointer transition-all duration-200"
+      >
+        <Eraser className="p-[0.5]"/>
       </button>
 
       <input
