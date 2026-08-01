@@ -109,7 +109,7 @@ export default function Footer() {
             </div>
             <hr className="w-full my-2.5" />
             <div className="flex flex-row items-center gap-3 w-full text-center justify-between">
-              <div className="flex flex-col items-center">
+              <div className="flex flex-col items-center" onClick={(e) => {e.preventDefault(); e.stopPropagation(); window.open("https://www.github.com/Nathan-Cherny")}}>
                 <img
                   className="h-7.5 w-7.5"
                   src={lastCommit.committer.avatar_url}

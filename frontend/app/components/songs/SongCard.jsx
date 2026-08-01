@@ -33,8 +33,6 @@ export default function SongCard({
   var bgColor1 = `rgba(${[...background, BACKGROUND_COLOR_OPACITY].join(",")})`
   var bgColor2 = `rgba(${[...background.map(s => s -= 35), BACKGROUND_COLOR_OPACITY].join(",")})`
 
-  console.log(bgColor2)
-
   return (
     <div
       onClick={() => setCurrentSong(isCurrentSong ? null : song)}
