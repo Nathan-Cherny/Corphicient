@@ -14,8 +14,6 @@ export default function SongCard({
 }) {
   const audioRef = useRef(null);
   const notify = useNotification();
-  const [color1, setColor] = useState(getRandomColor({a:0.1}))
-  const [color2, setColor2] = useState(getRandomColor({a:0.1}))
 
   useEffect(() => {
     if (isCurrentSong) {
@@ -34,17 +32,8 @@ export default function SongCard({
         : ""
         }
         hover:scale-105 hover:cursor-pointer`}
-        style={{ background: `linear-gradient(263deg, ${color1}, ${color2}`}}
+        style={{ background: `${song.color}`}}
     >
-      {/* <button
-        onClick={(e) => {
-          e.stopPropagation();
-          Song.deleteSong(song.id);
-        }}
-        className="absolute top-2 right-2 bg-red-500 text-white w-6 h-6 flex items-center justify-center hover:scale-110 hover:cursor-pointer transition-all duration-200"
-      >
-        X
-      </button> */}
 
       <button
         onClick={(e) => {

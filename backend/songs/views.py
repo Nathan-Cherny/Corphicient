@@ -8,6 +8,7 @@ from rest_framework.decorators import api_view, parser_classes
 from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.response import Response
 from .serializer import *
+from .colors import *
 from .forms import *
 from .download import download_song
 import os
@@ -65,8 +66,8 @@ def add_song(request):
     if serializer.is_valid():
 
         song_data = download_song(data["href"], data["name"])
-        # color = get_song_color(data["thumbnail"])
-        serializer.save(src=song_data["location"], duration=song_data["duration"], thumbnail=thumbnail)
+        color = get_song_color(thumbnail)
+        serializer.save(src=song_data["location"], duration=song_data["duration"], thumbnail=thumbnail, color=color)
 
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
