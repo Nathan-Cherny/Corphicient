@@ -24,16 +24,15 @@ export default function SongCard({
     }
   }, [isCurrentSong]);
 
-  if (song.color.includes(",")){
-    // rgb
-    var background = song.color.split(",")
-    background.push(BACKGROUND_COLOR_OPACITY)
-    background = `rgba(${background.join(",")})`
+  if (!song.color.includes(",")){
+    song.color = hexToRgbShort(song.color)
   }
-  else{
-    // hexcode
-    var background = song.color
-  }
+
+  var background = song.color.split(",")
+  background.push(BACKGROUND_COLOR_OPACITY)
+
+  var bgColor1 = `rgba(${background.join(",")})`
+  var bgColor2 = `rgba(${background.slice(0, 3).map(s => s -= 30).join(",")})`
 
   return (
     <div
@@ -44,7 +43,7 @@ export default function SongCard({
         : ""
         }
         hover:scale-105 hover:cursor-pointer`}
-        style={{ background: background}}
+        style={{ background: `linear-gradient(45deg, ${bgColor1}, ${bgColor2})`}}
     >
 
       <button
@@ -77,3 +76,9 @@ export default function SongCard({
     </div>
   );
 }
+
+const hexToRgbShort = hex => {
+  const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+  return result ? `${parseInt(result[1], 16)},${parseInt(result[2], 16)},${parseInt(result[3], 16)}` : null;
+};
+
