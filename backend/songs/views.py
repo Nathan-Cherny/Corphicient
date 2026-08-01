@@ -62,6 +62,7 @@ def add_song(request):
     if serializer.is_valid():
 
         song_data = download_song(data["href"], data["name"])
+        # color = get_song_color(data["thumbnail"])
         serializer.save(src=song_data["location"], duration=song_data["duration"])
 
         return Response(serializer.data, status=status.HTTP_201_CREATED)

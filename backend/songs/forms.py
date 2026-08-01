@@ -12,6 +12,7 @@ class FormSerializer(serializers.Serializer):
             if field.name == "id":
                 continue
 
+            internal_type = field.get_internal_type()
             field_type = "text"
             options = []
             if field.get_internal_type() in [
@@ -20,17 +21,19 @@ class FormSerializer(serializers.Serializer):
                 "DecimalField",
             ]:
                 field_type = "number"
-            elif field.get_internal_type() == "BooleanField":
+            elif internal_type == "BooleanField":
                 field_type = "checkbox"
-            elif field.get_internal_type() == "DateTimeField":
+            elif internal_type == "DateTimeField":
                 field_type = "datetime-local"
-            elif field.get_internal_type() == "ManyToManyField":
+            elif internal_type == "ManyToManyField":
                 field_type = "select"
                 related_model = field.related_model
                 options = [
                     {"value": obj.pk, "label": str(obj)}
                     for obj in related_model.objects.all()
                 ]
+            elif internal_type == "FileField":
+                field_type = "file"
 
             fields.append(
                 {

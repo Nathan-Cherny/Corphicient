@@ -9,6 +9,7 @@ class Song(models.Model):
     duration = models.FloatField(blank=True, default=0)
 
     thumbnail = models.ImageField(upload_to='thumbnail/', blank=True, null=True)
+    color = models.CharField(max_length=7, default="#44BBBB")
     
     def __str__(self):
         return self.name
