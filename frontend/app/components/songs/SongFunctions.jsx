@@ -18,7 +18,6 @@ export async function patchSong(id, name, cropParams) {
     }
 
     let response = await axiosClient(`songs/${id}/crop/`, payload, null, "PATCH")
-    console.log(response)
   }
 
   let payload = { name: name };

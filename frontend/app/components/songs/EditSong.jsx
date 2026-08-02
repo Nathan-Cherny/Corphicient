@@ -5,25 +5,27 @@ import { useNotification } from "../layout/notification/NotificationContext";
 
 export default function EditSong({ song, onSave }) {
   const notify = useNotification();
-  const [inputName, setInputName] = useState(song.name);
-  const [cropParams, setCropParams] = useState([null, null]);
 
-  function handleSave() {
+  function handleSave(e) {
+    e.preventDefault()
+    let formData = new FormData(e.currentTarget)
+    const plainObject = Object.fromEntries(formData.entries());
+    console.log(plainObject)
+    return
     onSave?.(song.id, inputName, cropParams);
     notify({ message: `Edited Song ${inputName}!` });
   }
 
   return (
-    <div className="flex flex-col gap-3 bg-white p-5">
+    <form className="flex flex-col gap-3 bg-white p-5" onSubmit={(e) => handleSave(e)}>
       <div className="flex flex-row justify-center items-center gap-10">
         <h1 className="text-xl text-center">Edit <b>{song.name}</b></h1>
-        <button
-          onClick={handleSave}
+        <input
           className="btn-primary bg-red-200 p-2 rounded-4xl shadow-2xl"
           style={{ cursor: "pointer" }}
-        >
-          Save changes
-        </button>
+          type="submit"
+          value={"Save Changes"}
+        />
 
       </div>
 
@@ -34,25 +36,33 @@ export default function EditSong({ song, onSave }) {
             <input
               name="name"
               type="text"
-              onChange={(e) => setInputName(e.target.value)}
-              value={inputName}
+              defaultValue={song.name}
             />
           </div>
 
           <CropSong
-            cropParams={cropParams}
-            setCropParams={setCropParams}
+            song={song}
             src={song.src}
           />
+
+          <div className="flex flex-col gap-3">
+            <label htmlFor="name"><b>Change Picture</b></label>
+            <img className="w-15 h-15" src={`http://localhost:8000${song.thumbnail}`}/>
+            <input
+              name="thumbnail"
+              type="file"
+            />
+          </div>
+
         </div>
       </div>
 
 
-    </div>
+    </form>
   );
 }
 
-function CropSong({ cropParams, setCropParams, src }) {
+function CropSong({song, src }) {
   return (
     <div className="flex flex-col gap-3">
       <label htmlFor="name"><b>Crop Song</b></label>
@@ -62,13 +72,11 @@ function CropSong({ cropParams, setCropParams, src }) {
           name="start"
           placeholder="start"
           type="number"
-          onChange={(e) => setCropParams([e.target.value, cropParams[1]])}
         />
         <input
           name="end"
           placeholder="end"
           type="number"
-          onChange={(e) => setCropParams([cropParams[0], e.target.value])}
         />
       </div>
     </div>
