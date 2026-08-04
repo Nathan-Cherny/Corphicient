@@ -133,8 +133,8 @@ export default function SongsList({
       <FadeOverlay isOpen={songToEdit} onClose={() => setSongToEdit(null)}>
         <EditSong
           song={songToEdit}
-          onSave={async (id, name, cropParams) => {
-            await Song.patchSong(id, name, cropParams);
+          onSave={async (id, formData) => {
+            await Song.patchSong(id, formData);
           }}
         />
       </FadeOverlay>

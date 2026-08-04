@@ -102,6 +102,7 @@ def add_time_played(request, pk):
 
 
 @api_view(["PATCH"])
+@parser_classes([MultiPartParser, FormParser])
 def update_song(request, pk):
     try:
         song = Song.objects.get(pk=pk)

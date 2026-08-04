@@ -11,21 +11,22 @@ export function deleteSong(id) {
   return deleteModel(id, "song");
 }
 
-export async function patchSong(id, name, cropParams) {
-  if(cropParams[0] && cropParams[1]){
-    let payload = {
-      cropParams
-    }
+export async function patchSong(id, formData) {
+  // if(cropParams[0] && cropParams[1]){
+  //   let payload = formData
 
-    let response = await axiosClient(`songs/${id}/crop/`, payload, null, "PATCH")
-  }
+  //   let response = await axiosClient(`songs/${id}/crop/`, payload, null, "PATCH")
+  // }
 
-  let payload = { name: name };
+  let payload = formData
+  console.log(formData.get('thumbnail'))
+
   let response = await axiosClient(
     `songs/${id}/update/`,
     payload,
     null,
     "PATCH",
+    true
   );
   return response;
 }

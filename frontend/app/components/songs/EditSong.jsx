@@ -9,15 +9,12 @@ export default function EditSong({ song, onSave }) {
   function handleSave(e) {
     e.preventDefault()
     let formData = new FormData(e.currentTarget)
-    const plainObject = Object.fromEntries(formData.entries());
-    console.log(plainObject)
-    return
-    onSave?.(song.id, inputName, cropParams);
-    notify({ message: `Edited Song ${inputName}!` });
+    onSave?.(song.id, formData);
+    notify({ message: `Edited Song!` });
   }
 
   return (
-    <form className="flex flex-col gap-3 bg-white p-5" onSubmit={(e) => handleSave(e)}>
+    <form className="flex flex-col gap-3 bg-white p-5" onSubmit={(e) => handleSave(e)} encType="multipart/form-data">
       <div className="flex flex-row justify-center items-center gap-10">
         <h1 className="text-xl text-center">Edit <b>{song.name}</b></h1>
         <input
