@@ -176,16 +176,18 @@ function CurrentSongInfo({
   return (
     <div>
       {/* Current Song Info */}
-      <div className="flex flex-row justify-around items-stretch mb-5 *:text-center">
-        <img
-          onClick={(e) => hotkeysMap[" "](e, currentAudioRef.current)}
-          className="w-150 h-100 p-1 object-contain border-black border shadow-2xl rounded-xl bg-black/40 cursor-pointer"
-          src={
-            currentSong?.thumbnail
-              ? `http://localhost:8000${currentSong?.thumbnail}`
-              : `http://localhost:8000/media/thumbnail/corphishbop.jpg`
-          }
-        />
+      <div className={`flex flex-row justify-around items-stretch mb-5 *:text-center`}>
+        <div className={`${currentSong ? "bg-linear-to-r rounded-xl from-orange-500  via-green-500 to-purple-500 p-1" : "p-1"}`}>
+          <img
+            onClick={(e) => hotkeysMap[" "](e, currentAudioRef.current)}
+            className={`w-150 h-100 p-1 bg-gray-600 object-contain border-black border shadow-2xl rounded-xl cursor-pointer`}
+            src={
+              currentSong?.thumbnail
+                ? `http://localhost:8000${currentSong?.thumbnail}`
+                : `http://localhost:8000/media/thumbnail/corphishbop.jpg`
+            }
+          />
+        </div>
         <div className="flex flex-col gap-5 justify-evenly items-center w-100">
           <h1 className="text-3xl">
             Playing <b>{currentSong?.name || "N/A"}</b>
