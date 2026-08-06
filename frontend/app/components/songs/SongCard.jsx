@@ -36,9 +36,9 @@ export default function SongCard({
   return (
     <div
       onClick={() => setCurrentSong(isCurrentSong ? null : song)}
-      className={`relative w-full flex flex-col p-1 border shadow-[5px_5px_2px_0px_rgba(0,0,0,1)] transition-all duration-200 justify-between ${
+      className={`relative w-full flex flex-col p-1 border-4 shadow-[5px_5px_2px_0px_rgba(0,0,0,1)] transition-all duration-200 justify-between ${
         isCurrentSong
-        ? "border-blue-500 border-4"
+        ? "border-blue-500"
         : ""
         }
         hover:scale-105 hover:cursor-pointer`}
