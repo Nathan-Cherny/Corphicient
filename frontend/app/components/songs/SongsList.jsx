@@ -190,7 +190,7 @@ function CurrentSongInfo({
         </div>
         <div className="flex flex-col gap-5 justify-evenly items-center w-100">
           <h1 className="text-3xl">
-            Playing <b style={{color: `rgb(${currentSong?.color.split(",").map(c => parseInt(c) - 75).join(",")})`}}>{currentSong?.name || "N/A"}</b>
+            Playing <b style={{color: currentSong ? `rgb(${currentSong?.color.split(",").map(c => parseInt(c) - 75).join(",")})` : "black"}}>{currentSong?.name || "N/A"}</b>
           </h1>
           <div className="flex flex-col gap-15 items-center">
             <HotKeyButtons hotkeysMap={hotkeysMap} currentAudioRef={currentAudioRef} />
