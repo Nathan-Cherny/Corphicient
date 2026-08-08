@@ -12,7 +12,7 @@ export default function SongCard({
   onAudioRef,
   setSongToEdit
 }) {
-  const BACKGROUND_COLOR_OPACITY = 0.25
+  const BACKGROUND_COLOR_OPACITY = 0.55
   const audioRef = useRef(null);
   const notify = useNotification();
 
@@ -31,7 +31,7 @@ export default function SongCard({
   var background = song.color.split(",")
 
   var bgColor1 = `rgba(${[...background, BACKGROUND_COLOR_OPACITY].join(",")})`
-  var bgColor2 = `rgba(${[...background.map(s => s -= 35), BACKGROUND_COLOR_OPACITY].join(",")})`
+  var bgColor2 = `rgba(${[...background.map(s => s -= 75), BACKGROUND_COLOR_OPACITY].join(",")})`
 
   return (
     <div
