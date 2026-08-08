@@ -29,7 +29,7 @@ export default function Home() {
 
         {sections.filter(s => s.name == "Today").map((s) => (
           <div className="w-full h-full" key={s.id}>
-            <Section setUpdate={setUpdate} section={s} collapse={false} />
+            <Section setUpdate={setUpdate} section={s} collapse={true} />
           </div>
         ))}
       </div>
