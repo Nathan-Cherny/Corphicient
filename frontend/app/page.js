@@ -22,16 +22,22 @@ export default function Home() {
   return (
     <PageMain>
       <div className="m-20">
-        <h1>What do I need to do?</h1>
-        <p>tasks for today</p>
-        <p>deadlines coming up soon</p>
-        <p>maybe a fun fact</p>
+        <h1 className="text-5xl text-center font-light">{new Date().toLocaleDateString()}</h1>
+        <hr className="my-10 w-full"/>
+        
+        <div className="flex flex-row gap-15">
+          {sections.filter(s => s.name == "Today").map((s) => (
+            <div className="w-full h-full" key={s.id}>
+              <Section setUpdate={setUpdate} section={s} collapse={true} />
+            </div>
+          ))}
 
-        {sections.filter(s => s.name == "Today").map((s) => (
-          <div className="w-full h-full" key={s.id}>
-            <Section setUpdate={setUpdate} section={s} collapse={true} />
+          <div className="flex flex-col border text-center rounded-2xl bg-amber-400 shadow-2xl p-5">
+            <h1 className="text-3xl mb-5">Deadlines</h1>
+            <div className="border h-full">
+            </div>
           </div>
-        ))}
+        </div>
       </div>
     </PageMain>
   );
