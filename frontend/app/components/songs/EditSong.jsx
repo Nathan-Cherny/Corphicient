@@ -51,6 +51,15 @@ export default function EditSong({ song, onSave }) {
             />
           </div>
 
+          <div className="flex flex-col gap-3">
+            <label htmlFor="name"><b>Change Color</b></label>
+            <input
+              name="color"
+              type="color"
+              defaultValue={`rgb(${song.color})`}
+            />
+          </div>
+
         </div>
       </div>
 
