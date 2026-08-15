@@ -107,15 +107,12 @@ export default function SongsList({
       title: currentSong.name,
       artwork: [
         {
-          src: currentSong.thumbnail,
+          src: "http://localhost:8000" + currentSong.thumbnail,
           sizes: "512x512",
-          type: "image/png",
+          type: "image/jpeg",
         },
       ],
     });
-
-    audio.addEventListener("timeupdate", updateProgress);
-    audio.addEventListener("loadedmetadata", updateProgress);
 
     // initialize immediately in case metadata already loaded
     updateProgress();
