@@ -103,16 +103,19 @@ export default function SongsList({
       });
     };
 
-    // navigator.mediaSession.metadata = new MediaMetadata({
-    //   title: currentSong.name,
-    //   artwork: [
-    //     {
-    //       src: "http://localhost:8000" + currentSong.thumbnail,
-    //       sizes: "512x512",
-    //       type: "image/jpeg",
-    //     },
-    //   ],
-    // });
+    if(currentSong){
+      navigator.mediaSession.metadata = new MediaMetadata({
+        title: currentSong.name,
+        artwork: [
+          {
+            src: "http://localhost:8000" + (currentSong.thumbnail || "/media/thumbnail/corphishbop.jpg"),
+            sizes: "512x512",
+            type: "image/jpeg",
+          },
+        ],
+      });
+    }
+
 
     // initialize immediately in case metadata already loaded
     updateProgress();
