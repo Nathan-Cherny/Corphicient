@@ -50,8 +50,9 @@ export default function SongsList({
   }
 
   const playNextSong = () => {
+    // current song isn't defined here
     setCurrentSong((prev) => {
-      const otherSongs = songs.filter((s) => s.id != currentSong.id);
+      const otherSongs = songs.filter((s) => s.id !== prev.id);
       if (otherSongs.length == 0) return;
       return getRandomSong(otherSongs);
     });
@@ -115,7 +116,6 @@ export default function SongsList({
         ],
       });
     }
-
 
     // initialize immediately in case metadata already loaded
     updateProgress();
