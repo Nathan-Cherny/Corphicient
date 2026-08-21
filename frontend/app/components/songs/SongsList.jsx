@@ -104,6 +104,10 @@ export default function SongsList({
       });
     };
 
+    audio.addEventListener("timeupdate", updateProgress);
+
+    audio.addEventListener("loadedmetadata", updateProgress);
+
     if(currentSong){
       navigator.mediaSession.metadata = new MediaMetadata({
         title: currentSong.name,
