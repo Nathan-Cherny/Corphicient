@@ -105,7 +105,6 @@ export default function SongsList({
     };
 
     audio.addEventListener("timeupdate", updateProgress);
-
     audio.addEventListener("loadedmetadata", updateProgress);
 
     if(currentSong){
@@ -145,7 +144,7 @@ export default function SongsList({
 
   useEffect(() => {
     navigator.mediaSession.setActionHandler("previoustrack", (e) => {
-      hotkeysMap["0"](e, currentAudioRef);
+      hotkeysMap["0"](e, currentAudioRef.current);
     });
 
     navigator.mediaSession.setActionHandler("nexttrack", () => {
