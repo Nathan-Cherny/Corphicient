@@ -104,15 +104,23 @@ export default function SongsList({
       });
     };
 
+    navigator.mediaSession.setPositionState({
+      duration: audio.duration,
+      playbackRate: audio.playbackRate,
+      position: audio.currentTime,
+    });
+
     audio.addEventListener("timeupdate", updateProgress);
     audio.addEventListener("loadedmetadata", updateProgress);
 
-    if(currentSong){
+    if (currentSong) {
       navigator.mediaSession.metadata = new MediaMetadata({
         title: currentSong.name,
         artwork: [
           {
-            src: "http://localhost:8000" + (currentSong.thumbnail || "/media/thumbnail/corphishbop.jpg"),
+            src:
+              "http://localhost:8000" +
+              (currentSong.thumbnail || "/media/thumbnail/corphishbop.jpg"),
             sizes: "512x512",
             type: "image/jpeg",
           },
@@ -150,6 +158,10 @@ export default function SongsList({
     navigator.mediaSession.setActionHandler("nexttrack", () => {
       playNextSong();
     });
+
+    navigator.mediaSession.setActionHandler("seekbackward", (details) => {});
+
+    navigator.mediaSession.setActionHandler("seekforward", (details) => {});
   }, []);
 
   return (
