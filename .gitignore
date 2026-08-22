@@ -2,3 +2,4 @@ Corphicient.bat
 desktop.ini
 sandbox.py
 .venv
+backend\db.sqlite3
