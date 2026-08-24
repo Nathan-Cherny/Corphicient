@@ -17,7 +17,7 @@ import {
   ListIcon,
   NotebookPenIcon,
   FileSpreadsheet,
-  Calendar
+  Calendar,
 } from "lucide-react";
 
 import Link from "next/link";
@@ -29,35 +29,46 @@ export default function Navbar() {
   const [todoOpen, setTodoOpen] = useState(false);
 
   useEffect(() => {
+    const newTab = pathname != "/";
     let navLinksData = [
-      { href: "/music_player", label: "Music Player", icon: Music },
-      { href: "/notes", label: "Notes", icon: NotebookPenIcon },
+      {
+        href: "/music_player",
+        label: "Music Player",
+        icon: Music,
+        newTab: newTab,
+      },
+      { href: "/notes", label: "Notes", icon: NotebookPenIcon, newTab: newTab },
       { lineDiv: true },
       {
         href: "https://calendar.google.com/calendar/u/0/r",
         label: "Calendar",
         icon: Calendar,
+        newTab: newTab,
       },
       {
         href: "https://docs.google.com/spreadsheets/d/1CLfYgpP7-9IrHClDjFJYu0IAehzd8r_HSsX1yJDZAUQ/edit?gid=386309940#gid=386309940",
         label: "$ SS",
         icon: FileSpreadsheet,
+        newTab: newTab,
       },
       { lineDiv: true },
       {
         href: "/work_functions",
         label: "Work",
         icon: Workflow,
+        newTab: newTab,
       },
       {
         href: "/games",
         label: "Games",
         icon: Joystick,
+        newTab: newTab,
         dropdown: [
           {
             href: "/games/pokemon",
             label: "20 Questions Pkmn!",
             icon: Joystick,
+            newTab: newTab,
           },
         ],
       },
@@ -66,11 +77,13 @@ export default function Navbar() {
         href: "http://localhost:8000/admin/",
         label: "Admin",
         icon: UserCheck,
+        newTab: newTab,
       },
       {
         label: "About",
         icon: CircleQuestionMark,
         href: "/about",
+        newTab: newTab,
       },
       // {
       //   label: "TODO",
@@ -191,7 +204,7 @@ function DropdownNavItem({ link, pathname }) {
 }
 
 function getHTMLFromLinkData(link, pathname, key) {
-  if(link.newTab === undefined) link.newTab = true
+  if (link.newTab === undefined) link.newTab = true;
   if (link.lineDiv) {
     return (
       <div className="text-gray-500 text-xl mx-0.5" key={key}>
