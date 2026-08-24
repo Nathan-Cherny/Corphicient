@@ -72,13 +72,13 @@ export default function Navbar() {
         icon: CircleQuestionMark,
         href: "/about",
       },
-      {
-        label: "TODO",
-        icon: ListIcon,
-        onClick: () => {
-          setTodoOpen(true);
-        },
-      },
+      // {
+      //   label: "TODO",
+      //   icon: ListIcon,
+      //   onClick: () => {
+      //     setTodoOpen(true);
+      //   },
+      // },
     ];
 
     setNavLinks(navLinksData);
