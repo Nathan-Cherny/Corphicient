@@ -13,7 +13,7 @@ export default function PlaylistListSettings({settings, setSettings}) {
   return (
     <>
       <button
-        className="bg-amber-400 p-5 rounded-2xl shadow-2xl border hover:scale-105 transition-all duration-150 cursor-pointer"
+        className="bg-gray-400 p-5 rounded-2xl shadow-2xl border hover:scale-105 transition-all duration-150 cursor-pointer"
         onClick={() => setSettingsMenuOpen(true)}
       >
         Settings
