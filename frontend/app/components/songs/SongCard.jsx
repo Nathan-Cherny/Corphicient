@@ -12,7 +12,7 @@ export default function SongCard({
   onAudioRef,
   setSongToEdit,
 }) {
-  const BACKGROUND_COLOR_OPACITY = 0.55;
+  const BACKGROUND_COLOR_OPACITY = 1;
   const audioRef = useRef(null);
   const notify = useNotification();
 
@@ -35,12 +35,11 @@ export default function SongCard({
 
   return (
     <div
-      className={`${isCurrentSong ? "bg-linear-to-r rounded-xl from-orange-500  via-green-500 to-purple-500 p-1" : "p-1"}`}
+      className={`rounded-xl p-1.5 transition-all duration-200 hover:scale-105 cursor-pointer ${isCurrentSong ? "bg-linear-to-r from-purple-500  via-red-500 to-lime-500" : "bg-black z-0"}`}
     >
       <div
         onClick={() => setCurrentSong(isCurrentSong ? null : song)}
-        className={`relative w-full flex flex-col p-1 border-4 shadow-[5px_5px_2px_0px_rgba(0,0,0,1)] transition-all duration-200 justify-between
-        hover:scale-105 hover:cursor-pointer`}
+        className={`relative w-full flex flex-col p-1 h-full z-10 rounded-xl justify-between`}
         style={{
           background: `linear-gradient(45deg, ${bgColor1}, ${bgColor2})`,
         }}

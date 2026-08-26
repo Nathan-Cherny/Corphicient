@@ -220,7 +220,7 @@ function CurrentSongInfo({
         >
           <img
             onClick={(e) => hotkeysMap[" "](e, currentAudioRef.current)}
-            className={`w-150 h-100 p-1 bg-gray-600 object-contain border-black border shadow-2xl rounded-xl cursor-pointer`}
+            className={`w-150 h-100 bg-gray-600 object-contain border-black border shadow-2xl rounded-xl cursor-pointer`}
             src={
               currentSong?.thumbnail
                 ? `http://localhost:8000${currentSong?.thumbnail}`
