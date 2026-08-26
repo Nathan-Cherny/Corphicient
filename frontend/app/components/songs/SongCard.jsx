@@ -10,9 +10,9 @@ export default function SongCard({
   setCurrentSong,
   onSongEnd,
   onAudioRef,
-  setSongToEdit
+  setSongToEdit,
 }) {
-  const BACKGROUND_COLOR_OPACITY = 0.55
+  const BACKGROUND_COLOR_OPACITY = 0.55;
   const audioRef = useRef(null);
   const notify = useNotification();
 
@@ -24,60 +24,62 @@ export default function SongCard({
     }
   }, [isCurrentSong]);
 
-  if (!song.color.includes(",")){
-    song.color = hexToRgbShort(song.color)
+  if (!song.color.includes(",")) {
+    song.color = hexToRgbShort(song.color);
   }
 
-  var background = song.color.split(",")
+  var background = song.color.split(",");
 
-  var bgColor1 = `rgba(${[...background, BACKGROUND_COLOR_OPACITY].join(",")})`
-  var bgColor2 = `rgba(${[...background.map(s => s -= 75), BACKGROUND_COLOR_OPACITY].join(",")})`
+  var bgColor1 = `rgba(${[...background, BACKGROUND_COLOR_OPACITY].join(",")})`;
+  var bgColor2 = `rgba(${[...background.map((s) => (s -= 75)), BACKGROUND_COLOR_OPACITY].join(",")})`;
 
   return (
     <div
-      onClick={() => setCurrentSong(isCurrentSong ? null : song)}
-      className={`relative w-full flex flex-col p-1 border-4 shadow-[5px_5px_2px_0px_rgba(0,0,0,1)] transition-all duration-200 justify-between ${
-        isCurrentSong
-        ? "border-blue-500"
-        : ""
-        }
-        hover:scale-105 hover:cursor-pointer`}
-        style={{ background: `linear-gradient(45deg, ${bgColor1}, ${bgColor2})`}}
+      className={`${isCurrentSong ? "bg-linear-to-r rounded-xl from-orange-500  via-green-500 to-purple-500 p-1" : "p-1"}`}
     >
-
-      <button
-        onClick={(e) => {
-          e.stopPropagation();
-          e.preventDefault();
+      <div
+        onClick={() => setCurrentSong(isCurrentSong ? null : song)}
+        className={`relative w-full flex flex-col p-1 border-4 shadow-[5px_5px_2px_0px_rgba(0,0,0,1)] transition-all duration-200 justify-between
+        hover:scale-105 hover:cursor-pointer`}
+        style={{
+          background: `linear-gradient(45deg, ${bgColor1}, ${bgColor2})`,
         }}
-        className="absolute top-1 left-1 text-black w-4 h-4 flex items-center justify-center hover:scale-110 hover:cursor-pointer transition-all duration-200"
       >
-        <Edit onClick={() => setSongToEdit(song)} />
-      </button>
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            e.preventDefault();
+          }}
+          className="absolute top-1 left-1 text-black w-4 h-4 flex items-center justify-center hover:scale-110 hover:cursor-pointer transition-all duration-200"
+        >
+          <Edit onClick={() => setSongToEdit(song)} />
+        </button>
 
-      <h3 className="font-bold text-3xl text-center m-5 h-full flex items-center justify-center">
-        {song.name}
-      </h3>
-      <audio
-        className="w-full"
-        ref={(el) => {
-          // this sets the audioRef so that this SongCard gets the html, and also calls onAudioRef so SongsList can get it too. Neat!
-          audioRef.current = el;
-          if (isCurrentSong) onAudioRef(el);
-        }}
-        src={`http://localhost:8000/${song.src}`}
-        crossOrigin="use-credentials"
-        preload="auto"
-        onPlay={() => setCurrentSong(song)}
-        onClick={(e) => e.stopPropagation()}
-        onEnded={onSongEnd}
-      />
+        <h3 className="font-bold text-3xl text-center m-5 h-full flex items-center justify-center">
+          {song.name}
+        </h3>
+        <audio
+          className="w-full"
+          ref={(el) => {
+            // this sets the audioRef so that this SongCard gets the html, and also calls onAudioRef so SongsList can get it too. Neat!
+            audioRef.current = el;
+            if (isCurrentSong) onAudioRef(el);
+          }}
+          src={`http://localhost:8000/${song.src}`}
+          crossOrigin="use-credentials"
+          preload="auto"
+          onPlay={() => setCurrentSong(song)}
+          onClick={(e) => e.stopPropagation()}
+          onEnded={onSongEnd}
+        />
+      </div>
     </div>
   );
 }
 
-const hexToRgbShort = hex => {
+const hexToRgbShort = (hex) => {
   const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-  return result ? `${parseInt(result[1], 16)},${parseInt(result[2], 16)},${parseInt(result[3], 16)}` : null;
+  return result
+    ? `${parseInt(result[1], 16)},${parseInt(result[2], 16)},${parseInt(result[3], 16)}`
+    : null;
 };
-
