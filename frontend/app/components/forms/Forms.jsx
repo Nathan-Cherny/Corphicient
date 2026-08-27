@@ -64,7 +64,7 @@ function parseField(field) {
           defaultValue={[]}
           multiple
           required={field.required}
-          className="border mx-5"
+          className="border mx-5 p-2"
           id={field.name}
           name={field.name}
         >
@@ -84,7 +84,7 @@ function parseField(field) {
         <label htmlFor={field.name}>{field.name}</label>
         <textarea
           required={field.required}
-          className="border mx-5"
+          className="border mx-5 p-2"
           id={field.name}
           type={field.type}
           name={field.name}
@@ -98,7 +98,7 @@ function parseField(field) {
       <label htmlFor={field.name}>{field.name}</label>
       <input
         required={field.required}
-        className="border mx-5"
+        className="border mx-5 p-2"
         id={field.name}
         type={field.type}
         name={field.name}
