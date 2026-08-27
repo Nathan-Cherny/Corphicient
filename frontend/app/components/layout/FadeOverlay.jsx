@@ -5,7 +5,7 @@ export default function FadeOverlay({ isOpen, onClose, children }) {
     <>
       {/* Black Fade Overlay */}
       <div
-        className="fixed inset-0 bg-black/50 z-40 transition-opacity duration-300"
+        className="fixed inset-0 bg-black/50 z-40 transition-opacity duration-300 margin-0"
         onClick={onClose}
         aria-hidden="true"
       />
