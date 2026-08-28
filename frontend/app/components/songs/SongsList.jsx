@@ -208,6 +208,54 @@ function CurrentSongInfo({
   notify,
   hotkeysMap,
 }) {
+  const [isDragging, setIsDragging] = useState(false);
+  const [dragProgress, setDragProgress] = useState(0); // stores a ratio from 0 to 1
+  const progressBarRef = useRef(null);
+  // Calculate which time to display: the scrub time if dragging, or the real time if playing
+  const displayTime = isDragging
+    ? dragProgress * progress.duration
+    : progress.currentTime;
+
+  // Calculate width percentage
+  const displayPercentage = progress.duration
+    ? (displayTime / progress.duration) * 100
+    : 0;
+
+  const updateScrubPosition = (e) => {
+    if (!progressBarRef.current) return;
+    const rect = progressBarRef.current.getBoundingClientRect();
+    const clickX = e.clientX - rect.left;
+
+    // Math.max/min clamps the value between 0 and 1 so dragging outside the bar doesn't break it
+    const ratio = Math.max(0, Math.min(1, clickX / rect.width));
+    setDragProgress(ratio);
+  };
+
+  const handlePointerDown = (e) => {
+    if (!progress.duration) return;
+    setIsDragging(true);
+
+    // This locks the pointer to this element, allowing the user
+    // to drag their mouse wildly outside the bar without losing the drag state
+    e.currentTarget.setPointerCapture(e.pointerId);
+    updateScrubPosition(e);
+  };
+
+  const handlePointerMove = (e) => {
+    if (!isDragging || !progress.duration) return;
+    updateScrubPosition(e);
+  };
+
+  const handlePointerUp = (e) => {
+    if (!isDragging || !progress.duration || !currentAudioRef.current) return;
+
+    setIsDragging(false);
+    e.currentTarget.releasePointerCapture(e.pointerId);
+
+    // Now that the user has let go, actually update the audio track
+    const newTime = dragProgress * progress.duration;
+    currentAudioRef.current.currentTime = newTime;
+  };
   if (!currentSong) progress = { currentTime: 0, duration: 0 };
   return (
     <div>
@@ -257,24 +305,25 @@ function CurrentSongInfo({
         </div>
       </div>
       <div className="flex flex-row items-center gap-2">
-        <p>{getReadableDurationSong(progress.currentTime, "small")}</p>
+        <p>{getReadableDurationSong(displayTime, "small")}</p>
+
         <div
-          className="w-full h-2 rounded-full bg-gray-700 cursor-pointer relative overflow-hidden"
-          onClick={(e) => {
-            if (!currentAudioRef.current || !progress.duration) return;
-            const rect = e.currentTarget.getBoundingClientRect();
-            const clickX = e.clientX - rect.left;
-            const ratio = clickX / rect.width;
-            currentAudioRef.current.currentTime = ratio * progress.duration;
-          }}
+          ref={progressBarRef}
+          // Added touch-none to prevent page scrolling on mobile while scrubbing
+          className="w-full h-2 rounded-full bg-gray-700 cursor-pointer relative overflow-hidden touch-none"
+          onPointerDown={handlePointerDown}
+          onPointerMove={handlePointerMove}
+          onPointerUp={handlePointerUp}
+          onPointerCancel={handlePointerUp} // Failsafe if the browser interrupts the drag
         >
           <div
             className="h-full bg-linear-to-r from-green-500 via-teal-500 to-blue-500"
             style={{
-              width: `${progress.duration ? (progress.currentTime / progress.duration) * 100 : 0}%`,
+              width: `${displayPercentage}%`,
             }}
           />
         </div>
+
         <p>{getReadableDurationSong(progress.duration, "small")}</p>
       </div>
     </div>
