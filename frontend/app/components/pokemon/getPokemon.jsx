@@ -5,6 +5,8 @@ import { getDexData, genPkmn } from "@/app/games/pokemon/page";
 
 export default function RandomPokemon() {
   const [allPokemon, setAllPokemon] = useState({});
+  const [rootMediaFolder, setRootMediaFolder] = useState("ani");
+  const [chance, setChance] = useState(8191);
   const [types, setTypes] = useState([]);
   const [pokemon, setPokemon] = useState({});
   const [isShiny, setIsShiny] = useState(false);
@@ -23,7 +25,10 @@ export default function RandomPokemon() {
 
       let pkmn = genPkmn(setPokemon, dexData);
 
-      const shiny = Math.floor(Math.random() * shinyChance + 1) == 1;
+      let pkmnChance = Math.floor(Math.random() * shinyChance + 1);
+      setChance(pkmnChance);
+
+      const shiny = chance == 1;
       setIsShiny(shiny);
 
       if (shiny) {
@@ -39,9 +44,16 @@ export default function RandomPokemon() {
     loadPokemon();
   }, [update]);
 
+  function switchAni() {
+    if (rootMediaFolder == "ani") {
+      setRootMediaFolder("gen5ani");
+    } else {
+      setRootMediaFolder("ani");
+    }
+  }
+
   if (!pokemon) return null;
 
-  const rootMediaFolder = `ani`;
   const shinySegment = isShiny ? "-shiny" : "";
 
   const src = getSrc(
@@ -58,22 +70,38 @@ export default function RandomPokemon() {
         alignItems: "center",
         gap: "15px",
       }}
+      title={chance}
     >
-      {/* Image (gen5 sprite) */}
-      <img
-        onClick={() => {
-          setUpdate(update + 1);
-        }}
-        className="h-25 py-5 hover:cursor-pointer hover:box-border transition"
-        src={src}
-        alt={pokemon.id}
-      />
+      {/* Image */}
+      <div className="flex flex-col justify-start">
+        <img
+          onClick={() => {
+            setUpdate(update + 1);
+          }}
+          onMouseOver={switchAni}
+          onMouseLeave={switchAni}
+          className="h-25 py-5 hover:cursor-pointer hover:box-border transition"
+          src={src}
+          alt={pokemon.id}
+        />
+        <button
+          onClick={switchAni}
+          className="text-gray-400 text-sm border-gray-400 border"
+        >
+          {rootMediaFolder}
+        </button>
+      </div>
       {/* Pokemon Info */}
       <div
         className="flex flex-col h-full text-center text-sm"
         style={{ color: `${color}` }}
       >
-        <a href={`https://pokemondb.net/pokedex/${pokemon?.name?.replaceAll(" ", "-").replaceAll(".", "")}`} target="_blank">{pokemon.name}</a>
+        <a
+          href={`https://pokemondb.net/pokedex/${pokemon?.name?.replaceAll(" ", "-").replaceAll(".", "")}`}
+          target="_blank"
+        >
+          {pokemon.name}
+        </a>
         <hr className="w-full my-1" />
 
         {/* Number and Types */}
