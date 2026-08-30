@@ -168,19 +168,53 @@ export default function Footer() {
   );
 }
 
-async function getCommits(all, advanced = false) {
-  let pageQuery = all ? "per_page=100" : "per_page=1";
-  let res = await fetch(
-    `https://api.github.com/repos/Nathan-Cherny/Corphicient/commits?${pageQuery}`,
-  );
-  res = await res.json();
-  if (!all)
-    res = await (
-      await fetch(
-        `https://api.github.com/repos/Nathan-Cherny/Corphicient/commits/${res[0].sha}`,
-      )
-    ).json();
-  return res;
+async function getCommits(all) {
+  if (!all) {
+    const response = await fetch(
+      "https://api.github.com/repos/Nathan-Cherny/Corphicient/commits?per_page=1",
+    );
+
+    if (!response.ok) {
+      throw new Error(`GitHub API error: ${response.status}`);
+    }
+
+    const [commit] = await response.json();
+
+    const details = await fetch(
+      `https://api.github.com/repos/Nathan-Cherny/Corphicient/commits/${commit.sha}`,
+    );
+
+    if (!details.ok) {
+      throw new Error(`GitHub API error: ${details.status}`);
+    }
+
+    return details.json();
+  }
+
+  const commits = [];
+  let page = 1;
+
+  while (true) {
+    const response = await fetch(
+      `https://api.github.com/repos/Nathan-Cherny/Corphicient/commits?per_page=100&page=${page}`,
+    );
+
+    if (!response.ok) {
+      throw new Error(`GitHub API error: ${response.status}`);
+    }
+
+    const pageCommits = await response.json();
+
+    commits.push(...pageCommits);
+
+    if (pageCommits.length < 100) {
+      break;
+    }
+
+    page++;
+  }
+
+  return commits;
 }
 
 const getHoursBetween = (date1, date2) =>
