@@ -287,7 +287,7 @@ function GetAllCommits() {
       </div>
       <div className="grid grid-cols-7 overflow-y-scroll">
         {datesInBetween.reverse().map((d) => (
-          <div key={d} title={`${allCommits[d]?.map(c => `\n${c.msg}`)}`} className="group relative inline-block">
+          <div key={d} title={`${allCommits[d]?.map(c => `\n${c.msg}`) || "No Commits :("}`} className="group relative inline-block">
             <div
               className="w-full h-25 flex text-center flex-col items-center justify-center border border-white"
               style={{
