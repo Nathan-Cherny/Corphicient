@@ -287,7 +287,7 @@ function GetAllCommits() {
       </div>
       <div className="grid grid-cols-7 overflow-y-scroll">
         {datesInBetween.reverse().map((d) => (
-          <div key={d} className="group relative inline-block">
+          <div key={d} title={`${allCommits[d]?.map(c => `\n${c.msg}`)}`} className="group relative inline-block">
             <div
               className="w-full h-25 flex text-center flex-col items-center justify-center border border-white"
               style={{
@@ -298,20 +298,6 @@ function GetAllCommits() {
             >
               <h2>{d}</h2>
               <p>{allCommits[d]?.length || 0}</p>
-            </div>
-            <div
-              key={allCommits[d]}
-              className="absolute left-full top-1/2 z-10 ml-3 hidden -translate-y-1/2 transform rounded-md bg-gray-900 px-5 py-1 gap-3 text-sm text-white shadow-lg group-hover:flex flex-col"
-            >
-              {allCommits[d]?.map((c, i) => {
-                if (!c) return <p key={`${d}-${i}`}>None</p>;
-                else
-                  return (
-                    <a key={`${d}-${i}`} href={c.url}>
-                      {c.msg}
-                    </a>
-                  );
-              })}
             </div>
           </div>
         ))}
