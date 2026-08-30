@@ -109,7 +109,14 @@ export default function Footer() {
             </div>
             <hr className="w-full my-2.5" />
             <div className="flex flex-row items-center gap-3 w-full text-center justify-between">
-              <div className="flex flex-col items-center" onClick={(e) => {e.preventDefault(); e.stopPropagation(); window.open("https://www.github.com/Nathan-Cherny")}}>
+              <div
+                className="flex flex-col items-center"
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  window.open("https://www.github.com/Nathan-Cherny");
+                }}
+              >
                 <img
                   className="h-7.5 w-7.5"
                   src={lastCommit.committer.avatar_url}
@@ -216,28 +223,44 @@ function GetAllCommits() {
     allCommits();
   }, []);
 
-  if (!allCommits) return <h1>Loading...</h1>;
+  if (!allCommits)
+    return (
+      <div className="p-5 bg-white rounded-2xl text-center">
+        <h1 className="text-black text-2xl">Loading...</h1>
+      </div>
+    );
 
   let dates = Object.keys(allCommits);
   let datesInBetween = getDatesInRange(dates[dates.length - 1], dates[0]);
 
-  let daysWithAtLeast1Commit = datesInBetween.filter(d => allCommits[d]?.length > 0).length
-  let totalDays = datesInBetween.length
-  let percentage = daysWithAtLeast1Commit / totalDays
+  let daysWithAtLeast1Commit = datesInBetween.filter(
+    (d) => allCommits[d]?.length > 0,
+  ).length;
+  let totalDays = datesInBetween.length;
+  let percentage = daysWithAtLeast1Commit / totalDays;
 
   return (
     <div className="bg-white flex flex-col p-2 justify-center text-center rounded-2xl max-h-100">
       <h1 className="text-4xl">All Commits</h1>
       <div className="flex flex-row text-sm justify-center gap-5">
-        <p><b>{daysWithAtLeast1Commit}</b> days with at least 1 commit out of <b>{totalDays}</b> Total Days</p>
-        <p><b>{(percentage * 100).toFixed(2)}%</b> Of Days Committed</p>
+        <p>
+          <b>{daysWithAtLeast1Commit}</b> days with at least 1 commit out of{" "}
+          <b>{totalDays}</b> Total Days
+        </p>
+        <p>
+          <b>{(percentage * 100).toFixed(2)}%</b> Of Days Committed
+        </p>
       </div>
       <div className="grid grid-cols-7 overflow-y-scroll">
         {datesInBetween.reverse().map((d) => (
           <div key={d} className="group relative inline-block">
             <div
               className="w-full h-25 flex text-center flex-col items-center justify-center border border-white"
-              style={{ backgroundColor: `rgb(0, ${getGreenForNumber(allCommits[d])}, 0)`, color: (getGreenForNumber(allCommits[d]) > 150) ? "black" : "white"}}
+              style={{
+                backgroundColor: `rgb(0, ${getGreenForNumber(allCommits[d])}, 0)`,
+                color:
+                  getGreenForNumber(allCommits[d]) > 150 ? "black" : "white",
+              }}
             >
               <h2>{d}</h2>
               <p>{allCommits[d]?.length || 0}</p>
@@ -277,7 +300,7 @@ function getDatesInRange(startDate, endDate) {
 
 function getGreenForNumber(number) {
   number = !number ? 0 : number.length;
-  let boost = (number > 0) ? 2 : 0
-  let green = (boost * number) * 20
-  return green
+  let boost = number > 0 ? 2 : 0;
+  let green = boost * number * 20;
+  return green;
 }
