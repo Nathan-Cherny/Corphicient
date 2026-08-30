@@ -274,7 +274,7 @@ function GetAllCommits() {
   let percentage = daysWithAtLeast1Commit / totalDays;
 
   return (
-    <div className="bg-white flex flex-col p-2 justify-center text-center rounded-2xl max-h-100">
+    <div className="bg-white flex flex-col p-2 justify-center text-center rounded-2xl max-h-120">
       <h1 className="text-4xl">All Commits</h1>
       <div className="flex flex-row text-sm justify-center gap-5">
         <p>
