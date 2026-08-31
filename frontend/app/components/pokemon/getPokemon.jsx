@@ -45,6 +45,7 @@ export default function RandomPokemon() {
   }, [update]);
 
   function switchAni() {
+    console.log(rootMediaFolder)
     if (rootMediaFolder == "ani") {
       setRootMediaFolder("gen5ani");
     } else {
@@ -75,8 +76,13 @@ export default function RandomPokemon() {
       {/* Image */}
       <div className="flex flex-col justify-start">
         <img
-          onClick={() => {
-            setUpdate(update + 1);
+          onClick={(e) => {
+            if(e.shiftKey){
+              switchAni()
+            }
+            else{
+              setUpdate(update + 1);
+            }
           }}
           onMouseOver={switchAni}
           onMouseLeave={switchAni}
@@ -84,12 +90,12 @@ export default function RandomPokemon() {
           src={src}
           alt={pokemon.id}
         />
-        <button
+        {/* <button
           onClick={switchAni}
           className="text-gray-400 text-sm border-gray-400 border"
         >
           {rootMediaFolder}
-        </button>
+        </button> */}
       </div>
       {/* Pokemon Info */}
       <div
