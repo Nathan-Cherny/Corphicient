@@ -45,7 +45,6 @@ export default function RandomPokemon() {
   }, [update]);
 
   function switchAni() {
-    console.log(rootMediaFolder)
     if (rootMediaFolder == "ani") {
       setRootMediaFolder("gen5ani");
     } else {
@@ -62,6 +61,8 @@ export default function RandomPokemon() {
     shinySegment,
     pokemon.name?.toLowerCase(),
   );
+
+  console.log(pokemon)
 
   return (
     <div
@@ -85,6 +86,7 @@ export default function RandomPokemon() {
             }
           }}
           onMouseOver={switchAni}
+          onError={(e) => {e.target.src = `https://play.pokemonshowdown.com/sprites/ani/corphish.gif`}}
           onMouseLeave={switchAni}
           className="h-25 py-5 hover:cursor-pointer hover:box-border transition"
           src={src}
