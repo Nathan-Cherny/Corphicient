@@ -7,16 +7,9 @@ export default function EditSong({ song, onSave }) {
   const notify = useNotification();
 
   async function createFileFromUrl(url, filename) {
-    // 1. Fetch the data from the URL
     const response = await fetch(url);
-
-    // 2. Convert the response data into a Blob
     const dataBlob = await response.blob();
-
-    // 3. Determine the content type (MIME type)
     const contentType = response.headers.get("content-type") || "";
-
-    // 4. Create and return the File object
     return new File([dataBlob], filename, { type: contentType });
   }
 
