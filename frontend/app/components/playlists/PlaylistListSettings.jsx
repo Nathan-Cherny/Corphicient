@@ -7,7 +7,7 @@ import Form from "../forms/Forms";
 import { addSong } from "../songs/SongFunctions";
 import { addPlaylist } from "./PlaylistFunctions";
 
-export default function PlaylistListSettings({settings, setSettings}) {
+export default function PlaylistListSettings({ settings, setSettings }) {
   const [settingsMenuOpen, setSettingsMenuOpen] = useState(false);
 
   return (
@@ -28,7 +28,7 @@ export default function PlaylistListSettings({settings, setSettings}) {
   );
 }
 
-function SettingsMenu({settings, setSettings}) {
+function SettingsMenu({ settings, setSettings }) {
   return (
     <div className="p-15 bg-white">
       <h1 className="text-2xl text-center">Settings</h1>
@@ -36,7 +36,11 @@ function SettingsMenu({settings, setSettings}) {
         <Form
           formType="get_song_form"
           nonFormFields={["secondsPlayed", "src", "duration", "color"]}
-          submitFunction={addSong}
+          submitFunction={(e) => {
+            addSong(e)
+              .then((e) => alert(JSON.stringify(e)`Successfully downloaded ${e.name} (id: ${e.id})`))
+              .catch((error) => alert(`${error.status} (${error.code}) Error downloading song: ${error.message}\n\n${error.stack}\n\n`));
+          }}
           name={"Add Song"}
         />
         <Form
@@ -46,7 +50,14 @@ function SettingsMenu({settings, setSettings}) {
         />
         <div className="flex flex-col border p-5">
           <h1>Timeskip</h1>
-          <input type="number" onChange={(e) => {settings.timeSkip = e.target.valueAsNumber; setSettings(settings)}} defaultValue={settings.timeSkip}></input>
+          <input
+            type="number"
+            onChange={(e) => {
+              settings.timeSkip = e.target.valueAsNumber;
+              setSettings(settings);
+            }}
+            defaultValue={settings.timeSkip}
+          ></input>
         </div>
       </div>
     </div>
