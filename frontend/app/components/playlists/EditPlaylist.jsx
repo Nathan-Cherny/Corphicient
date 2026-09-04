@@ -76,9 +76,9 @@ export default function EditPlaylist({ playlist, onSave }) {
       </div>
 
       <div>
-        <div className="flex flex-row gap-5">
+        <div className="flex flex-row gap-5 my-5 items-center">
           <label htmlFor="name">Change Name</label>
-          <input name="name" type="text" onChange={(e) => setInputName(e.target.value)} value={inputName}/>
+          <input className="border-gray-500 border p-0.5" name="name" type="text" onChange={(e) => setInputName(e.target.value)} value={inputName}/>
         </div>
         <SongSelect
           songs={songs}
