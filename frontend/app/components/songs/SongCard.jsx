@@ -35,7 +35,7 @@ export default function SongCard({
 
   return (
     <div
-      className={`rounded-xl p-1.5 transition-all duration-200 hover:scale-105 cursor-pointer ${isCurrentSong ? "bg-linear-to-r from-purple-500  via-red-500 to-lime-500" : "bg-black z-0"}`}
+      className={`rounded-xl p-1.5 transition-all duration-200 hover:scale-105 cursor-pointer ${isCurrentSong ? "bg-yellow-300" : "bg-black z-0"}`}
     >
       <div
         onClick={() => setCurrentSong(isCurrentSong ? null : song)}
