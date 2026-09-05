@@ -55,7 +55,7 @@ export default function EditPlaylist({ playlist, onSave }) {
         textWrap: "wrap",
         width: "fit",
         overflowY: "auto",
-        maxHeight: "750px",
+        maxHeight: "650px",
       }}
     >
       <div className="flex flex-row">
