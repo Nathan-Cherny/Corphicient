@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import * as NoteFns from "./NoteFunctions";
 import { useNotification } from "../../layout/notification/NotificationContext";
-import { Eraser, Save } from "lucide-react";
+import { ChevronUp, ChevronDown, Eraser, Save } from "lucide-react";
 
 export default function Note({ note, order }) {
   const notify = useNotification();
@@ -21,6 +21,14 @@ export default function Note({ note, order }) {
       <span className="absolute left-2 top-2 text-black">
         {order}
       </span>
+
+      <button className="absolute left-6 top-2 text-black">
+        <ChevronUp/>
+      </button>
+      
+      <button className="absolute left-12 top-2 text-black">
+        <ChevronDown/>
+      </button>
 
       <button
         type="button"
