@@ -15,7 +15,6 @@ class SectionNoteInline(admin.TabularInline):
     ordering = ('order',)
     fields = ('note', 'order')
 
-
 @admin.register(Section)
 class SectionAdmin(admin.ModelAdmin):
     list_display = ('name',)

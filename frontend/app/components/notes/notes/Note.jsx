@@ -5,7 +5,7 @@ import * as NoteFns from "./NoteFunctions";
 import { useNotification } from "../../layout/notification/NotificationContext";
 import { Eraser, Save } from "lucide-react";
 
-export default function Note({ note }) {
+export default function Note({ note, order }) {
   const notify = useNotification();
 
   return (
@@ -18,6 +18,10 @@ export default function Note({ note }) {
         notify({ message: `Updated Note '${note.name}'` });
       }}
     >
+      <span className="absolute left-2 top-2 text-black">
+        {order}
+      </span>
+
       <button
         type="button"
         onClick={(e) => {

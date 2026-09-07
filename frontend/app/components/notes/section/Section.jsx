@@ -25,6 +25,8 @@ export default function Section({ section, setUpdate, collapse }) {
 
   if (!section) section = {};
 
+  console.log(section)
+
   return (
     <div
       style={{ backgroundColor: section.color }}

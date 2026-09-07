@@ -7,7 +7,7 @@ export default function NoteList({ notes }) {
 
   return (<div>
     {notes.map((n, i) => (
-        <Note key={i} note={n}/>
+        <Note key={i} note={n.note} order={n.order}/>
     ))}
   </div>);
 }
