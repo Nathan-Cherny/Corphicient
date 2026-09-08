@@ -22,7 +22,7 @@ export default function Note({ note, order }) {
         {order}
       </span>
 
-      <button className="absolute left-6 top-2 text-black">
+      <button onClick={(e) => {/* here i need to make a fucntion that switches the order and then call set update in probably section.jsx */}} className="absolute left-6 top-2 text-black">
         <ChevronUp/>
       </button>
       
