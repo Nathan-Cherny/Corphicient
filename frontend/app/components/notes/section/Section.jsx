@@ -9,7 +9,8 @@ import { addNoteToSection } from "../notes/NoteFunctions";
 
 import * as SectionFns from "./SectionFunctions";
 
-import { Palette, PlusIcon, ChevronDown, ChevronUp } from "lucide-react";
+import { Palette, PlusIcon, ChevronDown, ChevronUp, Redo } from "lucide-react";
+import axiosClient from "@/app/axiosClient";
 
 export default function Section({ section, setUpdate, collapse }) {
   const [addNoteMenuOpen, setAddNoteMenuOpen] = useState(false);
@@ -25,7 +26,18 @@ export default function Section({ section, setUpdate, collapse }) {
 
   if (!section) section = {};
 
-  console.log(section)
+  async function reorderNotes(sectionId, notes) {
+
+    await axiosClient(
+      `/section/${sectionId}/notes/order/`,
+      {
+        notes
+      },
+      null,
+      "PATCH",
+      false,
+    );
+  }
 
   return (
     <div
@@ -122,8 +134,8 @@ export default function Section({ section, setUpdate, collapse }) {
 
         <button
           onClick={(e) => {
-            e.preventDefault()
-            e.stopPropagation()
+            e.preventDefault();
+            e.stopPropagation();
             setCollapsed(!collapsed);
           }}
           className="absolute top-2 right-26 border border-black bg-orange-500 text-white w-6 h-6 p-0.5 flex items-center justify-center hover:scale-110 hover:cursor-pointer transition-all duration-200"
@@ -131,8 +143,20 @@ export default function Section({ section, setUpdate, collapse }) {
           {collapsed ? <ChevronUp /> : <ChevronDown />}
         </button>
 
+        <button
+          onClick={(e) => {
+            reorderNotes(
+              section.id,
+              section.notes.map((note) => note.note.id),
+            );
+          }}
+          className="absolute top-2 right-34 border border-black bg-purple-500 text-white w-6 h-6 p-0.5 flex items-center justify-center hover:scale-110 hover:cursor-pointer transition-all duration-200"
+        >
+          <Redo />
+        </button>
+
         <input
-          className="text-3xl mb-1 w-11/12 text-center"
+          className="text-3xl mt-0 mb-1 w-full text-left"
           defaultValue={section.name}
           name="name"
           onKeyDown={(e) => {

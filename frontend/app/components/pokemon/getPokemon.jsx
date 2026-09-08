@@ -62,8 +62,6 @@ export default function RandomPokemon() {
     pokemon.name?.toLowerCase(),
   );
 
-  console.log(pokemon)
-
   return (
     <div
       style={{
