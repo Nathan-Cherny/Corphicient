@@ -31,7 +31,7 @@ export default function SongCard({
   var background = song.color.split(",");
 
   var bgColor1 = `rgba(${[...background, BACKGROUND_COLOR_OPACITY].join(",")})`;
-  var bgColor2 = `rgba(${[...background.map((s) => (s -= 75)), BACKGROUND_COLOR_OPACITY].join(",")})`;
+  var bgColor2 = `rgba(${[...background.map((s) => (s -= 25)), BACKGROUND_COLOR_OPACITY].join(",")})`;
 
   return (
     <div
