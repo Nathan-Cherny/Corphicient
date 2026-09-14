@@ -17,6 +17,11 @@ export default function Section({ section, setUpdate, collapse }) {
   const [collapsed, setCollapsed] = useState(!!collapse);
   const [colorMenuOpen, setColorMenuOpen] = useState(false);
   const notify = useNotification();
+  const [notes, setNotes] = useState(section.notes || []);
+
+  useEffect(() => {
+    setNotes(section.notes || []);
+  }, [section.notes]);
 
   useEffect(() => {
     if (collapse !== null && collapse !== undefined) {
@@ -27,16 +32,36 @@ export default function Section({ section, setUpdate, collapse }) {
   if (!section) section = {};
 
   async function reorderNotes(sectionId, notes) {
-
     await axiosClient(
       `/section/${sectionId}/notes/order/`,
       {
-        notes
+        notes,
       },
       null,
       "PATCH",
       false,
     );
+    setUpdate(prev => prev+1)
+  }
+
+  function moveNote(noteId, direction) {
+    setNotes((prev) => {
+      const idx = prev.findIndex((n) => n.note.id === noteId);
+      if (idx === -1) return prev;
+
+      const swapIdx = direction === "up" ? idx - 1 : idx + 1;
+      if (swapIdx < 0 || swapIdx >= prev.length) return prev;
+
+      const next = [...prev];
+      [next[idx], next[swapIdx]] = [next[swapIdx], next[idx]];
+
+      reorderNotes(
+        section.id,
+        next.map((n) => n.note.id),
+      );
+
+      return next;
+    });
   }
 
   return (
@@ -168,7 +193,7 @@ export default function Section({ section, setUpdate, collapse }) {
         />
       </form>
 
-      {collapsed && <NoteList notes={section.notes}></NoteList>}
+      {collapsed && <NoteList notes={notes} onMove={moveNote}></NoteList>}
     </div>
   );
 }

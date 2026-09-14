@@ -5,36 +5,53 @@ import * as NoteFns from "./NoteFunctions";
 import { useNotification } from "../../layout/notification/NotificationContext";
 import { ChevronUp, ChevronDown, Eraser, Save } from "lucide-react";
 
-export default function Note({ note, order }) {
+export default function Note({ note, order, onMove }) {
   const notify = useNotification();
 
   return (
     <form
       className="bg-white/25 p-5 relative border shadow-[2px_2px_1px_0px] mt-5"
       id={`${note.id}-form`}
-      onClick={(e) => {e.preventDefault(); e.stopPropagation();}}
+      onClick={(e) => {
+        e.preventDefault();
+        e.stopPropagation();
+      }}
       onSubmit={(e) => {
         var res = NoteFns.updateNote(e, note.id);
         notify({ message: `Updated Note '${note.name}'` });
       }}
     >
-      <span className="absolute left-2 top-2 text-black">
-        {order}
-      </span>
+      <span className="absolute left-2 top-2 text-black">{order}</span>
 
-      <button onClick={(e) => {/* here i need to make a fucntion that switches the order and then call set update in probably section.jsx */}} className="absolute left-6 top-2 text-black">
-        <ChevronUp/>
+      <button
+        type="button"
+        onClick={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          onMove(note.id, "up");
+        }}
+        className="absolute left-6 top-2 text-black"
+      >
+        <ChevronUp />
       </button>
-      
-      <button className="absolute left-12 top-2 text-black">
-        <ChevronDown/>
+
+      <button
+        type="button"
+        onClick={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          onMove(note.id, "down");
+        }}
+        className="absolute left-12 top-2 text-black"
+      >
+        <ChevronDown />
       </button>
 
       <button
         type="button"
         onClick={(e) => {
           NoteFns.deleteNote(note.id);
-          notify({message: `Deleted Note`})
+          notify({ message: `Deleted Note` });
         }}
         className="absolute top-2 right-2 bg-red-500 text-white w-6 h-6 flex items-center justify-center hover:scale-110 hover:cursor-pointer transition-all duration-200"
       >
@@ -50,7 +67,7 @@ export default function Note({ note, order }) {
         }}
         className="absolute top-2 right-10 bg-indigo-500 text-white w-6 h-6 flex items-center justify-center hover:scale-110 hover:cursor-pointer transition-all duration-200"
       >
-        <Save className="p-[0.5]"/>
+        <Save className="p-[0.5]" />
       </button>
 
       <button
@@ -63,7 +80,7 @@ export default function Note({ note, order }) {
         }}
         className="absolute top-2 right-18 bg-green-500 text-white w-6 h-6 flex items-center justify-center hover:scale-110 hover:cursor-pointer transition-all duration-200"
       >
-        <Eraser className="p-[0.5]"/>
+        <Eraser className="p-[0.5]" />
       </button>
 
       <input
