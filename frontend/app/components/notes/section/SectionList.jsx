@@ -38,8 +38,8 @@ export default function SectionList({}) {
         <SectionSettings className="py-2"/>
       </div>
       <div className="grid grid-cols-2 gap-5">
-        {sections.map((s) => (
-          <div className="w-full h-full" key={s.id}>
+        {sections.map((s, i) => (
+          <div className="w-full h-full" key={`${s.id}|${i}`}>
             <Section setUpdate={setUpdate} section={s} collapse={allCollapse} />
           </div>
         ))}

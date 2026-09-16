@@ -44,25 +44,19 @@ export default function Section({ section, setUpdate, collapse }) {
     setUpdate(prev => prev+1)
   }
 
-  function moveNote(noteId, direction) {
-    setNotes((prev) => {
-      const idx = prev.findIndex((n) => n.note.id === noteId);
-      if (idx === -1) return prev;
+function moveNote(noteId, direction) {
+  const idx = notes.findIndex((n) => n.note.id === noteId);
+  if (idx === -1) return;
 
-      const swapIdx = direction === "up" ? idx - 1 : idx + 1;
-      if (swapIdx < 0 || swapIdx >= prev.length) return prev;
+  const swapIdx = direction === "up" ? idx - 1 : idx + 1;
+  if (swapIdx < 0 || swapIdx >= notes.length) return;
 
-      const next = [...prev];
-      [next[idx], next[swapIdx]] = [next[swapIdx], next[idx]];
+  const next = [...notes];
+  [next[idx], next[swapIdx]] = [next[swapIdx], next[idx]];
 
-      reorderNotes(
-        section.id,
-        next.map((n) => n.note.id),
-      );
-
-      return next;
-    });
-  }
+  setNotes(next);
+  reorderNotes(section.id, next.map((n) => n.note.id));
+}
 
   return (
     <div
