@@ -42,7 +42,6 @@ export default function Section({ section, setUpdate, collapse }) {
       false,
     );
     setUpdate(prev => prev+1)
-    console.log('test')
   }
 
   function moveNote(noteId, direction) {
