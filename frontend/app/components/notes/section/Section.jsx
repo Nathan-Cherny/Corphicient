@@ -162,7 +162,8 @@ function moveNote(noteId, direction) {
           {collapsed ? <ChevronUp /> : <ChevronDown />}
         </button>
 
-        <button
+          {/* I don't think i need this lol */}
+        {/* <button
           onClick={(e) => {
             reorderNotes(
               section.id,
@@ -172,7 +173,7 @@ function moveNote(noteId, direction) {
           className="absolute top-2 right-34 border border-black bg-purple-500 text-white w-6 h-6 p-0.5 flex items-center justify-center hover:scale-110 hover:cursor-pointer transition-all duration-200"
         >
           <Redo />
-        </button>
+        </button> */}
 
         <input
           className="text-3xl mt-0 mb-1 w-full text-left"
