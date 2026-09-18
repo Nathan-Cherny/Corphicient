@@ -41,22 +41,25 @@ export default function Section({ section, setUpdate, collapse }) {
       "PATCH",
       false,
     );
-    setUpdate(prev => prev+1)
+    setUpdate((prev) => prev + 1);
   }
 
-function moveNote(noteId, direction) {
-  const idx = notes.findIndex((n) => n.note.id === noteId);
-  if (idx === -1) return;
+  function moveNote(noteId, direction) {
+    const idx = notes.findIndex((n) => n.note.id === noteId);
+    if (idx === -1) return;
 
-  const swapIdx = direction === "up" ? idx - 1 : idx + 1;
-  if (swapIdx < 0 || swapIdx >= notes.length) return;
+    const swapIdx = direction === "up" ? idx - 1 : idx + 1;
+    if (swapIdx < 0 || swapIdx >= notes.length) return;
 
-  const next = [...notes];
-  [next[idx], next[swapIdx]] = [next[swapIdx], next[idx]];
+    const next = [...notes];
+    [next[idx], next[swapIdx]] = [next[swapIdx], next[idx]];
 
-  setNotes(next);
-  reorderNotes(section.id, next.map((n) => n.note.id));
-}
+    setNotes(next);
+    reorderNotes(
+      section.id,
+      next.map((n) => n.note.id),
+    );
+  }
 
   return (
     <div
@@ -162,7 +165,7 @@ function moveNote(noteId, direction) {
           {collapsed ? <ChevronUp /> : <ChevronDown />}
         </button>
 
-          {/* I don't think i need this lol */}
+        {/* I don't think i need this lol */}
         {/* <button
           onClick={(e) => {
             reorderNotes(
