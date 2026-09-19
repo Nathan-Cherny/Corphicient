@@ -5,7 +5,7 @@ import Section from "./Section";
 import { useEffect, useState } from "react";
 import SectionSettings from "./SectionSettings";
 
-export default function SectionList({}) {
+export default function SectionList({ }) {
   const [update, setUpdate] = useState(0);
   const request = ["get_sections/", null, "", "GET"];
   const [sections, setSections] = useState([]);
@@ -35,7 +35,7 @@ export default function SectionList({}) {
         >
           Expand All
         </button>
-        <SectionSettings className="py-2"/>
+        <SectionSettings className="py-2" />
       </div>
       <div className="grid grid-cols-2 gap-5">
         {sections.map((s, i) => (
