@@ -32,9 +32,9 @@ export default function Home() {
             </div>
           ))}
 
-          <div className="flex flex-col border text-center rounded-2xl bg-amber-400 shadow-2xl p-5 w-fit">
+          <div className="flex flex-col border text-center rounded-2xl w-full bg-amber-400 shadow-2xl p-5">
             <h1 className="text-3xl mb-5">Tasks</h1>
-            <iframe src="https://calendar.google.com/calendar/embed?src=natec3632%40gmail.com&ctz=America%2FNew_York&mode=AGENDA" width="400" height="600"></iframe>
+            <iframe className="w-full" src="https://calendar.google.com/calendar/embed?src=natec3632%40gmail.com&ctz=America%2FNew_York&mode=WEEK" width="400" height="600"></iframe>
           </div>
         </div>
 
