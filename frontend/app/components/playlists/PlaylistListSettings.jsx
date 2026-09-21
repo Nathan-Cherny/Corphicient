@@ -38,7 +38,7 @@ function SettingsMenu({ settings, setSettings }) {
           nonFormFields={["secondsPlayed", "src", "duration", "color"]}
           submitFunction={(e) => {
             addSong(e)
-              .then((e) => alert(JSON.stringify(e)`Successfully downloaded ${e.name} (id: ${e.id})`))
+              .then((e) => alert(`Successfully downloaded ${e.name} (id: ${e.id})`))
               .catch((error) => alert(`${error.status} (${error.code}) Error downloading song: ${error.message}\n\n${error.stack}\n\n`));
           }}
           name={"Add Song"}
