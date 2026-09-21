@@ -26,7 +26,7 @@ export default function Home() {
         <hr className="my-10 w-full"/>
         
         <div className="flex flex-row items-stretch gap-15 *:h-full">
-          {sections.filter(s => s.name == "Today").map((s) => (
+          {sections.filter(s => s.id == 10).map((s) => (
             <div className="w-full h-full" key={s.id}>
               <Section setUpdate={setUpdate} section={s} collapse={true} />
             </div>
