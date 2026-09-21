@@ -297,6 +297,7 @@ function GetAllCommits() {
               }}
             >
               <h2>{d}</h2>
+              <p className="text-sm">{new Date(d).toLocaleDateString('en-US', { weekday: 'long' })}</p>
               <p>{allCommits[d]?.length || 0}</p>
             </div>
           </div>
