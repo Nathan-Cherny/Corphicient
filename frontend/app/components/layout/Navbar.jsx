@@ -43,13 +43,13 @@ export default function Navbar() {
         href: "https://calendar.google.com/calendar/u/0/r",
         label: "Calendar",
         icon: Calendar,
-        newTab: newTab,
+        newTab: true,
       },
       {
         href: "https://docs.google.com/spreadsheets/d/1CLfYgpP7-9IrHClDjFJYu0IAehzd8r_HSsX1yJDZAUQ/edit?gid=386309940#gid=386309940",
         label: "$ SS",
         icon: FileSpreadsheet,
-        newTab: newTab,
+        newTab: true,
       },
       { lineDiv: true },
       {
@@ -77,7 +77,7 @@ export default function Navbar() {
         href: "http://localhost:8000/admin/",
         label: "Admin",
         icon: UserCheck,
-        newTab: newTab,
+        newTab: true,
       },
       {
         label: "About",
@@ -233,6 +233,7 @@ function getHTMLFromLinkData(link, pathname, key) {
   }
 
   const isActive = pathname === link.href;
+
   return (
     <Link
       key={key}
