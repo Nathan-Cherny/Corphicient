@@ -78,6 +78,8 @@ function parseField(field) {
     );
   }
 
+  if (field.name.includes("color")) field.type = "color"
+
   if (field.max_length >= 750) {
     return (
       <>
