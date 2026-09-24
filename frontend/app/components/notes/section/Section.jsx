@@ -6,6 +6,7 @@ import FadeOverlay from "../../layout/FadeOverlay";
 import Form from "../../forms/Forms";
 import { useNotification } from "../../layout/notification/NotificationContext";
 import { addNoteToSection } from "../notes/NoteFunctions";
+import ColorSelect from "../../visual/selectColor";
 
 import * as SectionFns from "./SectionFunctions";
 
@@ -102,19 +103,7 @@ export default function Section({ section, setUpdate, collapse }) {
         >
           <div className="bg-white p-5 flex flex-col items-center">
             <h1 className="text-xl">Set Color For Section</h1>
-            <div className="flex flex-row gap-5 items-center">
-              <input
-                name="color"
-                defaultValue={section.color}
-                className="w-20 h-10"
-                type="color"
-                onChange={(e) => {
-                  document.getElementById("colorLabel").innerHTML =
-                    e.target.value;
-                }}
-              />
-              <p id="colorLabel">{section.color}</p>
-            </div>
+            <ColorSelect defaultColor={section.color}/>
             <input type="submit" value={"Submit"} />
           </div>
         </FadeOverlay>

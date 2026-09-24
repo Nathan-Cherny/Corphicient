@@ -4,6 +4,7 @@ import axiosClient from "@/app/axiosClient";
 import { useState, useEffect } from "react";
 import EditPlaylist from "../playlists/EditPlaylist";
 import SongSelect from "../songs/SongSelect";
+import ColorSelect from "../visual/selectColor";
 
 export default function Form({
   formType,
@@ -78,7 +79,7 @@ function parseField(field) {
     );
   }
 
-  if (field.name.includes("color")) field.type = "color"
+  if (field.name.includes("color")) return <ColorSelect/>
 
   if (field.max_length >= 750) {
     return (
