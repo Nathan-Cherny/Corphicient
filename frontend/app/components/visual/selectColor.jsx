@@ -1,3 +1,5 @@
+"use client"
+
 export default function ColorSelect({defaultColor}) {
     return (
         <div className="flex flex-row gap-5 items-center">
