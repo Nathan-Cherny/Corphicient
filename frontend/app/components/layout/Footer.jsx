@@ -297,7 +297,7 @@ function GetAllCommits() {
               }}
             >
               <h2>{d}</h2>
-              <p className="text-sm">{new Date(d).toLocaleDateString('en-US', { weekday: 'long' })}</p>
+              <p className="text-sm">{new Date(d + "T00:00:00").toLocaleDateString('en-US', { weekday: 'long' })}</p>
               <p>{allCommits[d]?.length || 0}</p>
             </div>
           </div>
@@ -305,6 +305,10 @@ function GetAllCommits() {
       </div>
     </div>
   );
+}
+
+function getRightDate(date){
+
 }
 
 function getDatesInRange(startDate, endDate) {
