@@ -6,6 +6,7 @@ import { useNotification } from "../../layout/notification/NotificationContext";
 import { ChevronUp, ChevronDown, Eraser, Save } from "lucide-react";
 
 export default function Note({ note, order, onMove }) {
+  console.log(note)
   const notify = useNotification();
 
   return (

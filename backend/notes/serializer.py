@@ -3,10 +3,15 @@ from .models import *
 
 
 class NoteSerializer(serializers.ModelSerializer):
+    max_note_length = serializers.SerializerMethodField()
+
     class Meta:
         model = Note
-        fields = ["id", "name", "note"]
+        fields = ["id", "name", "note", "max_note_length"]
         read_only_fields = []
+
+    def get_max_note_length(self, obj):
+        return Note._meta.get_field("note").max_length
 
 
 class SectionNoteSerializer(serializers.ModelSerializer):
