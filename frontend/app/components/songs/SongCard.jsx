@@ -3,6 +3,7 @@ import * as Song from "./SongFunctions";
 import { Edit, Eraser } from "lucide-react";
 import { useNotification } from "../layout/notification/NotificationContext";
 import { getRandomColor } from "../visual/colors";
+import { API_BASE_URL } from "@/app/lib/config";
 
 export default function SongCard({
   song,
@@ -64,7 +65,7 @@ export default function SongCard({
             audioRef.current = el;
             if (isCurrentSong) onAudioRef(el);
           }}
-          src={`http://localhost:8000/${song.src}`}
+          src={`${API_BASE_URL}/${song.src}`}
           crossOrigin="use-credentials"
           preload="auto"
           onPlay={() => setCurrentSong(song)}

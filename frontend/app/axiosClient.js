@@ -1,4 +1,5 @@
 import axios from "axios";
+import { API_BASE_URL } from "./lib/config";
 
 const axiosClient = async (
   path,
@@ -7,9 +8,7 @@ const axiosClient = async (
   type = "POST",
   isFormData = false,
 ) => {
-  const baseUrl = "http://localhost:8000/";
-
-  const endpoint = baseUrl + path;
+  const endpoint = `${API_BASE_URL}/${path}`;
 
   const config = {
     headers: {
@@ -30,8 +29,7 @@ const axiosClient = async (
       res = await axios.put(endpoint, data, config);
     } else if (type === "DELETE") {
       res = await axios.delete(endpoint, data, config);
-    }
-    else if (type === "PATCH") {
+    } else if (type === "PATCH") {
       res = await axios.patch(endpoint, data, config);
     }
 

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useNotification } from "../layout/notification/NotificationContext";
+import { API_BASE_URL } from "@/app/lib/config";
 
 export default function EditSong({ song, onSave }) {
   const notify = useNotification();
@@ -22,7 +23,7 @@ export default function EditSong({ song, onSave }) {
     if (thumbnailFile.size === 0) {
       try {
         const file = await createFileFromUrl(
-          `http://localhost:8000${song.thumbnail}`,
+          `${API_BASE_URL}${song.thumbnail}`,
           `${song.thumbnail}`,
         );
         formData.set("thumbnail", file);
@@ -70,7 +71,7 @@ export default function EditSong({ song, onSave }) {
             </label>
             <img
               className="w-15 h-15"
-              src={`http://localhost:8000${song.thumbnail}`}
+              src={`${API_BASE_URL}${song.thumbnail}`}
             />
             <input name="thumbnail" type="file" />
           </div>
@@ -99,7 +100,7 @@ function CropSong({ song, src }) {
       </label>
       <audio
         className="w-full"
-        src={`http://localhost:8000/${src}`}
+        src={`${API_BASE_URL}/${src}`}
         controls
       ></audio>
       <div className="flex flex-row">

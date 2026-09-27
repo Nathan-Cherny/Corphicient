@@ -7,6 +7,8 @@ import Image from "next/image";
 import corphishLogo from "@/public/corphish.png";
 import FadeOverlay from "./FadeOverlay";
 
+import { API_BASE_URL } from "@/app/lib/config";
+
 import {
   Music,
   UserCheck,
@@ -74,7 +76,7 @@ export default function Navbar() {
       },
       { lineDiv: true },
       {
-        href: "http://localhost:8000/admin/",
+        href: `${API_BASE_URL}/admin/`,
         label: "Admin",
         icon: UserCheck,
         newTab: true,

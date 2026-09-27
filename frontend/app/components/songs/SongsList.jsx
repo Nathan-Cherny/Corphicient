@@ -10,6 +10,8 @@ import { useNotification } from "../layout/notification/NotificationContext";
 import FadeOverlay from "../layout/FadeOverlay";
 import EditSong from "./EditSong";
 
+import { API_BASE_URL } from "@/app/lib/config";
+
 import {
   Pause,
   Play,
@@ -119,7 +121,7 @@ export default function SongsList({
         artwork: [
           {
             src:
-              "http://localhost:8000" +
+              API_BASE_URL +
               (currentSong.thumbnail || "/media/thumbnail/corphishbop.jpg"),
             sizes: "512x512",
             type: "image/jpeg",
@@ -271,8 +273,8 @@ function CurrentSongInfo({
             className={`w-150 h-100 bg-gray-600 object-contain border-black border shadow-2xl rounded-xl cursor-pointer`}
             src={
               currentSong?.thumbnail
-                ? `http://localhost:8000${currentSong?.thumbnail}`
-                : `http://localhost:8000/media/thumbnail/corphishbop.jpg`
+                ? `${API_BASE_URL}${currentSong?.thumbnail}`
+                : `${API_BASE_URL}/media/thumbnail/corphishbop.jpg`
             }
           />
         </div>
