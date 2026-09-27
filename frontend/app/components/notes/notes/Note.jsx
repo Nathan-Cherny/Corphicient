@@ -6,8 +6,8 @@ import { useNotification } from "../../layout/notification/NotificationContext";
 import { ChevronUp, ChevronDown, Eraser, Save } from "lucide-react";
 
 export default function Note({ note, order, onMove }) {
-  console.log(note)
   const notify = useNotification();
+  const [noteLength, setNoteLength] = useState(note.note.length)
 
   return (
     <form
@@ -104,8 +104,13 @@ export default function Note({ note, order, onMove }) {
             e.currentTarget.form?.requestSubmit();
           }
         }}
-        className="field-sizing-content w-full border-black border-t  p-5"
+        onChange={(e) => {
+          setNoteLength(e.target?.value.length)
+        }}
+        className="field-sizing-content relative w-full border-black border-t p-5 pt-10"
       />
+      <p className={`absolute top-15 right-7`}>
+        <span className={`${note.max_note_length < noteLength ? "text-red-700" : ""}`}>{noteLength}</span> / {note.max_note_length}</p>
     </form>
   );
 }
