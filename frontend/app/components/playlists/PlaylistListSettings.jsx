@@ -13,7 +13,7 @@ export default function PlaylistListSettings({ settings, setSettings }) {
   return (
     <>
       <button
-        className="bg-gray-400 p-5 rounded-2xl shadow-2xl border hover:scale-105 transition-all duration-150 cursor-pointer"
+        className="rounded-xl border border-sky-200 bg-sky-100 px-6 py-3 font-medium text-sky-900 shadow-md transition-all duration-150 hover:scale-105 hover:bg-sky-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 cursor-pointer"
         onClick={() => setSettingsMenuOpen(true)}
       >
         Settings
@@ -30,35 +30,47 @@ export default function PlaylistListSettings({ settings, setSettings }) {
 
 function SettingsMenu({ settings, setSettings }) {
   return (
-    <div className="p-15 bg-white">
-      <h1 className="text-2xl text-center">Settings</h1>
-      <div className="bg-black/15 flex flex-col gap-5 items-stretch p-5 mt-5">
+    <div className="w-full max-w-3xl max-h-[90vh] overflow-scroll rounded-2xl bg-white p-8 shadow-xl">
+      <h1 className="text-center text-2xl font-semibold text-sky-950">
+        Settings
+      </h1>
+
+      <div className="mt-6 flex flex-col items-stretch gap-5 rounded-xl bg-sky-50 p-5">
         <Form
           formType="get_song_form"
           nonFormFields={["secondsPlayed", "src", "duration", "color"]}
           submitFunction={(e) => {
             addSong(e)
-              .then((e) => alert(`Successfully downloaded ${e.name} (id: ${e.id})`))
-              .catch((error) => alert(`${error.status} (${error.code}) Error downloading song: ${error.message}\n\n${error.stack}\n\n`));
+              .then((e) =>
+                alert(`Successfully downloaded ${e.name} (id: ${e.id})`),
+              )
+              .catch((error) =>
+                alert(
+                  `${error.status} (${error.code}) Error downloading song: ${error.message}\n\n${error.stack}\n\n`,
+                ),
+              );
           }}
-          name={"Add Song"}
+          name="Add song"
         />
         <Form
           formType="get_playlist_form"
           submitFunction={addPlaylist}
-          name={"Add Playlist"}
+          name="Add playlist"
         />
-        <div className="flex flex-col border p-5">
-          <h1>Timeskip</h1>
+
+        <section className="flex flex-col gap-3 rounded-xl border border-sky-200 bg-white p-5 shadow-sm">
+          <h2 className="text-center text-lg font-semibold text-sky-950">
+            Timeskip
+          </h2>
           <input
             type="number"
-            onChange={(e) => {
-              settings.timeSkip = e.target.valueAsNumber;
-              setSettings(settings);
-            }}
+            className="rounded-lg border border-sky-200 bg-white px-3 py-2 text-sky-950 focus:border-sky-400 focus:outline-none focus:ring-2 focus:ring-sky-200"
+            onChange={(e) =>
+              setSettings({ ...settings, timeSkip: e.target.valueAsNumber })
+            }
             defaultValue={settings.timeSkip}
-          ></input>
-        </div>
+          />
+        </section>
       </div>
     </div>
   );
