@@ -22,7 +22,7 @@ export default function Home() {
   return (
     <PageMain>
       <div className="m-20">
-        <h1 className="text-5xl text-center font-light">{new Date().toLocaleDateString()}</h1>
+        <h1 className="text-5xl text-center font-light">{new Date().toLocaleDateString()} - Corphicient</h1>
         <hr className="my-10 w-full"/>
         
         <div className="flex flex-row items-stretch gap-15 *:h-full">
