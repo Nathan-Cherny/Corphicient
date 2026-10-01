@@ -41,7 +41,7 @@ export default function Form({
 
   // go thru each form_data field and add that
   return (
-    <section className="flex flex-col rounded-xl border border-sky-200 bg-white p-5 shadow-sm">
+    <section className="flex flex-col content-center items-center rounded-xl border border-sky-200 bg-white p-5 shadow-sm">
       <h2 className="mb-4 text-center text-lg font-semibold text-sky-950">
         {name}
       </h2>

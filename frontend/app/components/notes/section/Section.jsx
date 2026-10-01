@@ -75,7 +75,7 @@ export default function Section({ section, setUpdate, collapse }) {
         isOpen={addNoteMenuOpen}
         onClose={() => setAddNoteMenuOpen(false)}
       >
-        <div className="bg-white p-5">
+        <div className="bg-white p-5 flex-col flex gap-5">
           <Form
             formType="get_note_form/"
             nonFormFields={[]}
@@ -86,10 +86,23 @@ export default function Section({ section, setUpdate, collapse }) {
             }}
             name={`Add Note To ${section.name}`}
           />
+
+          <Form
+            formType="get_section_form/"
+            nonFormFields={["color", "name"]}
+            submitFunction={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              let fd = new FormData(e.target)
+              let data = fd.entries()
+              console.log(data)
+            }}
+            name={"Add Existing Note"}
+          />
         </div>
       </FadeOverlay>
 
-            {/* test */}
+      {/* test */}
 
       <form
         onSubmit={(e) => {
@@ -105,7 +118,7 @@ export default function Section({ section, setUpdate, collapse }) {
         >
           <div className="bg-white p-5 flex flex-col items-center">
             <h1 className="text-xl">Set Color For Section</h1>
-            <ColorSelect defaultColor={section.color}/>
+            <ColorSelect defaultColor={section.color} />
             <input type="submit" value={"Submit"} />
           </div>
         </FadeOverlay>

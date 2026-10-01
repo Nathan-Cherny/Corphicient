@@ -32,7 +32,7 @@ function SectionSettingsMenu({}) {
   const notify = useNotification();
 
   return (
-  <div className="p-5 bg-white max-h-[90vh] overflow-scroll ">
+  <div className="p-5 bg-white max-h-[90vh] overflow-scroll flex flex-col gap-5">
     <Form
       formType="get_section_form/"
       nonFormFields={[]}
