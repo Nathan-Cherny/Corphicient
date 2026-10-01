@@ -10,8 +10,6 @@ import { useNotification } from "../../layout/notification/NotificationContext";
 export default function SectionSettings({}) {
   const [settingsMenuOpen, setSettingsMenuOpen] = useState(false);
 
-  
-
   return (
     <>
       <button
