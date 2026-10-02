@@ -22,23 +22,42 @@ export default function Home() {
   return (
     <PageMain>
       <div className="m-20">
-        <h1 className="text-5xl text-center font-light">{new Date().toLocaleDateString()} - Corphicient</h1>
-        <hr className="my-10 w-full"/>
-        
-        <div className="flex flex-row items-stretch gap-15 *:h-full">
-          {sections.filter(s => s.id == 10).map((s) => (
-            <div className="w-full h-full" key={s.id}>
-              <Section setUpdate={setUpdate} section={s} collapse={true} />
-            </div>
-          ))}
+        <h1 className="text-5xl text-center font-light">
+          {new Date().toLocaleDateString()} - Corphicient
+        </h1>
+        <hr className="my-10 w-full" />
 
-          <div className="flex flex-col border text-center rounded-2xl w-full bg-amber-400 shadow-2xl p-5">
-            <h1 className="text-3xl mb-5">Tasks</h1>
-            <iframe className="w-full" src="https://calendar.google.com/calendar/embed?src=natec3632%40gmail.com&ctz=America%2FNew_York&mode=WEEK" width="400" height="600"></iframe>
+        <div className="flex flex-col gap-5">
+          <div className="flex flex-row items-stretch gap-15 *:h-full">
+            {sections
+              .filter((s) => s.id == 10)
+              .map((s) => (
+                <div className="w-full overflow-y-scroll" key={s.id}>
+                  <Section className={""} setUpdate={setUpdate} section={s} collapse={true} />
+                </div>
+              ))}
+
+            <div className="flex flex-col border text-center rounded-2xl w-full bg-amber-400 shadow-2xl p-5">
+              <h1 className="text-3xl mb-5">Tasks</h1>
+              <iframe
+                className="w-full"
+                src="https://calendar.google.com/calendar/embed?src=natec3632%40gmail.com&ctz=America%2FNew_York&mode=WEEK"
+                width="400"
+                height="600"
+              ></iframe>
+            </div>
+          </div>
+
+          <div className="flex flex-col border text-center rounded-2xl w-full bg-purple-400 shadow-2xl p-5">
+            <h1 className="text-3xl mb-5">GitHub</h1>
+            <iframe
+              src="https://jandi.firejune.io/Nathan-Cherny?tz=America/New_York&scheme=light"
+              width="100%"
+              height="250"
+              className="bg-transparent"
+            ></iframe>
           </div>
         </div>
-
-
       </div>
     </PageMain>
   );

@@ -13,7 +13,7 @@ import * as SectionFns from "./SectionFunctions";
 import { Palette, PlusIcon, ChevronDown, ChevronUp, Redo } from "lucide-react";
 import axiosClient from "@/app/axiosClient";
 
-export default function Section({ section, setUpdate, collapse }) {
+export default function Section({ section, setUpdate, collapse, className }) {
   const [addNoteMenuOpen, setAddNoteMenuOpen] = useState(false);
   const [collapsed, setCollapsed] = useState(!!collapse);
   const [colorMenuOpen, setColorMenuOpen] = useState(false);
@@ -69,7 +69,7 @@ export default function Section({ section, setUpdate, collapse }) {
         if (!e.ctrlKey) return;
         setCollapsed(!collapsed);
       }}
-      className={`p-5 shadow-2xl rounded-2xl h-full border relative cursor-pointer`}
+      className={`p-5 shadow-2xl rounded-2xl h-full border relative cursor-pointer max-h-150 overflow-y-scroll ${className}`}
     >
       <FadeOverlay
         isOpen={addNoteMenuOpen}
