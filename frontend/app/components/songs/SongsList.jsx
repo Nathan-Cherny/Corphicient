@@ -9,6 +9,7 @@ import { getReadableDurationSong } from "../playlists/PlaylistCard";
 import { useNotification } from "../layout/notification/NotificationContext";
 import FadeOverlay from "../layout/FadeOverlay";
 import EditSong from "./EditSong";
+import AudioVisualizer from "./AudioVisualizer";
 
 import { API_BASE_URL } from "@/app/lib/config";
 
@@ -161,9 +162,9 @@ export default function SongsList({
       playNextSong();
     });
 
-    navigator.mediaSession.setActionHandler("seekbackward", (details) => {});
+    navigator.mediaSession.setActionHandler("seekbackward", (details) => { });
 
-    navigator.mediaSession.setActionHandler("seekforward", (details) => {});
+    navigator.mediaSession.setActionHandler("seekforward", (details) => { });
   }, []);
 
   return (
@@ -265,17 +266,31 @@ function CurrentSongInfo({
       <div
         className={`flex flex-row justify-around items-stretch mb-5 *:text-center`}
       >
-        <div
-          className={`${currentSong ? "bg-linear-to-r rounded-xl from-orange-500  via-green-500 to-purple-500 p-1" : "p-1"}`}
-        >
-          <img
-            onClick={(e) => hotkeysMap[" "](e, currentAudioRef.current)}
-            className={`w-150 h-100 bg-gray-600 object-contain border-black border shadow-2xl rounded-xl cursor-pointer`}
-            src={
-              currentSong?.thumbnail
-                ? `${API_BASE_URL}${currentSong?.thumbnail}`
-                : `${API_BASE_URL}/media/thumbnail/corphishbop.jpg`
-            }
+        <div className="flex items-stretch">
+          <div
+            className={`p-1 rounded-xl`}
+            style={{
+                backgroundColor: currentSong
+                  ? `rgb(${currentSong?.color
+                    .split(",")
+                    .map((c) => parseInt(c) - 75)
+                    .join(",")})`
+                  : "black",
+              }}
+          >
+            <img
+              onClick={(e) => hotkeysMap[" "](e, currentAudioRef.current)}
+              className={`w-120 h-100 bg-gray-600 object-contain border-black border shadow-2xl rounded-xl cursor-pointer`}
+              src={
+                currentSong?.thumbnail
+                  ? `${API_BASE_URL}${currentSong?.thumbnail}`
+                  : `${API_BASE_URL}/media/thumbnail/corphishbop.jpg`
+              }
+            />
+          </div>
+          <AudioVisualizer
+            currentAudioRef={currentAudioRef}
+            currentSong={currentSong}
           />
         </div>
         <div className="flex flex-col gap-5 justify-evenly items-center w-100">
@@ -285,9 +300,9 @@ function CurrentSongInfo({
               style={{
                 color: currentSong
                   ? `rgb(${currentSong?.color
-                      .split(",")
-                      .map((c) => parseInt(c) - 75)
-                      .join(",")})`
+                    .split(",")
+                    .map((c) => parseInt(c) - 75)
+                    .join(",")})`
                   : "black",
               }}
             >
@@ -307,7 +322,7 @@ function CurrentSongInfo({
         </div>
       </div>
       <div className="flex flex-row items-center gap-2">
-        <p>{getReadableDurationSong(displayTime, "small")}</p>
+        <p className="select-none">{getReadableDurationSong(displayTime, "small")}</p>
 
         <div
           ref={progressBarRef}
@@ -326,9 +341,9 @@ function CurrentSongInfo({
           />
         </div>
 
-        <p>{getReadableDurationSong(progress.duration, "small")}</p>
+        <p className="select-none">{getReadableDurationSong(progress.duration, "small")}</p>
       </div>
-    </div>
+    </div >
   );
 }
 
