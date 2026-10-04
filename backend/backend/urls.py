@@ -27,6 +27,7 @@ urlpatterns = [
 
     path('songs/', get_songs, name="get_songs"),
     path('add_song/', add_song, name='add_song'),
+    path('song_progress/<str:job_id>/', song_progress, name='song_progress'),
     path('get_song_form/', get_song_form, name='get_song_form'),
     path('delete_song/<int:pk>/', delete_song, name="delete_song"),
     path('songs/<int:pk>/update/', update_song, name="update_song"),

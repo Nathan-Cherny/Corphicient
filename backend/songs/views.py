@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from songs.models import *
 from django.db.models import F
-from django.http import FileResponse, HttpResponse
+from django.http import FileResponse, HttpResponse, StreamingHttpResponse
 from django.conf import settings
 from rest_framework import generics, status
 from rest_framework.decorators import api_view, parser_classes
@@ -11,7 +11,10 @@ from .serializer import *
 from .colors import *
 from .forms import *
 from .download import download_song
+from . import progress
+import json
 import os
+import time
 from .crop import cropSong
 
 # STATIC MEDIA
@@ -64,14 +67,62 @@ def add_song(request):
     serializer = SongSerializer(data=data)
 
     if serializer.is_valid():
+        # Chosen by the frontend so it can subscribe to song_progress/<job_id>/
+        job_id = data.get("job_id")
 
-        song_data = download_song(data["href"], data["name"])
-        color = get_song_color(thumbnail)
-        serializer.save(src=song_data["location"], duration=song_data["duration"], thumbnail=thumbnail, color=color)
+        try:
+            song_data = download_song(data["href"], data["name"], job_id=job_id)
+            color = get_song_color(thumbnail)
+            serializer.save(src=song_data["location"], duration=song_data["duration"], thumbnail=thumbnail, color=color)
+        except Exception as e:
+            progress.update(job_id, status="error", message=str(e))
+            raise
+
+        # download_song already marked the job as errored if the download failed
+        if song_data["location"]:
+            progress.update(job_id, status="done", progress=100)
 
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+def song_progress(request, job_id):
+    """Server-sent events stream of a download's progress.
+
+    A plain Django view on purpose: DRF's content negotiation rejects the
+    text/event-stream Accept header that EventSource sends.
+    """
+
+    def stream():
+        last_sent = None
+        started = time.time()
+        seen_job = False
+
+        while True:
+            state = progress.get(job_id)
+
+            if state is not None:
+                seen_job = True
+                if state != last_sent:
+                    yield f"data: {json.dumps(state)}\n\n"
+                    last_sent = state
+                if state["status"] in ("done", "error"):
+                    return
+            elif not seen_job and time.time() - started > 60:
+                # Nobody ever started this job; don't hold the connection open forever
+                yield f"data: {json.dumps({'status': 'error', 'message': 'Unknown job'})}\n\n"
+                return
+
+            if time.time() - started > 60 * 30:
+                return
+
+            time.sleep(0.25)
+
+    response = StreamingHttpResponse(stream(), content_type="text/event-stream")
+    response["Cache-Control"] = "no-cache"
+    response["X-Accel-Buffering"] = "no"  # stop nginx from buffering the stream
+    return response
 
 
 @api_view(["GET"])

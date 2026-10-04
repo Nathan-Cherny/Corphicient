@@ -1,8 +1,10 @@
 import yt_dlp
 from mutagen.mp3 import MP3
 
+from . import progress as progress_store
 
-def download_song(url, name="New Song", output_dir="../backend/media/songs/"):
+
+def download_song(url, name="New Song", output_dir="../backend/media/songs/", job_id=None):
     downloaded_path = {"filename": None}
 
     def progress_hook(d):
@@ -12,7 +14,10 @@ def download_song(url, name="New Song", output_dir="../backend/media/songs/"):
 
             if total:
                 progress = downloaded / total * 100
-                send_progress_to_frontend(progress)
+                send_progress_to_frontend(progress, job_id)
+        elif d["status"] == "finished":
+            # The bytes are down; ffmpeg still has to convert to mp3.
+            send_progress_to_frontend(100, job_id, status="processing")
 
     def postprocessor_hook(d):
         if d["status"] == "finished":
@@ -29,6 +34,7 @@ def download_song(url, name="New Song", output_dir="../backend/media/songs/"):
         "outtmpl": f"{output_dir}/{name}.%(ext)s",
         "progress_hooks": [progress_hook],
         "postprocessor_hooks": [postprocessor_hook],
+        "noprogress": True,
     }
 
     try:
@@ -44,11 +50,14 @@ def download_song(url, name="New Song", output_dir="../backend/media/songs/"):
             return {"location": location, "duration": duration}
     except Exception as e:
         print(f"\n\n\nException while downloading song: \n\n{e}")
+        progress_store.update(job_id, status="error", message=str(e))
         return {"location": "", "duration": 0}
 
 
 def convertPathToLocalSRC(path):
     return "/".join(path.split("\\")[2:])
 
-def send_progress_to_frontend(progress):
-    print(progress)
+
+def send_progress_to_frontend(progress, job_id=None, status="downloading"):
+    """Record download progress so the frontend can stream it (see song_progress view)."""
+    progress_store.update(job_id, status=status, progress=round(progress, 1))

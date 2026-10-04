@@ -5,6 +5,7 @@ import { useState } from "react";
 
 import Form from "../forms/Forms";
 import { addSong } from "../songs/SongFunctions";
+import SongDownloadProgress from "../songs/SongDownloadProgress";
 import { addPlaylist } from "./PlaylistFunctions";
 
 export default function PlaylistListSettings({ settings, setSettings }) {
@@ -29,6 +30,8 @@ export default function PlaylistListSettings({ settings, setSettings }) {
 }
 
 function SettingsMenu({ settings, setSettings }) {
+  const [songProgress, setSongProgress] = useState(null);
+
   return (
     <div className="w-full max-w-3xl max-h-[90vh] overflow-scroll rounded-2xl bg-white p-8 shadow-xl">
       <h1 className="text-center text-2xl font-semibold text-sky-950">
@@ -40,7 +43,8 @@ function SettingsMenu({ settings, setSettings }) {
           formType="get_song_form"
           nonFormFields={["secondsPlayed", "src", "duration", "color"]}
           submitFunction={(e) => {
-            addSong(e)
+            setSongProgress({ status: "starting", progress: 0 });
+            addSong(e, setSongProgress)
               .then((e) =>
                 alert(`Successfully downloaded ${e.name} (id: ${e.id})`),
               )
@@ -48,10 +52,12 @@ function SettingsMenu({ settings, setSettings }) {
                 alert(
                   `${error.status} (${error.code}) Error downloading song: ${error.message}\n\n${error.stack}\n\n`,
                 ),
-              );
+              )
+              .finally(() => setSongProgress(null));
           }}
           name="Add song"
         />
+        <SongDownloadProgress state={songProgress} />
         <Form
           formType="get_playlist_form"
           submitFunction={addPlaylist}
