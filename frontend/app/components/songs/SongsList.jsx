@@ -185,6 +185,7 @@ export default function SongsList({
         currentSong={currentSong}
         notify={notify}
         hotkeysMap={hotkeysMap}
+        setProgress={setProgress}
       />
       <div className="grid grid-cols-5 gap-5">
         {songs.map((song, i) => (
@@ -211,11 +212,11 @@ function CurrentSongInfo({
   currentSong,
   notify,
   hotkeysMap,
+  setProgress
 }) {
   const [isDragging, setIsDragging] = useState(false);
-  const [dragProgress, setDragProgress] = useState(0); // stores a ratio from 0 to 1
-  const progressBarRef = useRef(null);
-  // Calculate which time to display: the scrub time if dragging, or the real time if playing
+  const [dragProgress, setDragProgress] = useState(0);
+
   const displayTime = isDragging
     ? dragProgress * progress.duration
     : progress.currentTime;
@@ -225,41 +226,67 @@ function CurrentSongInfo({
     ? (displayTime / progress.duration) * 100
     : 0;
 
+  const dragProgressRef = useRef(0);
+  const progressBarRef = useRef(null);
+
   const updateScrubPosition = (e) => {
-    if (!progressBarRef.current) return;
+    if (!progressBarRef.current) return 0;
+
     const rect = progressBarRef.current.getBoundingClientRect();
     const clickX = e.clientX - rect.left;
 
-    // Math.max/min clamps the value between 0 and 1 so dragging outside the bar doesn't break it
     const ratio = Math.max(0, Math.min(1, clickX / rect.width));
+
+    // Keep both the UI state and an immediately-readable value
+    dragProgressRef.current = ratio;
     setDragProgress(ratio);
+
+    return ratio;
   };
 
   const handlePointerDown = (e) => {
     if (!progress.duration) return;
+
     setIsDragging(true);
 
-    // This locks the pointer to this element, allowing the user
-    // to drag their mouse wildly outside the bar without losing the drag state
     e.currentTarget.setPointerCapture(e.pointerId);
+
     updateScrubPosition(e);
   };
 
   const handlePointerMove = (e) => {
     if (!isDragging || !progress.duration) return;
+
     updateScrubPosition(e);
   };
 
   const handlePointerUp = (e) => {
-    if (!isDragging || !progress.duration || !currentAudioRef.current) return;
+    if (!isDragging || !progress.duration || !currentAudioRef.current) {
+      return;
+    }
 
-    setIsDragging(false);
-    e.currentTarget.releasePointerCapture(e.pointerId);
+    // Read the latest position directly from the ref
+    const ratio = dragProgressRef.current;
+    const newTime = ratio * progress.duration;
 
-    // Now that the user has let go, actually update the audio track
-    const newTime = dragProgress * progress.duration;
+    // Immediately synchronize React's progress state
+    setProgress({
+      currentTime: newTime,
+      duration: progress.duration,
+    });
+
+    // Seek the actual audio
     currentAudioRef.current.currentTime = newTime;
+
+    // Now switch back from dragProgress to progress.currentTime
+    setIsDragging(false);
+
+    if (e.currentTarget.hasPointerCapture(e.pointerId)) {
+      e.currentTarget.releasePointerCapture(e.pointerId);
+    }
   };
+
+
   if (!currentSong) progress = { currentTime: 0, duration: 0 };
   const color = mapSongColorToLowerTint(currentSong)
   return (
@@ -270,7 +297,7 @@ function CurrentSongInfo({
       >
         <div className="flex items-stretch">
           <div
-            className={`p-1 rounded-xl`}
+            className={`p-1 rounded-xl hover:scale-101`}
             style={{
               backgroundColor: color
             }}
@@ -292,7 +319,7 @@ function CurrentSongInfo({
         </div>
         <div
           className="flex bg-blue-500/10 border shadow-sm flex-col gap-5 justify-evenly items-center w-100"
-          style={{backgroundColor: mapSongColorToLowerTint(currentSong, 150, 0.25)}}
+          style={{ backgroundColor: mapSongColorToLowerTint(currentSong, 150, 0.25) }}
         >
           <h1 className="text-3xl">
             Playing{" "}
@@ -322,7 +349,8 @@ function CurrentSongInfo({
         <div
           ref={progressBarRef}
           // Added touch-none to prevent page scrolling on mobile while scrubbing
-          className="w-full h-2 rounded-full bg-gray-700 cursor-pointer relative overflow-hidden touch-none"
+          className="w-full h-2 rounded-full bg-gray-700 cursor-pointer relative overflow-hidden touch-none border"
+
           onPointerDown={handlePointerDown}
           onPointerMove={handlePointerMove}
           onPointerUp={handlePointerUp}
