@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useNotification } from "../layout/notification/NotificationContext";
 import { API_BASE_URL } from "@/app/lib/config";
+import ColorSelect from "../visual/selectColor";
 
 export default function EditSong({ song, onSave }) {
   const notify = useNotification();
@@ -80,11 +81,7 @@ export default function EditSong({ song, onSave }) {
             <label htmlFor="name">
               <b>Change Color</b>
             </label>
-            <input
-              name="color"
-              type="color"
-              defaultValue={`rgb(${song.color})`}
-            />
+            <ColorSelect defaultColor={`rgb(${song.color})`} />
           </div>
         </div>
       </div>
