@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { mapSongColorToLowerTint } from "../visual/colors";
 
 const BAR_COUNT = 10;
 const MIN_BIN = 1; // skip the DC bin
@@ -20,17 +21,6 @@ function buildBinRanges(binCount) {
   });
 }
 
-// Same tint the "Playing <name>" title uses
-function getBarColor(song) {
-  const parts = song?.color?.split(",").map(Number);
-  if (!parts || parts.length < 3 || parts.some(Number.isNaN)) {
-    return "rgb(55,65,81)";
-  }
-  return `rgb(${parts
-    .slice(0, 3)
-    .map((c) => Math.max(0, c - 75))
-    .join(",")})`;
-}
 
 /**
  * A stack of horizontal bars driven by the audio that's actually playing. Each
@@ -112,7 +102,7 @@ export default function AudioVisualizer({ currentAudioRef, currentSong }) {
     };
   }, [currentSong, currentAudioRef]);
 
-  const color = getBarColor(currentSong);
+  const color = mapSongColorToLowerTint(currentSong)
 
   // flex-col-reverse puts the first bar (bass) at the bottom and treble at the top
   return (
@@ -126,10 +116,10 @@ export default function AudioVisualizer({ currentAudioRef, currentSong }) {
           ref={(el) => {
             barRefs.current[i] = el;
           }}
-          className="min-h-0 flex-1 rounded-r-lg"
+          className="min-h-0 flex-1 rounded-r-lg border-2"
           // React only rewrites style keys whose value changed, so the width the
           // draw loop sets each frame isn't clobbered by re-renders
-          style={{ backgroundColor: color, width: `${MIN_LENGTH}%` }}
+          style={{ backgroundColor: mapSongColorToLowerTint(currentSong, i * 10), width: `${MIN_LENGTH}%`, borderLeftColor: mapSongColorToLowerTint(currentSong, i * 10) }}
         />
       ))}
     </div>

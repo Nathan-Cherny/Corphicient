@@ -23,6 +23,7 @@ import {
   SkipForward,
   SkipBack,
 } from "lucide-react";
+import { mapSongColorToLowerTint } from "../visual/colors";
 
 /**
  * The part of the Playlist that displays Songs. Manages going from song to song and such
@@ -270,17 +271,12 @@ function CurrentSongInfo({
           <div
             className={`p-1 rounded-xl`}
             style={{
-                backgroundColor: currentSong
-                  ? `rgb(${currentSong?.color
-                    .split(",")
-                    .map((c) => parseInt(c) - 75)
-                    .join(",")})`
-                  : "black",
-              }}
+                backgroundColor: mapSongColorToLowerTint(currentSong),
+            }}
           >
             <img
               onClick={(e) => hotkeysMap[" "](e, currentAudioRef.current)}
-              className={`w-120 h-100 bg-gray-600 object-contain border-black border shadow-2xl rounded-xl cursor-pointer`}
+              className={`w-120 h-100 bg-gray-600 object-contain border-black border p-1 shadow-2xl rounded-xl cursor-pointer`}
               src={
                 currentSong?.thumbnail
                   ? `${API_BASE_URL}${currentSong?.thumbnail}`
@@ -298,12 +294,7 @@ function CurrentSongInfo({
             Playing{" "}
             <b
               style={{
-                color: currentSong
-                  ? `rgb(${currentSong?.color
-                    .split(",")
-                    .map((c) => parseInt(c) - 75)
-                    .join(",")})`
-                  : "black",
+                color: mapSongColorToLowerTint(currentSong)
               }}
             >
               {currentSong?.name || "N/A"}
