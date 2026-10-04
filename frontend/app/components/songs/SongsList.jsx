@@ -261,6 +261,7 @@ function CurrentSongInfo({
     currentAudioRef.current.currentTime = newTime;
   };
   if (!currentSong) progress = { currentTime: 0, duration: 0 };
+  const color = mapSongColorToLowerTint(currentSong)
   return (
     <div>
       {/* Current Song Info */}
@@ -271,7 +272,7 @@ function CurrentSongInfo({
           <div
             className={`p-1 rounded-xl`}
             style={{
-                backgroundColor: mapSongColorToLowerTint(currentSong),
+              backgroundColor: color
             }}
           >
             <img
@@ -289,12 +290,15 @@ function CurrentSongInfo({
             currentSong={currentSong}
           />
         </div>
-        <div className="flex flex-col gap-5 justify-evenly items-center w-100">
+        <div
+          className="flex bg-blue-500/10 border shadow-sm flex-col gap-5 justify-evenly items-center w-100"
+          style={{backgroundColor: mapSongColorToLowerTint(currentSong, 150, 0.25)}}
+        >
           <h1 className="text-3xl">
             Playing{" "}
             <b
               style={{
-                color: mapSongColorToLowerTint(currentSong)
+                color: color
               }}
             >
               {currentSong?.name || "N/A"}
@@ -325,9 +329,10 @@ function CurrentSongInfo({
           onPointerCancel={handlePointerUp} // Failsafe if the browser interrupts the drag
         >
           <div
-            className="h-full bg-linear-to-r from-green-500 via-teal-500 to-blue-500"
+            className="h-full"
             style={{
               width: `${displayPercentage}%`,
+              backgroundColor: mapSongColorToLowerTint(currentSong, 100, 1)
             }}
           />
         </div>

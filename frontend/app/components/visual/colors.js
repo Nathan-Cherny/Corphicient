@@ -14,11 +14,12 @@ export function randint(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-export function mapSongColorToLowerTint(currentSong, offset = 0) {
+export function mapSongColorToLowerTint(currentSong, offset = 0, opacity = 1) {
   return currentSong
     ? `rgb(${currentSong?.color
         .split(",")
         .map((c) => (parseInt(c) - 75) + offset)
+        .concat(opacity)
         .join(",")})`
-    : "black";
+    : `rgba(0, 0, 0, ${opacity})`;
 }
