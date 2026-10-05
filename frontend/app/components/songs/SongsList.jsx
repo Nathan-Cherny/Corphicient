@@ -189,7 +189,7 @@ export default function SongsList({
         setProgress={setProgress}
         setSongToEdit={setSongToEdit}
       />
-      <div className="grid grid-cols-5 gap-5">
+      <div className="grid grid-cols-5 gap-5 p-5 bg-black/20 rounded-xl shadow-xl">
         {songs.map((song, i) => (
           <SongCard
             key={i}

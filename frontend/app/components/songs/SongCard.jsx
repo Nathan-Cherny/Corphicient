@@ -57,7 +57,7 @@ export default function SongCard({
           <Edit onClick={() => setSongToEdit(song)} />
         </button>
 
-        <h3 className="font-bold text-3xl text-center m-5 h-full flex items-center justify-center">
+        <h3 className="font-bold text-[clamp(0.5rem,4cqw,1rem)] text-center m-5 h-full flex items-center justify-center">
           {song.name}
         </h3>
         <audio
