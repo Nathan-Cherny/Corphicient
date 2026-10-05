@@ -15,6 +15,7 @@ import { API_BASE_URL } from "@/app/lib/config";
 
 import {
   Pause,
+  Edit,
   Play,
   Repeat,
   RepeatOff,
@@ -186,6 +187,7 @@ export default function SongsList({
         notify={notify}
         hotkeysMap={hotkeysMap}
         setProgress={setProgress}
+        setSongToEdit={setSongToEdit}
       />
       <div className="grid grid-cols-5 gap-5">
         {songs.map((song, i) => (
@@ -212,7 +214,8 @@ function CurrentSongInfo({
   currentSong,
   notify,
   hotkeysMap,
-  setProgress
+  setProgress,
+  setSongToEdit
 }) {
   const [isDragging, setIsDragging] = useState(false);
   const [dragProgress, setDragProgress] = useState(0);
@@ -289,6 +292,7 @@ function CurrentSongInfo({
 
   if (!currentSong) progress = { currentTime: 0, duration: 0 };
   const color = mapSongColorToLowerTint(currentSong)
+
   return (
     <div>
       {/* Current Song Info */}
@@ -318,7 +322,7 @@ function CurrentSongInfo({
           />
         </div>
         <div
-          className="flex bg-blue-500/10 border shadow-sm flex-col gap-5 justify-evenly items-center w-100"
+          className="flex relative bg-blue-500/10 border shadow-sm flex-col gap-5 justify-evenly items-center w-100"
           style={{ backgroundColor: mapSongColorToLowerTint(currentSong, 150, 0.25) }}
         >
           <h1 className="text-3xl">
@@ -331,15 +335,32 @@ function CurrentSongInfo({
               {currentSong?.name || "N/A"}
             </b>
           </h1>
+
+          {currentSong && <button
+            onClick={(e) => {
+              e.stopPropagation();
+              e.preventDefault();
+            }}
+            className="absolute top-1 right-1 text-black w-4 h-4 flex items-center justify-center hover:scale-110 hover:cursor-pointer transition-all duration-200"
+          >
+            <Edit size={24} onClick={() => setSongToEdit(currentSong)} />
+          </button>}
+
           <div className="flex flex-col gap-15 items-center">
             <HotKeyButtons
               hotkeysMap={hotkeysMap}
               currentAudioRef={currentAudioRef}
             />
-            <h1>
-              Total Time Played:{" "}
-              {getReadableDurationSong(currentSong?.secondsPlayed || 0)}
-            </h1>
+            <div className="flex flex-col gap-5">
+              <h3>
+                Total Time Played:{" "}
+                {getReadableDurationSong(currentSong?.secondsPlayed || 0)}
+              </h3>
+              <h3>
+                Date Added: {currentSong?.date_created ? new Date(currentSong.date_created).toLocaleString() : "N/A"}
+              </h3>
+
+            </div>
           </div>
         </div>
       </div>
@@ -360,7 +381,7 @@ function CurrentSongInfo({
             className="h-full"
             style={{
               width: `${displayPercentage}%`,
-              backgroundColor: mapSongColorToLowerTint(currentSong, 100, 1)
+              backgroundColor: mapSongColorToLowerTint(currentSong, Math.trunc(displayPercentage), 1)
             }}
           />
         </div>
@@ -373,7 +394,7 @@ function CurrentSongInfo({
 
 function HotKeyButtons({ hotkeysMap, currentAudioRef }) {
   return (
-    <div className="flex flex-row gap-5 *:hover:scale-105 *:border *:p-1 *:rounded-xl *:bg-white/20 *:active:scale-95 *:select-none">
+    <div className="flex flex-row gap-5 bg-black/10 p-5 rounded-xl *:hover:scale-105 *:border *:p-1 *:rounded-xl *:bg-white/20 *:active:scale-95 *:select-none">
       <h1
         className="cursor-pointer"
         title="Toggle Playing"

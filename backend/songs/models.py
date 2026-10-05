@@ -10,6 +10,8 @@ class Song(models.Model):
 
     thumbnail = models.ImageField(upload_to='thumbnail/', blank=True, null=True)
     color = models.CharField(max_length=15, default="#44BBBB")
+
+    date_created = models.DateTimeField(null=True, blank=True)
     
     def __str__(self):
         return self.name
