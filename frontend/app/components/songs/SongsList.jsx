@@ -378,7 +378,7 @@ function CurrentSongInfo({
           onPointerCancel={handlePointerUp} // Failsafe if the browser interrupts the drag
         >
           <div
-            className="h-full"
+            className="h-full border-gray-300 border rounded-xl"
             style={{
               width: `${displayPercentage}%`,
               backgroundColor: mapSongColorToLowerTint(currentSong, Math.trunc(displayPercentage), 1)
