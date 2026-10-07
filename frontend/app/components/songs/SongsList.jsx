@@ -322,8 +322,8 @@ function CurrentSongInfo({
           />
         </div>
         <div
-          className="flex relative bg-blue-500/10 border shadow-sm flex-col gap-5 justify-evenly items-center w-100"
-          style={{ backgroundColor: mapSongColorToLowerTint(currentSong, 150, 0.25) }}
+          className="flex relative bg-blue-500/5 border rounded-xl shadow-lg flex-col gap-5 justify-evenly items-center w-100"
+          style={{ backgroundColor: mapSongColorToLowerTint(currentSong, 150, 0.1) }}
         >
           <h1 className="text-3xl">
             Playing{" "}
@@ -351,13 +351,16 @@ function CurrentSongInfo({
               hotkeysMap={hotkeysMap}
               currentAudioRef={currentAudioRef}
             />
-            <div className="flex flex-col gap-5">
+            <div className="flex flex-col gap-2 border-t-2 w-full pt-5">
               <h3>
                 Total Time Played:{" "}
                 {getReadableDurationSong(currentSong?.secondsPlayed || 0)}
               </h3>
               <h3>
                 Date Added: {currentSong?.date_created ? new Date(currentSong.date_created).toLocaleString() : "N/A"}
+              </h3>
+              <h3>
+                Album: {currentSong?.album || "N/A"}
               </h3>
 
             </div>
