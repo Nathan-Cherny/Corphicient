@@ -39,7 +39,7 @@ export default function EditSong({ song, onSave }) {
 
   return (
     <form
-      className="flex flex-col gap-3 bg-white p-5"
+      className="flex flex-col gap-3 bg-white p-5 max-h-150 overflow-y-scroll"
       onSubmit={(e) => handleSave(e)}
       encType="multipart/form-data"
     >
@@ -82,6 +82,13 @@ export default function EditSong({ song, onSave }) {
               <b>Change Color</b>
             </label>
             <ColorSelect defaultColor={`rgb(${song.color})`} />
+          </div>
+
+          <div className="flex flex-col gap-3">
+            <label htmlFor="name">
+              <b>Change Album</b>
+            </label>
+            <input name="album" type="text" defaultValue={song?.album || "N/A"} />
           </div>
         </div>
       </div>
