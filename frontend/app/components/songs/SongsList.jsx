@@ -346,21 +346,20 @@ function CurrentSongInfo({
             <Edit size={24} onClick={() => setSongToEdit(currentSong)} />
           </button>}
 
-          <div className="flex flex-col gap-15 items-center">
+          <div className="flex flex-col gap-15 items-center px-3">
             <HotKeyButtons
               hotkeysMap={hotkeysMap}
               currentAudioRef={currentAudioRef}
             />
             <div className="flex flex-col gap-2 border-t-2 w-full pt-5">
               <h3>
-                Total Time Played:{" "}
-                {getReadableDurationSong(currentSong?.secondsPlayed || 0)}
+                <b>Total Time Played: </b> {getReadableDurationSong(currentSong?.secondsPlayed || 0, "small")}
               </h3>
               <h3>
-                Date Added: {currentSong?.date_created ? new Date(currentSong.date_created).toLocaleString() : "N/A"}
+                <b>Date Added</b>: {currentSong?.date_created ? new Date(currentSong.date_created).toLocaleString() : "N/A"}
               </h3>
               <h3>
-                Album: {currentSong?.album || "N/A"}
+                <b>Album</b>: {currentSong?.album || "N/A"}
               </h3>
 
             </div>
