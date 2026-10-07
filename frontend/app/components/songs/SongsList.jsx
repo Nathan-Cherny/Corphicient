@@ -297,7 +297,7 @@ function CurrentSongInfo({
     <div>
       {/* Current Song Info */}
       <div
-        className={`flex flex-row justify-around items-stretch mb-5 *:text-center`}
+        className={`flex flex-row justify-around items-stretch mb-5 *:text-center bg-black/20 p-5 rounded-xl shadow-lg`}
       >
         <div className="flex items-stretch">
           <div
