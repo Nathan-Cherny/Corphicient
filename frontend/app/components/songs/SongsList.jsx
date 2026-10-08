@@ -325,7 +325,6 @@ function CurrentSongInfo({
     }
   };
 
-
   if (!currentSong) progress = { currentTime: 0, duration: 0 };
   const color = mapSongColorToLowerTint(currentSong)
 
