@@ -205,6 +205,8 @@ export default function SongsList({
     });
   }, []);
 
+  const songAlbums = ["All", ...Array.from(new Set(songs.map(song => song.album).filter(s => !!s)))]
+
   return (
     <div className="flex flex-wrap flex-col justify-center gap-0">
       <FadeOverlay isOpen={songToEdit} onClose={() => setSongToEdit(null)}>
@@ -225,20 +227,31 @@ export default function SongsList({
         setProgress={setProgress}
         setSongToEdit={setSongToEdit}
       />
-      <div className="grid grid-cols-5 gap-5 p-5 bg-black/20 rounded-xl shadow-x mt-5">
-        {songs.map((song, i) => (
-          <SongCard
-            key={i}
-            song={song}
-            isCurrentSong={currentSong?.id == song.id}
-            setCurrentSong={setCurrentSong}
-            onSongEnd={playNextSong}
-            onAudioRef={(ref) => {
-              currentAudioRef.current = ref;
-            }} // this allows the currentAudioRef to change if a new song becomes currentSong
-            setSongToEdit={setSongToEdit}
-          />
-        ))}
+
+      <div className="flex flex-col gap-5  bg-black/20 rounded-xl shadow-x mt-1">
+        <div className="mt-5 text-center">
+          <label htmlFor="albumFilter">Album</label>
+          <select>
+            {songAlbums.map(sa => 
+              <option className="text-center" value={sa}>{sa}</option>
+            )}
+          </select>
+        </div>
+        <div className="grid grid-cols-5 gap-5 p-5">
+          {songs.map((song, i) => (
+            <SongCard
+              key={i}
+              song={song}
+              isCurrentSong={currentSong?.id == song.id}
+              setCurrentSong={setCurrentSong}
+              onSongEnd={playNextSong}
+              onAudioRef={(ref) => {
+                currentAudioRef.current = ref;
+              }} // this allows the currentAudioRef to change if a new song becomes currentSong
+              setSongToEdit={setSongToEdit}
+            />
+          ))}
+        </div>
       </div>
     </div>
   );
