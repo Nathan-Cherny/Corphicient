@@ -23,6 +23,7 @@ import {
   ArrowLeft,
   SkipForward,
   SkipBack,
+  XCircle
 } from "lucide-react";
 import { mapSongColorToLowerTint } from "../visual/colors";
 
@@ -89,6 +90,9 @@ export default function SongsList({
       if (audio.loop) audio.loop = false;
       else audio.loop = true;
     },
+    x: (e, audio) => {
+      setCurrentSong(null)
+    },
     " ": (e, audio) => {
       if (!audio) return;
       e.preventDefault();
@@ -103,29 +107,47 @@ export default function SongsList({
     if (!audio) return;
 
     const updateProgress = () => {
-      setProgress({
-        currentTime: audio.currentTime,
-        duration: audio.duration || 0,
-      });
-    };
+      const duration = audio.duration;
+      const position = audio.currentTime;
 
-    navigator.mediaSession.setPositionState({
-      duration: audio.duration,
-      playbackRate: audio.playbackRate,
-      position: audio.currentTime,
-    });
+      // Update your React progress bar
+      setProgress({
+        currentTime: position,
+        duration: Number.isFinite(duration) ? duration : 0,
+      });
+
+      // Update the OS/browser Media Session
+      if (
+        "mediaSession" in navigator &&
+        "setPositionState" in navigator.mediaSession &&
+        Number.isFinite(duration) &&
+        duration > 0 &&
+        Number.isFinite(position)
+      ) {
+        navigator.mediaSession.setPositionState({
+          duration,
+          playbackRate: audio.playbackRate,
+          position: Math.min(position, duration),
+        });
+      }
+    };
 
     audio.addEventListener("timeupdate", updateProgress);
     audio.addEventListener("loadedmetadata", updateProgress);
+    audio.addEventListener("durationchange", updateProgress);
+    audio.addEventListener("seeked", updateProgress);
+    audio.addEventListener("ratechange", updateProgress);
 
     if (currentSong) {
       navigator.mediaSession.metadata = new MediaMetadata({
         title: currentSong.name,
+        album: currentSong.album,
         artwork: [
           {
             src:
               API_BASE_URL +
-              (currentSong.thumbnail || "/media/thumbnail/corphishbop.jpg"),
+              (currentSong.thumbnail ||
+                "/media/thumbnail/corphishbop.jpg"),
             sizes: "512x512",
             type: "image/jpeg",
           },
@@ -133,14 +155,17 @@ export default function SongsList({
       });
     }
 
-    // initialize immediately in case metadata already loaded
+    // Initialize immediately if metadata is already available
     updateProgress();
 
     return () => {
       audio.removeEventListener("timeupdate", updateProgress);
       audio.removeEventListener("loadedmetadata", updateProgress);
+      audio.removeEventListener("durationchange", updateProgress);
+      audio.removeEventListener("seeked", updateProgress);
+      audio.removeEventListener("ratechange", updateProgress);
     };
-  }, [currentAudioRef.current, currentSong]);
+  }, [currentSong]);
 
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -156,6 +181,13 @@ export default function SongsList({
   }, [currentSong, getRandomSong]);
 
   useEffect(() => {
+    navigator.mediaSession.setActionHandler("seekto", (details) => {
+      const audio = currentAudioRef.current;
+      if (!audio || details.seekTime == null) return;
+
+      audio.currentTime = details.seekTime;
+    });
+
     navigator.mediaSession.setActionHandler("previoustrack", (e) => {
       hotkeysMap["0"](e, currentAudioRef.current);
     });
@@ -164,13 +196,17 @@ export default function SongsList({
       playNextSong();
     });
 
-    navigator.mediaSession.setActionHandler("seekbackward", (details) => { });
+    navigator.mediaSession.setActionHandler("seekbackward", (details) => {
+      hotkeysMap["ArrowLeft"](e, currentAudioRef.current)
+    });
 
-    navigator.mediaSession.setActionHandler("seekforward", (details) => { });
+    navigator.mediaSession.setActionHandler("seekforward", (details) => {
+      hotkeysMap["ArrowRight"](e, currentAudioRef.current)
+    });
   }, []);
 
   return (
-    <div className="flex flex-wrap flex-col justify-center gap-7 ">
+    <div className="flex flex-wrap flex-col justify-center gap-0">
       <FadeOverlay isOpen={songToEdit} onClose={() => setSongToEdit(null)}>
         <EditSong
           song={songToEdit}
@@ -189,7 +225,7 @@ export default function SongsList({
         setProgress={setProgress}
         setSongToEdit={setSongToEdit}
       />
-      <div className="grid grid-cols-5 gap-5 p-5 bg-black/20 rounded-xl shadow-xl">
+      <div className="grid grid-cols-5 gap-5 p-5 bg-black/20 rounded-xl shadow-x mt-5">
         {songs.map((song, i) => (
           <SongCard
             key={i}
@@ -294,10 +330,12 @@ function CurrentSongInfo({
   const color = mapSongColorToLowerTint(currentSong)
 
   return (
-    <div>
-      {/* Current Song Info */}
+    <div
+      className="bg-black/20 p-5 rounded-xl shadow-lg border-2"
+      style={{ borderColor: color }}
+    >
       <div
-        className={`flex flex-row justify-around items-stretch mb-5 *:text-center bg-black/20 p-5 rounded-xl shadow-lg`}
+        className={`flex flex-row justify-between items-stretch mb-5 *:text-center p-5`}
       >
         <div className="flex items-stretch">
           <div
@@ -322,14 +360,15 @@ function CurrentSongInfo({
           />
         </div>
         <div
-          className="flex relative bg-blue-500/5 border rounded-xl shadow-lg flex-col gap-5 justify-evenly items-center w-100"
+          className="flex relative border rounded-xl shadow-lg flex-col justify-evenly items-center w-100"
           style={{ backgroundColor: mapSongColorToLowerTint(currentSong, 150, 0.1) }}
         >
-          <h1 className="text-3xl">
-            Playing{" "}
+          <h1 className="text-4xl">
             <b
               style={{
-                color: color
+                color: color,
+                WebkitTextStrokeWidth: "1px",
+                WebkitTextStrokeColor: mapSongColorToLowerTint(currentSong, -50, 1)
               }}
             >
               {currentSong?.name || "N/A"}
@@ -346,20 +385,20 @@ function CurrentSongInfo({
             <Edit size={24} onClick={() => setSongToEdit(currentSong)} />
           </button>}
 
-          <div className="flex flex-col gap-15 items-center px-3">
+          <div className="flex flex-col gap-5 items-center px-3">
             <HotKeyButtons
               hotkeysMap={hotkeysMap}
               currentAudioRef={currentAudioRef}
             />
-            <div className="flex flex-col gap-2 border-t-2 w-full pt-5">
-              <h3>
-                <b>Total Time Played: </b> {getReadableDurationSong(currentSong?.secondsPlayed || 0, "small")}
+            <div className="flex flex-col gap-2 border-t-2 w-full pt-5 [&>h3]:flex [&>h3]:flex-row [&>h3]:justify-between">
+              <h3 className="">
+                <b>Total Time Played</b> <p>{getReadableDurationSong(currentSong?.secondsPlayed || 0, "small")}</p>
               </h3>
               <h3>
-                <b>Date Added</b>: {currentSong?.date_created ? new Date(currentSong.date_created).toLocaleString() : "N/A"}
+                <b>Date Added</b><p>{currentSong?.date_created ? new Date(currentSong.date_created).toLocaleString() : "N/A"}</p>
               </h3>
               <h3>
-                <b>Album</b>: {currentSong?.album || "N/A"}
+                <b>Album</b> <p>{currentSong?.album || "N/A"}</p>
               </h3>
 
             </div>
@@ -395,14 +434,15 @@ function CurrentSongInfo({
 }
 
 function HotKeyButtons({ hotkeysMap, currentAudioRef }) {
+  const iconSize = 16
   return (
-    <div className="flex flex-row gap-5 bg-black/10 p-5 rounded-xl *:hover:scale-105 *:border *:p-1 *:rounded-xl *:bg-white/20 *:active:scale-95 *:select-none">
+    <div className="flex flex-row gap-5 content-center flex-wrap bg-black/10 p-5 rounded-xl *:hover:scale-105 *:border *:p-1 *:rounded-xl *:bg-white/20 *:active:scale-95 *:select-none">
       <h1
         className="cursor-pointer"
         title="Toggle Playing"
         onClick={(e) => hotkeysMap[" "](e, currentAudioRef.current)}
       >
-        {currentAudioRef?.current?.paused ? <Play /> : <Pause />}
+        {currentAudioRef?.current?.paused ? <Play size={iconSize} /> : <Pause size={iconSize} />}
       </h1>
 
       <h1
@@ -413,7 +453,7 @@ function HotKeyButtons({ hotkeysMap, currentAudioRef }) {
           hotkeysMap["l"](e, currentAudioRef.current);
         }}
       >
-        {currentAudioRef?.current?.loop ? <Repeat /> : <RepeatOff />}
+        {currentAudioRef?.current?.loop ? <Repeat size={iconSize} /> : <RepeatOff size={iconSize} />}
       </h1>
 
       <h1
@@ -424,7 +464,7 @@ function HotKeyButtons({ hotkeysMap, currentAudioRef }) {
           hotkeysMap[0](e, currentAudioRef.current);
         }}
       >
-        <SkipBack />
+        <SkipBack size={iconSize} />
       </h1>
 
       <h1
@@ -435,7 +475,7 @@ function HotKeyButtons({ hotkeysMap, currentAudioRef }) {
           hotkeysMap["s"](e, currentAudioRef.current);
         }}
       >
-        <SkipForward />
+        <SkipForward size={iconSize} />
       </h1>
 
       <h1
@@ -446,7 +486,7 @@ function HotKeyButtons({ hotkeysMap, currentAudioRef }) {
           hotkeysMap["ArrowLeft"](e, currentAudioRef.current);
         }}
       >
-        <ArrowLeft />
+        <ArrowLeft size={iconSize} />
       </h1>
 
       <h1
@@ -457,7 +497,18 @@ function HotKeyButtons({ hotkeysMap, currentAudioRef }) {
           hotkeysMap["ArrowRight"](e, currentAudioRef.current);
         }}
       >
-        <ArrowRight />
+        <ArrowRight size={iconSize} />
+      </h1>
+
+      <h1
+        className="cursor-pointer"
+        title="Remove Current Song"
+        onClick={(e) => {
+          e.preventDefault();
+          hotkeysMap["x"](e, currentAudioRef.current);
+        }}
+      >
+        <XCircle size={iconSize} />
       </h1>
     </div>
   );

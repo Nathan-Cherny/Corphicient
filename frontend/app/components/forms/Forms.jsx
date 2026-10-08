@@ -84,44 +84,78 @@ function FieldLabel({ field }) {
 }
 
 function parseField(field) {
-  if (field.type == "select") {
-    return (
-      <>
-        <FieldLabel field={field} />
-        <select
-          defaultValue={[]}
-          multiple
-          required={field.required}
-          className={inputClasses}
-          id={field.name}
-          name={field.name}
-        >
-          {field.options.map((option) => (
-            <option key={option.value} value={option.value}>
-              {option.label}
-            </option>
-          ))}
-        </select>
-      </>
-    );
+  if (field.type == "select") return <SelectInput field={field} />
+
+  if (field.name.includes("color")) return <ColorSelect/>;
+
+  if (field.type == "datetime-local") return <DateInputControlled field={field} />
+
+  if (field.max_length >= 750) return <TextAreaInput field={field} />
+
+  return <DefaultInput field={field}/>
+}
+
+function DefaultInput({ field }) {
+  return (
+    <>
+      <FieldLabel field={field} />
+      <input
+        required={field.required}
+        className={inputClasses}
+        id={field.name}
+        type={field.type}
+        name={field.name}
+      />
+    </>
+  );
+}
+
+function TextAreaInput({ field }) {
+  return (
+    <>
+      <FieldLabel field={field} />
+      <textarea
+        required={field.required}
+        className={`${inputClasses} min-h-24`}
+        id={field.name}
+        type={field.type}
+        name={field.name}
+      />
+    </>
+  );
+}
+
+function SelectInput({ field }) {
+  return (
+    <>
+      <FieldLabel field={field} />
+      <select
+        defaultValue={[]}
+        multiple
+        required={field.required}
+        className={inputClasses}
+        id={field.name}
+        name={field.name}
+      >
+        {field.options.map((option) => (
+          <option key={option.value} value={option.value}>
+            {option.label}
+          </option>
+        ))}
+      </select>
+    </>
+  );
+}
+
+
+function DateInputControlled({ field }) {
+  function localDateTimeNow() {
+    const d = new Date();
+    d.setMinutes(d.getMinutes() - d.getTimezoneOffset());
+    return d.toISOString().slice(0, 16);
   }
 
-  if (field.name.includes("color")) return <ColorSelect />;
-
-  if (field.max_length >= 750) {
-    return (
-      <>
-        <FieldLabel field={field} />
-        <textarea
-          required={field.required}
-          className={`${inputClasses} min-h-24`}
-          id={field.name}
-          type={field.type}
-          name={field.name}
-        />
-      </>
-    );
-  }
+  const [date, setDate] = useState(localDateTimeNow);
 
   return (
     <>
@@ -132,6 +166,8 @@ function parseField(field) {
         id={field.name}
         type={field.type}
         name={field.name}
+        value={date}
+        onChange={(e) => setDate(e.target.value)}
       />
     </>
   );

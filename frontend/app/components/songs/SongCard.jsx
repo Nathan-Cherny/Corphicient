@@ -58,7 +58,7 @@ export default function SongCard({
         </button>
         
 
-        <h3 className="font-bold text-[clamp(0.5rem,4cqw,1rem)] text-center m-5 h-full flex items-center justify-center">
+        <h3 className="font-bold text-[clamp(0.5rem,4cqw,1rem)] select-none text-center m-5 h-full flex items-center justify-center">
           {song.name}
         </h3>
         <audio
