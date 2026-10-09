@@ -37,6 +37,7 @@ export default function SongsList({
   settings,
   setUpdate,
 }) {
+  const [filteredSongs, setFilteredSongs] = useState(songs)
   const currentAudioRef = useRef(null);
   const timeSkip = settings?.timeSkip || 5;
   const [progress, setProgress] = useState({ currentTime: 0, duration: 0 });
@@ -205,6 +206,10 @@ export default function SongsList({
     });
   }, []);
 
+  useEffect(() => {
+    setFilteredSongs(songs)
+  }, [songs])
+
   const songAlbums = ["All", ...Array.from(new Set(songs.map(song => song.album).filter(s => !!s)))]
 
   return (
@@ -231,17 +236,23 @@ export default function SongsList({
       <div className="flex flex-col gap-5 border bg-black/20 rounded-xl shadow-x mt-5">
         <div className="mt-5 text-center bg-white/50 mx-5 p-5 rounded-xl border">
           <label htmlFor="albumFilter">Album</label>
-          <select onClick={(e) => {
+          <select onChange={(e) => {
             let album = e.target.value
-            
+
+            if (album == "All") {
+              setFilteredSongs(songs);
+              return
+            }
+
+            setFilteredSongs(songs.filter(song => song.album == album))
           }}>
-            {songAlbums.map(sa => 
+            {songAlbums.map(sa =>
               <option key={sa} className="text-center" value={sa}>{sa}</option>
             )}
           </select>
         </div>
         <div className="grid grid-cols-5 gap-5 p-5">
-          {songs.map((song, i) => (
+          {filteredSongs.map((song, i) => (
             <SongCard
               key={i}
               song={song}
