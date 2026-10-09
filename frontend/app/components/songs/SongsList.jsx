@@ -233,7 +233,7 @@ export default function SongsList({
           <label htmlFor="albumFilter">Album</label>
           <select>
             {songAlbums.map(sa => 
-              <option className="text-center" value={sa}>{sa}</option>
+              <option key={sa} className="text-center" value={sa}>{sa}</option>
             )}
           </select>
         </div>
