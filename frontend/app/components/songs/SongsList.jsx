@@ -228,10 +228,13 @@ export default function SongsList({
         setSongToEdit={setSongToEdit}
       />
 
-      <div className="flex flex-col gap-5  bg-black/20 rounded-xl shadow-x mt-1">
-        <div className="mt-5 text-center">
+      <div className="flex flex-col gap-5 border bg-black/20 rounded-xl shadow-x mt-5">
+        <div className="mt-5 text-center bg-white/50 mx-5 p-5 rounded-xl border">
           <label htmlFor="albumFilter">Album</label>
-          <select>
+          <select onClick={(e) => {
+            let album = e.target.value
+            
+          }}>
             {songAlbums.map(sa => 
               <option key={sa} className="text-center" value={sa}>{sa}</option>
             )}
