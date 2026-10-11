@@ -535,7 +535,20 @@ function FilterBar({ songAlbums, songs, setFilteredSongs, filteredSongs, filters
     let songsToFilter = songs
     
     for(let filterable of filterables){
-      songsToFilter = songsToFilter.filter(song => song[filterable].includes(newFilters[filterable]))
+      let value = newFilters[filterable]
+      console.log(typeof value)
+
+      switch (typeof value){
+        case "string":
+          songsToFilter = songsToFilter.filter(song => song[filterable].includes(value))
+          break;
+        case "object": // date
+          songsToFilter = songsToFilter.filter(song => new Date(song[filterable]) >= value)
+          break;
+        default:
+          songsToFilter = songsToFilter.filter(song => song[filterable].includes(value))
+      }
+
     }
 
     setFilteredSongs(songsToFilter)
@@ -551,9 +564,9 @@ function FilterBar({ songAlbums, songs, setFilteredSongs, filteredSongs, filters
           let album = e.target.value
 
           let newFilters = Object.assign(filters, {"album": album})
-          applyFilters(newFilters)
+          if(album == "All") delete newFilters.album
 
-          // setFilteredSongs((filteredSongs || songs).filter(song => song.album == album))
+          applyFilters(newFilters)
         }}>
           {songAlbums.map(sa =>
             <option key={sa} className="text-center" value={sa}>{sa}</option>
@@ -570,7 +583,6 @@ function FilterBar({ songAlbums, songs, setFilteredSongs, filteredSongs, filters
           if(name == "") delete newFilters.name
 
           applyFilters(newFilters)
-          // setFilteredSongs((filteredSongs || songs).filter(song => song.name.toLowerCase().includes(name)))
         }} type="text" />
       </div>
       {/* Tags */}
@@ -585,6 +597,11 @@ function FilterBar({ songAlbums, songs, setFilteredSongs, filteredSongs, filters
       <div>
         <label htmlFor="dateFilter">Date</label>
         <input id="dateFilter" type="date" onChange={(e) => {
+          let date = e.target.value
+
+          let newFilters = Object.assign(filters, {"date_created": new Date(date)})
+          
+          applyFilters(newFilters)
         }} />
       </div>
     </div>
