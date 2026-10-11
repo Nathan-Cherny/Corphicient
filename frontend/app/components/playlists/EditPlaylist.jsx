@@ -15,6 +15,9 @@ export default function EditPlaylist({ playlist, onSave }) {
 
   const playlistSongs = playlist.songs;
   const playlistName = playlist.name;
+  // The playlist is refetched regularly, which gives playlist.songs a new identity each time.
+  // Depend on the song ids instead, so that doesn't wipe a selection that's being edited.
+  const playlistSongIds = playlistSongs.map((s) => s.id).join(",");
 
   const [selectedIds, setSelectedIds] = useState(new Set());
   const [inputName, setInputName] = useState(playlistName);
@@ -28,7 +31,7 @@ export default function EditPlaylist({ playlist, onSave }) {
       setLoading(false);
     }
     getSongs();
-  }, [playlistSongs, change]);
+  }, [playlistSongIds, change]);
 
   function toggle(id) {
     setSelectedIds((prev) => {

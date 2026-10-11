@@ -2,8 +2,10 @@
 
 import * as Playlist from "./PlaylistFunctions";
 import SongsList from "../songs/SongsList";
-import { Edit, Eraser } from "lucide-react";
+import { Edit, Eraser, SlidersHorizontal } from "lucide-react";
 import EditPlaylist from "./EditPlaylist";
+import FilterPlaylistForm from "./FilterPlaylistForm";
+import { describeFilters } from "../songs/SongFilter";
 
 import { useState, useEffect, useRef } from "react";
 import PieChartVis from "../visual/PieChart";
@@ -41,13 +43,30 @@ export default function PlaylistCard({
       <div className="flex flex-row gap-5">
         
         <FadeOverlay isOpen={showEdit} onClose={() => setShowEdit(false)}>
-          <EditPlaylist
-            onSave={async (selected, name) => {
-              setUpdate(prev => prev+1)
-              await Playlist.patchPlaylist(playlist.id, selected, name);
-            }}
-            playlist={playlist}
-          />
+          {Playlist.isFilterPlaylist(playlist) ? (
+            <div className="w-full max-w-3xl rounded-2xl bg-white p-6">
+              <h1 className="mb-4 text-center text-2xl">
+                Edit <b>{playlist.name}</b>
+              </h1>
+              <FilterPlaylistForm
+                idPrefix={`editFilterPlaylist${playlist.id}-`}
+                playlist={playlist}
+                onSave={async (name, filters) => {
+                  await Playlist.patchFilterPlaylist(playlist.id, name, filters);
+                  setUpdate((prev) => prev + 1);
+                }}
+              />
+            </div>
+          ) : (
+            <EditPlaylist
+              onSave={async (selected, name) => {
+                // refetch only once the change has actually been saved
+                await Playlist.patchPlaylist(playlist.id, selected, name);
+                setUpdate(prev => prev+1)
+              }}
+              playlist={playlist}
+            />
+          )}
         </FadeOverlay>
 
         <div>
@@ -56,6 +75,18 @@ export default function PlaylistCard({
           >
             {playlist.name}
           </h3>
+          {Playlist.isFilterPlaylist(playlist) && (
+            <p
+              className="mb-3 flex flex-row items-center justify-center gap-2 text-sm text-gray-700"
+              title="This playlist has no songs of its own. It always shows every song matching its filters."
+            >
+              <SlidersHorizontal size={14} />
+              <span>
+                Filter playlist:{" "}
+                <i>{describeFilters(playlist.filters).join(", ") || "all songs"}</i>
+              </span>
+            </p>
+          )}
           <p className="w-full">
             Total Duration: <i>{getTotalDuration(playlist.songs)}</i>
           </p>

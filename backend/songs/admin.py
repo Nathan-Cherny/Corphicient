@@ -8,5 +8,6 @@ class SongAdmin(admin.ModelAdmin):
 
 @admin.register(Playlist)
 class PlaylistAdmin(admin.ModelAdmin):
-    list_display = ('name',)
+    list_display = ('name', 'playlist_type')
+    list_filter = ('playlist_type',)
     search_fields = ('name',)

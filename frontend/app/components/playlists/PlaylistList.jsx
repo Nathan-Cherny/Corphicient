@@ -5,12 +5,18 @@ import axiosClient from "../../axiosClient";
 import { useEffect, useState, useSyncExternalStore } from "react";
 import PlaylistCard from "./PlaylistCard";
 import PlaylistListSettings from "./PlaylistListSettings";
+import { isFilterPlaylist } from "./PlaylistFunctions";
+import { describeFilters } from "../songs/SongFilter";
+import { SlidersHorizontal } from "lucide-react";
 
 export default function PlaylistList({}) {
   const request = ["playlists/", null, "", "GET"];
 
-  const [activePlaylist, setActivePlaylist] = useState(null);
+  const [activePlaylistId, setActivePlaylistId] = useState(null);
   const [playlists, setPlaylists] = useState([]);
+  // Looked up by id (rather than stored) so it refreshes whenever the playlists are refetched.
+  // That's what keeps a filter playlist current when songs are added, edited or removed.
+  const activePlaylist = playlists.find((pl) => pl.id === activePlaylistId) ?? null;
   const [currentSong, setCurrentSong] = useState(null);
   const [prevCurrentSong, setPrevCurrentSong] = useState(null);
   const [currentSongDate, setCurrentSongDate] = useState(null);
@@ -52,7 +58,7 @@ export default function PlaylistList({}) {
     setUpdate((prev) => prev + 1);
     document.title =
       currentSong && !anom
-        ? `${currentSong.name} | ${activePlaylist.name} | Corphicient`
+        ? `${currentSong.name} | ${activePlaylist?.name} | Corphicient`
         : "Corphicient";
   }, [currentSong]);
 
@@ -70,17 +76,27 @@ export default function PlaylistList({}) {
                 playlists,
                 setCurrentSong,
                 activePlaylist,
-                setActivePlaylist,
+                setActivePlaylistId,
               )
             }
             key={i}
             id={pl.id}
-            className={`border bg-blue-50 p-5 hover:scale-105 hover:cursor-pointer ${pl?.id === activePlaylist?.id ? "bg-yellow-500 border-2 font-bold" : ""}`}
+            title={
+              isFilterPlaylist(pl)
+                ? `Filter playlist: ${describeFilters(pl.filters).join(", ") || "all songs"}`
+                : undefined
+            }
+            className={`flex flex-row items-center gap-2 border bg-blue-50 p-5 hover:scale-105 hover:cursor-pointer ${pl?.id === activePlaylist?.id ? "bg-yellow-500 border-2 font-bold" : ""}`}
           >
+            {isFilterPlaylist(pl) && <SlidersHorizontal size={16} />}
             {pl.name}
           </button>
         ))}
-        <PlaylistListSettings settings={settings} setSettings={setSettings} />
+        <PlaylistListSettings
+          settings={settings}
+          setSettings={setSettings}
+          onPlaylistsChanged={() => setUpdate((prev) => prev + 1)}
+        />
       </div>
 
       {activePlaylist && (
@@ -105,11 +121,11 @@ function changePlaylist(
   playlists,
   setCurrentSong,
   activePlaylist,
-  setActivePlaylist,
+  setActivePlaylistId,
 ) {
   if (activePlaylist && id == activePlaylist.id) {
     return;
   }
   setCurrentSong(null);
-  setActivePlaylist(findPlaylist(id, playlists));
+  setActivePlaylistId(findPlaylist(id, playlists)?.id ?? null);
 }

@@ -237,7 +237,8 @@ def update_playlist(request, pk):
             {"error": "Playlist not found"}, status=status.HTTP_404_NOT_FOUND
         )
 
-    serializer = PlaylistSerializer(playlist, data=request.data)
+    # partial, because this is a PATCH: manual playlists send songs + name, filter playlists name + filters
+    serializer = PlaylistSerializer(playlist, data=request.data, partial=True)
 
     if serializer.is_valid():
         serializer.save()

@@ -6,9 +6,11 @@ import { useState } from "react";
 import Form from "../forms/Forms";
 import { addSong } from "../songs/SongFunctions";
 import SongDownloadProgress from "../songs/SongDownloadProgress";
-import { addPlaylist } from "./PlaylistFunctions";
+import { addPlaylist, addFilterPlaylist } from "./PlaylistFunctions";
+import FilterPlaylistForm from "./FilterPlaylistForm";
 
-export default function PlaylistListSettings({ settings, setSettings }) {
+// onPlaylistsChanged: called after something is added that playlists depend on (a song, a filter playlist)
+export default function PlaylistListSettings({ settings, setSettings, onPlaylistsChanged }) {
   const [settingsMenuOpen, setSettingsMenuOpen] = useState(false);
 
   return (
@@ -23,13 +25,17 @@ export default function PlaylistListSettings({ settings, setSettings }) {
         isOpen={settingsMenuOpen}
         onClose={() => setSettingsMenuOpen(false)}
       >
-        <SettingsMenu settings={settings} setSettings={setSettings} />
+        <SettingsMenu
+          settings={settings}
+          setSettings={setSettings}
+          onPlaylistsChanged={onPlaylistsChanged}
+        />
       </FadeOverlay>
     </>
   );
 }
 
-function SettingsMenu({ settings, setSettings }) {
+function SettingsMenu({ settings, setSettings, onPlaylistsChanged }) {
   const [songProgress, setSongProgress] = useState(null);
 
   return (
@@ -45,9 +51,11 @@ function SettingsMenu({ settings, setSettings }) {
           submitFunction={(e) => {
             setSongProgress({ status: "starting", progress: 0 });
             addSong(e, setSongProgress)
-              .then((e) =>
-                alert(`Successfully downloaded ${e.name} (id: ${e.id})`),
-              )
+              .then((e) => {
+                alert(`Successfully downloaded ${e.name} (id: ${e.id})`);
+                // filter playlists pick up new songs on their own, once they're refetched
+                onPlaylistsChanged?.();
+              })
               .catch((error) =>
                 alert(
                   `${error.status} (${error.code}) Error downloading song: ${error.message}\n\n${error.stack}\n\n`,
@@ -60,9 +68,23 @@ function SettingsMenu({ settings, setSettings }) {
         <SongDownloadProgress state={songProgress} />
         <Form
           formType="get_playlist_form"
+          nonFormFields={["playlist_type", "filters"]}
           submitFunction={addPlaylist}
           name="Add playlist"
         />
+
+        <section className="flex flex-col gap-3 rounded-xl border border-sky-200 bg-white p-5 shadow-sm">
+          <h2 className="text-center text-lg font-semibold text-sky-950">
+            Add filter playlist
+          </h2>
+          <FilterPlaylistForm
+            idPrefix="newFilterPlaylist-"
+            onSave={async (name, filters) => {
+              await addFilterPlaylist(name, filters);
+              onPlaylistsChanged?.();
+            }}
+          />
+        </section>
 
         <section className="flex flex-col gap-3 rounded-xl border border-sky-200 bg-white p-5 shadow-sm">
           <h2 className="text-center text-lg font-semibold text-sky-950">

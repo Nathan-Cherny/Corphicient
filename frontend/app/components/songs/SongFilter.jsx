@@ -64,12 +64,29 @@ function FilterField({ id, label, icon: Icon, children }) {
   )
 }
 
+export function countActiveFilters(filters) {
+  return [
+    filters.name.trim() !== "",
+    filters.album !== "All",
+    filters.since !== "",
+  ].filter(Boolean).length
+}
+
+/** Short human-readable descriptions of the active filters, e.g. ['album: Graduation'] */
+export function describeFilters(filters) {
+  const parts = []
+  if (filters.name?.trim()) parts.push(`name contains "${filters.name.trim()}"`)
+  if (filters.album && filters.album !== "All") parts.push(`album: ${filters.album}`)
+  if (filters.since) parts.push(`added since ${filters.since}`)
+  return parts
+}
+
 /**
- * The filter bar UI. Pair it with useSongFilters:
- *   const { filters, setFilters, filteredSongs } = useSongFilters(songs)
- *   <SongFilter songs={songs} filteredSongs={filteredSongs} filters={filters} setFilters={setFilters} />
+ * Just the filter inputs (no card, no header), so other places can reuse them, e.g. the
+ * filter playlist form. `songs` is only used to build the list of albums to pick from.
+ * Pass a unique `idPrefix` if two sets of fields can be on screen at once (keeps input ids unique).
  */
-export default function SongFilter({ songs, filteredSongs, filters, setFilters, setOpen }) {
+export function SongFilterFields({ songs, filters, setFilters, idPrefix = "" }) {
   const songAlbums = useMemo(
     () => ["All", ...Array.from(new Set(songs.map(song => song.album).filter(s => !!s)))],
     [songs]
@@ -78,11 +95,67 @@ export default function SongFilter({ songs, filteredSongs, filters, setFilters, 
   const updateFilter = (key, value) =>
     setFilters(prev => ({ ...prev, [key]: value }))
 
-  const activeCount = [
-    filters.name.trim() !== "",
-    filters.album !== "All",
-    filters.since !== "",
-  ].filter(Boolean).length
+  return (
+    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      {/* Name */}
+      <FilterField id={`${idPrefix}nameFilter`} label="Name" icon={Search}>
+        <input
+          id={`${idPrefix}nameFilter`}
+          type="text"
+          placeholder="Search by song name..."
+          className={filterInputClass}
+          value={filters.name}
+          onChange={(e) => updateFilter("name", e.target.value)}
+        />
+      </FilterField>
+
+      {/* Album */}
+      <FilterField id={`${idPrefix}albumFilter`} label="Album" icon={Disc}>
+        <select
+          id={`${idPrefix}albumFilter`}
+          className={`${filterInputClass} cursor-pointer`}
+          value={filters.album}
+          onChange={(e) => updateFilter("album", e.target.value)}
+        >
+          {songAlbums.map(sa => (
+            <option key={sa} value={sa}>{sa === "All" ? "All albums" : sa}</option>
+          ))}
+        </select>
+      </FilterField>
+
+      {/* Tags */}
+      <FilterField id={`${idPrefix}tagFilter`} label="Tags" icon={Tag}>
+        <select
+          id={`${idPrefix}tagFilter`}
+          disabled
+          title="Tag filtering is coming soon"
+          className={`${filterInputClass} cursor-not-allowed bg-gray-100 text-gray-400`}
+        >
+          <option>Coming soon</option>
+        </select>
+      </FilterField>
+
+      {/* Date */}
+      <FilterField id={`${idPrefix}dateFilter`} label="Added on or after" icon={Calendar}>
+        <input
+          id={`${idPrefix}dateFilter`}
+          type="date"
+          className={filterInputClass}
+          value={filters.since}
+          onChange={(e) => updateFilter("since", e.target.value)}
+        />
+      </FilterField>
+    </div>
+  )
+}
+
+/**
+ * The filter bar UI. Pair it with useSongFilters:
+ *   const { filters, setFilters, filteredSongs } = useSongFilters(songs)
+ *   <SongFilter songs={songs} filteredSongs={filteredSongs} filters={filters} setFilters={setFilters} />
+ */
+export default function SongFilter({ songs, filteredSongs, filters, setFilters, setOpen }) {
+  const activeCount = countActiveFilters(filters)
 
   return (
     <div className="mx-5 mt-5 rounded-xl border bg-white/60 p-5 shadow-sm backdrop-blur-sm">
@@ -113,57 +186,7 @@ export default function SongFilter({ songs, filteredSongs, filters, setFilters, 
         </div>
       </div>
 
-      {/* Controls */}
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        {/* Name */}
-        <FilterField id="nameFilter" label="Name" icon={Search}>
-          <input
-            id="nameFilter"
-            type="text"
-            placeholder="Search by song name..."
-            className={filterInputClass}
-            value={filters.name}
-            onChange={(e) => updateFilter("name", e.target.value)}
-          />
-        </FilterField>
-
-        {/* Album */}
-        <FilterField id="albumFilter" label="Album" icon={Disc}>
-          <select
-            id="albumFilter"
-            className={`${filterInputClass} cursor-pointer`}
-            value={filters.album}
-            onChange={(e) => updateFilter("album", e.target.value)}
-          >
-            {songAlbums.map(sa => (
-              <option key={sa} value={sa}>{sa === "All" ? "All albums" : sa}</option>
-            ))}
-          </select>
-        </FilterField>
-
-        {/* Tags */}
-        <FilterField id="tagFilter" label="Tags" icon={Tag}>
-          <select
-            id="tagFilter"
-            disabled
-            title="Tag filtering is coming soon"
-            className={`${filterInputClass} cursor-not-allowed bg-gray-100 text-gray-400`}
-          >
-            <option>Coming soon</option>
-          </select>
-        </FilterField>
-
-        {/* Date */}
-        <FilterField id="dateFilter" label="Added on or after" icon={Calendar}>
-          <input
-            id="dateFilter"
-            type="date"
-            className={filterInputClass}
-            value={filters.since}
-            onChange={(e) => updateFilter("since", e.target.value)}
-          />
-        </FilterField>
-      </div>
+      <SongFilterFields songs={songs} filters={filters} setFilters={setFilters} />
     </div>
   )
 }
