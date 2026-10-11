@@ -2,7 +2,7 @@
 
 // imports from next
 
-import { useState, useEffect, useRef, useMemo } from "react";
+import { useState, useEffect, useRef } from "react";
 import SongCard, { playSong } from "./SongCard";
 import * as Song from "./SongFunctions";
 import { getReadableDurationSong } from "../playlists/PlaylistCard";
@@ -10,6 +10,7 @@ import { useNotification } from "../layout/notification/NotificationContext";
 import FadeOverlay from "../layout/FadeOverlay";
 import EditSong from "./EditSong";
 import AudioVisualizer from "./AudioVisualizer";
+import SongFilter, { useSongFilters } from "./SongFilter";
 
 import { API_BASE_URL } from "@/app/lib/config";
 
@@ -23,13 +24,7 @@ import {
   ArrowLeft,
   SkipForward,
   SkipBack,
-  XCircle,
-  Search,
-  Disc,
-  Tag,
-  Calendar,
-  SlidersHorizontal,
-  X
+  XCircle
 } from "lucide-react";
 import { mapSongColorToLowerTint } from "../visual/colors";
 
@@ -43,8 +38,7 @@ export default function SongsList({
   settings,
   setUpdate,
 }) {
-  const [filters, setFilters] = useState(DEFAULT_FILTERS)
-  const filteredSongs = useMemo(() => filterSongs(songs, filters), [songs, filters])
+  const { filters, setFilters, filteredSongs } = useSongFilters(songs)
   const currentAudioRef = useRef(null);
   const timeSkip = settings?.timeSkip || 5;
   const [progress, setProgress] = useState({ currentTime: 0, duration: 0 });
@@ -230,8 +224,6 @@ export default function SongsList({
     });
   }, []);
 
-  const songAlbums = ["All", ...Array.from(new Set(songs.map(song => song.album).filter(s => !!s)))]
-
   return (
     <div className="flex flex-wrap flex-col justify-center gap-0">
       <FadeOverlay isOpen={songToEdit} onClose={() => setSongToEdit(null)}>
@@ -254,7 +246,7 @@ export default function SongsList({
       />
 
       <div className="flex flex-col gap-5 border bg-black/20 rounded-xl shadow-x mt-5">
-        <FilterBar songs={songs} filters={filters} setFilters={setFilters} songAlbums={songAlbums} filteredSongs={filteredSongs} />
+        <SongFilter songs={songs} filters={filters} setFilters={setFilters} filteredSongs={filteredSongs} />
         <div className="grid grid-cols-5 gap-5 p-5">
           {filteredSongs.map((song) => (
             <SongCard
@@ -542,141 +534,4 @@ function HotKeyButtons({ hotkeysMap, currentAudioRef }) {
       </h1>
     </div>
   );
-}
-
-const DEFAULT_FILTERS = { name: "", album: "All", since: "" }
-
-/**
- * Pure filtering: songs + filters in, matching songs out.
- * To add a filter: add one more condition here, one field in DEFAULT_FILTERS, activeCount, and the corresponding div.
- */
-function filterSongs(songs, filters) {
-  const name = filters.name.trim().toLowerCase()
-  const since = filters.since ? new Date(`${filters.since}T00:00:00`) : null
-
-  return songs.filter(song =>
-    (!name || (song.name ?? "").toLowerCase().includes(name)) &&
-    (filters.album === "All" || song.album === filters.album) &&
-    (!since || new Date(song.date_created) >= since)
-  )
-}
-
-const filterInputClass =
-  "w-full rounded-lg border border-gray-300 bg-white py-2 pl-9 pr-3 text-sm text-gray-800 shadow-sm " +
-  "placeholder:text-gray-400 transition-colors hover:border-gray-400 " +
-  "focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/30"
-
-function FilterField({ id, label, icon: Icon, children }) {
-  return (
-    <div className="flex flex-col gap-1.5 text-left">
-      <label
-        htmlFor={id}
-        className="text-xs font-semibold tracking-wide text-gray-600"
-      >
-        {label}
-      </label>
-      <div className="relative">
-        <Icon
-          size={16}
-          className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
-        />
-        {children}
-      </div>
-    </div>
-  )
-}
-
-function FilterBar({ songAlbums, songs, filteredSongs, filters, setFilters }) {
-  const updateFilter = (key, value) =>
-    setFilters(prev => ({ ...prev, [key]: value }))
-
-  const activeCount = [
-    filters.name.trim() !== "",
-    filters.album !== "All",
-    filters.since !== "",
-  ].filter(Boolean).length
-
-  return (
-    <div className="mx-5 mt-5 rounded-xl border bg-white/60 p-5 shadow-sm backdrop-blur-sm">
-      {/* Header */}
-      <div className="mb-4 flex flex-row items-center justify-between">
-        <div className="flex flex-row items-center gap-2 text-gray-800">
-          <SlidersHorizontal size={18} />
-          <h2 className="text-base font-semibold">Filter songs</h2>
-          {activeCount > 0 && (
-            <span className="rounded-full bg-blue-600 px-2 py-0.5 text-xs font-medium text-white">
-              {activeCount} active
-            </span>
-          )}
-        </div>
-
-        <div className="flex flex-row items-center gap-3">
-          <p className="select-none text-sm text-gray-600">
-            Showing <b>{filteredSongs.length}</b> of <b>{songs.length}</b>
-          </p>
-          <button
-            type="button"
-            disabled={activeCount === 0}
-            onClick={() => setFilters(DEFAULT_FILTERS)}
-            className="flex cursor-pointer flex-row items-center gap-1 rounded-lg border border-gray-300 bg-white px-3 py-1.5 text-sm text-gray-700 shadow-sm transition-all hover:bg-gray-100 active:scale-95 disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-white"
-          >
-            <X size={14} />
-            Clear all
-          </button>
-        </div>
-      </div>
-
-      {/* Controls */}
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        {/* Name */}
-        <FilterField id="nameFilter" label="Name" icon={Search}>
-          <input
-            id="nameFilter"
-            type="text"
-            placeholder="Search by song name..."
-            className={filterInputClass}
-            value={filters.name}
-            onChange={(e) => updateFilter("name", e.target.value)}
-          />
-        </FilterField>
-
-        {/* Album */}
-        <FilterField id="albumFilter" label="Album" icon={Disc}>
-          <select
-            id="albumFilter"
-            className={`${filterInputClass} cursor-pointer`}
-            value={filters.album}
-            onChange={(e) => updateFilter("album", e.target.value)}
-          >
-            {songAlbums.map(sa => (
-              <option key={sa} value={sa}>{sa === "All" ? "All albums" : sa}</option>
-            ))}
-          </select>
-        </FilterField>
-
-        {/* Tags */}
-        <FilterField id="tagFilter" label="Tags" icon={Tag}>
-          <select
-            id="tagFilter"
-            disabled
-            title="Tag filtering is coming soon"
-            className={`${filterInputClass} cursor-not-allowed bg-gray-100 text-gray-400`}
-          >
-            <option>Coming soon</option>
-          </select>
-        </FilterField>
-
-        {/* Date */}
-        <FilterField id="dateFilter" label="Added on or after" icon={Calendar}>
-          <input
-            id="dateFilter"
-            type="date"
-            className={filterInputClass}
-            value={filters.since}
-            onChange={(e) => updateFilter("since", e.target.value)}
-          />
-        </FilterField>
-      </div>
-    </div>
-  )
 }
