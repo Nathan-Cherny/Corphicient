@@ -2,7 +2,7 @@
 
 // imports from next
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import SongCard, { playSong } from "./SongCard";
 import * as Song from "./SongFunctions";
 import { getReadableDurationSong } from "../playlists/PlaylistCard";
@@ -43,8 +43,8 @@ export default function SongsList({
   settings,
   setUpdate,
 }) {
-  const [filters, setFilters] = useState({})
-  const [filteredSongs, setFilteredSongs] = useState(songs)
+  const [filters, setFilters] = useState(DEFAULT_FILTERS)
+  const filteredSongs = useMemo(() => filterSongs(songs, filters), [songs, filters])
   const currentAudioRef = useRef(null);
   const timeSkip = settings?.timeSkip || 5;
   const [progress, setProgress] = useState({ currentTime: 0, duration: 0 });
@@ -66,8 +66,8 @@ export default function SongsList({
   const playNextSong = () => {
     // current song isn't defined here
     setCurrentSong((prev) => {
-      const otherSongs = filteredSongs.filter((s) => s.id !== prev.id);
-      if (otherSongs.length == 0) return;
+      const otherSongs = filteredSongs.filter((s) => s.id !== prev?.id);
+      if (otherSongs.length == 0) return prev; // nothing else to play, keep the current song
       return getRandomSong(otherSongs);
     });
   };
@@ -107,6 +107,11 @@ export default function SongsList({
       togglePause(audio, notify);
     },
   };
+
+  // Always points at this render's hotkeysMap. Listeners registered once (like the
+  // media session handlers) read from here so they never use stale filters/timeSkip.
+  const hotkeysRef = useRef(hotkeysMap);
+  hotkeysRef.current = hotkeysMap;
 
   // use effects
 
@@ -178,15 +183,26 @@ export default function SongsList({
   useEffect(() => {
     const handleKeyDown = (e) => {
       if (!currentSong) return;
+
+      // Don't hijack keys while the user is typing in a filter box, select, etc.
+      const target = e.target;
+      if (
+        target instanceof HTMLElement &&
+        (target.isContentEditable ||
+          ["INPUT", "SELECT", "TEXTAREA"].includes(target.tagName))
+      ) {
+        return;
+      }
+
       let audio = currentAudioRef.current;
       let key = e.key;
 
-      if (key in hotkeysMap) hotkeysMap[key](e, audio);
+      if (key in hotkeysRef.current) hotkeysRef.current[key](e, audio);
     };
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [currentSong, getRandomSong]);
+  }, [currentSong]);
 
   useEffect(() => {
     navigator.mediaSession.setActionHandler("seekto", (details) => {
@@ -196,27 +212,23 @@ export default function SongsList({
       audio.currentTime = details.seekTime;
     });
 
+    // These are registered once, so they go through hotkeysRef to always see the latest filters
     navigator.mediaSession.setActionHandler("previoustrack", (e) => {
-      hotkeysMap["0"](e, currentAudioRef.current);
+      hotkeysRef.current["0"](e, currentAudioRef.current);
     });
 
-    navigator.mediaSession.setActionHandler("nexttrack", () => {
-      playNextSong();
+    navigator.mediaSession.setActionHandler("nexttrack", (e) => {
+      hotkeysRef.current["s"](e, currentAudioRef.current);
     });
 
-    navigator.mediaSession.setActionHandler("seekbackward", (details) => {
-      hotkeysMap["ArrowLeft"](e, currentAudioRef.current)
+    navigator.mediaSession.setActionHandler("seekbackward", (e) => {
+      hotkeysRef.current["ArrowLeft"](e, currentAudioRef.current);
     });
 
-    navigator.mediaSession.setActionHandler("seekforward", (details) => {
-      hotkeysMap["ArrowRight"](e, currentAudioRef.current)
+    navigator.mediaSession.setActionHandler("seekforward", (e) => {
+      hotkeysRef.current["ArrowRight"](e, currentAudioRef.current);
     });
   }, []);
-
-  useEffect(() => {
-    setFilteredSongs(songs)
-  }, [songs])
-
 
   const songAlbums = ["All", ...Array.from(new Set(songs.map(song => song.album).filter(s => !!s)))]
 
@@ -242,11 +254,11 @@ export default function SongsList({
       />
 
       <div className="flex flex-col gap-5 border bg-black/20 rounded-xl shadow-x mt-5">
-        <FilterBar songs={songs} filters={filters} setFilters={setFilters} setFilteredSongs={setFilteredSongs} songAlbums={songAlbums} filteredSongs={filteredSongs} />
+        <FilterBar songs={songs} filters={filters} setFilters={setFilters} songAlbums={songAlbums} filteredSongs={filteredSongs} />
         <div className="grid grid-cols-5 gap-5 p-5">
-          {filteredSongs.map((song, i) => (
+          {filteredSongs.map((song) => (
             <SongCard
-              key={i}
+              key={song.id}
               song={song}
               isCurrentSong={currentSong?.id == song.id}
               setCurrentSong={setCurrentSong}
@@ -532,11 +544,21 @@ function HotKeyButtons({ hotkeysMap, currentAudioRef }) {
   );
 }
 
-// yyyy-mm-dd in local time, for the <input type="date"> value
-function toDateInputValue(date) {
-  if (!(date instanceof Date) || isNaN(date)) return ""
-  const pad = (n) => String(n).padStart(2, "0")
-  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`
+const DEFAULT_FILTERS = { name: "", album: "All", since: "" }
+
+/**
+ * Pure filtering: songs + filters in, matching songs out.
+ * To add a filter: add one more condition here, one field in DEFAULT_FILTERS, activeCount, and the corresponding div.
+ */
+function filterSongs(songs, filters) {
+  const name = filters.name.trim().toLowerCase()
+  const since = filters.since ? new Date(`${filters.since}T00:00:00`) : null
+
+  return songs.filter(song =>
+    (!name || (song.name ?? "").toLowerCase().includes(name)) &&
+    (filters.album === "All" || song.album === filters.album) &&
+    (!since || new Date(song.date_created) >= since)
+  )
 }
 
 const filterInputClass =
@@ -564,39 +586,15 @@ function FilterField({ id, label, icon: Icon, children }) {
   )
 }
 
-function FilterBar({ songAlbums, songs, setFilteredSongs, filteredSongs, filters, setFilters }) {
-  function applyFilters(newFilters) {
-    setFilters(newFilters)
+function FilterBar({ songAlbums, songs, filteredSongs, filters, setFilters }) {
+  const updateFilter = (key, value) =>
+    setFilters(prev => ({ ...prev, [key]: value }))
 
-    let songsToFilter = songs
-
-    for (let filterable of Object.keys(newFilters)) {
-      let value = newFilters[filterable]
-
-      if (value instanceof Date) {
-        // date: keep songs added on or after the chosen day
-        songsToFilter = songsToFilter.filter(song => new Date(song[filterable]) >= value)
-      } else {
-        // text: case-insensitive "contains"
-        const needle = String(value).toLowerCase()
-        songsToFilter = songsToFilter.filter(song =>
-          String(song[filterable] ?? "").toLowerCase().includes(needle)
-        )
-      }
-    }
-
-    setFilteredSongs(songsToFilter)
-  }
-
-  // Sets a filter, or removes it when the value is empty. Never mutates the existing filters object.
-  function updateFilter(key, value, isEmpty) {
-    const newFilters = { ...filters }
-    if (isEmpty) delete newFilters[key]
-    else newFilters[key] = value
-    applyFilters(newFilters)
-  }
-
-  const activeCount = Object.keys(filters).length
+  const activeCount = [
+    filters.name.trim() !== "",
+    filters.album !== "All",
+    filters.since !== "",
+  ].filter(Boolean).length
 
   return (
     <div className="mx-5 mt-5 rounded-xl border bg-white/60 p-5 shadow-sm backdrop-blur-sm">
@@ -619,7 +617,7 @@ function FilterBar({ songAlbums, songs, setFilteredSongs, filteredSongs, filters
           <button
             type="button"
             disabled={activeCount === 0}
-            onClick={() => applyFilters({})}
+            onClick={() => setFilters(DEFAULT_FILTERS)}
             className="flex cursor-pointer flex-row items-center gap-1 rounded-lg border border-gray-300 bg-white px-3 py-1.5 text-sm text-gray-700 shadow-sm transition-all hover:bg-gray-100 active:scale-95 disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-white"
           >
             <X size={14} />
@@ -637,8 +635,8 @@ function FilterBar({ songAlbums, songs, setFilteredSongs, filteredSongs, filters
             type="text"
             placeholder="Search by song name..."
             className={filterInputClass}
-            value={filters.name ?? ""}
-            onChange={(e) => updateFilter("name", e.target.value, e.target.value === "")}
+            value={filters.name}
+            onChange={(e) => updateFilter("name", e.target.value)}
           />
         </FilterField>
 
@@ -647,8 +645,8 @@ function FilterBar({ songAlbums, songs, setFilteredSongs, filteredSongs, filters
           <select
             id="albumFilter"
             className={`${filterInputClass} cursor-pointer`}
-            value={filters.album ?? "All"}
-            onChange={(e) => updateFilter("album", e.target.value, e.target.value === "All")}
+            value={filters.album}
+            onChange={(e) => updateFilter("album", e.target.value)}
           >
             {songAlbums.map(sa => (
               <option key={sa} value={sa}>{sa === "All" ? "All albums" : sa}</option>
@@ -674,12 +672,8 @@ function FilterBar({ songAlbums, songs, setFilteredSongs, filteredSongs, filters
             id="dateFilter"
             type="date"
             className={filterInputClass}
-            value={toDateInputValue(filters.date_created)}
-            onChange={(e) => {
-              const date = e.target.value
-              // "T00:00:00" parses as local midnight instead of UTC midnight
-              updateFilter("date_created", new Date(`${date}T00:00:00`), date === "")
-            }}
+            value={filters.since}
+            onChange={(e) => updateFilter("since", e.target.value)}
           />
         </FilterField>
       </div>
