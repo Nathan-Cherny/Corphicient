@@ -69,7 +69,7 @@ function FilterField({ id, label, icon: Icon, children }) {
  *   const { filters, setFilters, filteredSongs } = useSongFilters(songs)
  *   <SongFilter songs={songs} filteredSongs={filteredSongs} filters={filters} setFilters={setFilters} />
  */
-export default function SongFilter({ songs, filteredSongs, filters, setFilters }) {
+export default function SongFilter({ songs, filteredSongs, filters, setFilters, setOpen }) {
   const songAlbums = useMemo(
     () => ["All", ...Array.from(new Set(songs.map(song => song.album).filter(s => !!s)))],
     [songs]
@@ -89,7 +89,6 @@ export default function SongFilter({ songs, filteredSongs, filters, setFilters }
       {/* Header */}
       <div className="mb-4 flex flex-row items-center justify-between">
         <div className="flex flex-row items-center gap-2 text-gray-800">
-          <SlidersHorizontal size={18} />
           <h2 className="text-base font-semibold">Filter songs</h2>
           {activeCount > 0 && (
             <span className="rounded-full bg-blue-600 px-2 py-0.5 text-xs font-medium text-white">
@@ -167,4 +166,8 @@ export default function SongFilter({ songs, filteredSongs, filters, setFilters }
       </div>
     </div>
   )
+}
+
+export function SongFilterToggleButton({setFilterOpen}){
+  return <SlidersHorizontal className="border cursor-pointer hover:scale-105" onClick={() => setFilterOpen(prev => !prev)} size={18} />
 }

@@ -10,7 +10,7 @@ import { useNotification } from "../layout/notification/NotificationContext";
 import FadeOverlay from "../layout/FadeOverlay";
 import EditSong from "./EditSong";
 import AudioVisualizer from "./AudioVisualizer";
-import SongFilter, { useSongFilters } from "./SongFilter";
+import SongFilter, { SongFilterToggleButton, useSongFilters } from "./SongFilter";
 
 import { API_BASE_URL } from "@/app/lib/config";
 
@@ -24,7 +24,8 @@ import {
   ArrowLeft,
   SkipForward,
   SkipBack,
-  XCircle
+  XCircle,
+  SlidersHorizontal,
 } from "lucide-react";
 import { mapSongColorToLowerTint } from "../visual/colors";
 
@@ -43,6 +44,8 @@ export default function SongsList({
   const timeSkip = settings?.timeSkip || 5;
   const [progress, setProgress] = useState({ currentTime: 0, duration: 0 });
   const notify = useNotification();
+
+  const [filterOpen, setFilterOpen] = useState(false)
 
   const [songToEdit, setSongToEdit] = useState(null);
 
@@ -246,7 +249,9 @@ export default function SongsList({
       />
 
       <div className="flex flex-col gap-5 border bg-black/20 rounded-xl shadow-x mt-5">
-        <SongFilter songs={songs} filters={filters} setFilters={setFilters} filteredSongs={filteredSongs} />
+
+        <SongsListOptions filterOpen={filterOpen} setFilterOpen={setFilterOpen} songFilter={<SongFilter songs={songs} filters={filters} setFilters={setFilters} filteredSongs={filteredSongs} setOpen={setFilterOpen} />} />
+
         <div className="grid grid-cols-5 gap-5 p-5">
           {filteredSongs.map((song) => (
             <SongCard
@@ -534,4 +539,15 @@ function HotKeyButtons({ hotkeysMap, currentAudioRef }) {
       </h1>
     </div>
   );
+}
+
+
+function SongsListOptions({ filterOpen, setFilterOpen, songFilter }) {
+  return (
+    <div className="p-5 w-full bg-gray-500/25 rounded-t-xl border-b border-black">
+      {<SongFilterToggleButton setFilterOpen={setFilterOpen}/>}
+      {filterOpen && songFilter}
+    </div>
+
+  )
 }
