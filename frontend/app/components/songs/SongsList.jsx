@@ -59,7 +59,7 @@ export default function SongsList({
   const playNextSong = () => {
     // current song isn't defined here
     setCurrentSong((prev) => {
-      const otherSongs = songs.filter((s) => s.id !== prev.id);
+      const otherSongs = filteredSongs.filter((s) => s.id !== prev.id);
       if (otherSongs.length == 0) return;
       return getRandomSong(otherSongs);
     });
@@ -209,6 +209,7 @@ export default function SongsList({
   useEffect(() => {
     setFilteredSongs(songs)
   }, [songs])
+  
 
   const songAlbums = ["All", ...Array.from(new Set(songs.map(song => song.album).filter(s => !!s)))]
 
@@ -234,23 +235,7 @@ export default function SongsList({
       />
 
       <div className="flex flex-col gap-5 border bg-black/20 rounded-xl shadow-x mt-5">
-        <div className="mt-5 text-center bg-white/50 mx-5 p-5 rounded-xl border">
-          <label htmlFor="albumFilter">Album</label>
-          <select onChange={(e) => {
-            let album = e.target.value
-
-            if (album == "All") {
-              setFilteredSongs(songs);
-              return
-            }
-
-            setFilteredSongs(songs.filter(song => song.album == album))
-          }}>
-            {songAlbums.map(sa =>
-              <option key={sa} className="text-center" value={sa}>{sa}</option>
-            )}
-          </select>
-        </div>
+        <FilterBar songs={songs} setFilteredSongs={setFilteredSongs} songAlbums={songAlbums} />
         <div className="grid grid-cols-5 gap-5 p-5">
           {filteredSongs.map((song, i) => (
             <SongCard
@@ -538,4 +523,49 @@ function HotKeyButtons({ hotkeysMap, currentAudioRef }) {
       </h1>
     </div>
   );
+}
+
+function FilterBar({ songAlbums, songs, setFilteredSongs }) {
+  return (
+    <div className="mt-5 text-center bg-white/50 mx-5 p-5 rounded-xl px-100 border 
+    *:flex *: flex-row *:justify-between *:text-center">
+      {/* Album */}
+      <div>
+        <label htmlFor="albumFilter">Album</label>
+        <select id="albumFilter" onChange={(e) => {
+          let album = e.target.value
+
+          if (album == "All") {
+            setFilteredSongs(songs);
+            return
+          }
+
+          setFilteredSongs(songs.filter(song => song.album == album))
+        }}>
+          {songAlbums.map(sa =>
+            <option key={sa} className="text-center" value={sa}>{sa}</option>
+          )}
+        </select>
+      </div>
+      {/* Name */}
+      <div>
+        <label htmlFor="nameFilter">Name</label>
+        <input id="nameFilter" type="text" />
+      </div>
+      {/* Tags */}
+      <div>
+        <label htmlFor="tagFilter">Tags</label>
+        <select id="tagFilter" onChange={(e) => {
+        }}>
+          <option>TBD</option>
+        </select>
+      </div>
+      {/* Date */}
+      <div>
+        <label htmlFor="dateFilter">Date</label>
+        <input id="dateFilter" type="date" onChange={(e) => {
+        }} />
+      </div>
+    </div>
+  )
 }
