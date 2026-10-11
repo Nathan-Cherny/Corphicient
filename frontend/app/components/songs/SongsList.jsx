@@ -23,7 +23,13 @@ import {
   ArrowLeft,
   SkipForward,
   SkipBack,
-  XCircle
+  XCircle,
+  Search,
+  Disc,
+  Tag,
+  Calendar,
+  SlidersHorizontal,
+  X
 } from "lucide-react";
 import { mapSongColorToLowerTint } from "../visual/colors";
 
@@ -526,83 +532,156 @@ function HotKeyButtons({ hotkeysMap, currentAudioRef }) {
   );
 }
 
+// yyyy-mm-dd in local time, for the <input type="date"> value
+function toDateInputValue(date) {
+  if (!(date instanceof Date) || isNaN(date)) return ""
+  const pad = (n) => String(n).padStart(2, "0")
+  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`
+}
+
+const filterInputClass =
+  "w-full rounded-lg border border-gray-300 bg-white py-2 pl-9 pr-3 text-sm text-gray-800 shadow-sm " +
+  "placeholder:text-gray-400 transition-colors hover:border-gray-400 " +
+  "focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/30"
+
+function FilterField({ id, label, icon: Icon, children }) {
+  return (
+    <div className="flex flex-col gap-1.5 text-left">
+      <label
+        htmlFor={id}
+        className="text-xs font-semibold tracking-wide text-gray-600"
+      >
+        {label}
+      </label>
+      <div className="relative">
+        <Icon
+          size={16}
+          className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+        />
+        {children}
+      </div>
+    </div>
+  )
+}
+
 function FilterBar({ songAlbums, songs, setFilteredSongs, filteredSongs, filters, setFilters }) {
-  function applyFilters(newFilters){
+  function applyFilters(newFilters) {
     setFilters(newFilters)
 
-    let filterables = Object.keys(newFilters)
-
     let songsToFilter = songs
-    
-    for(let filterable of filterables){
+
+    for (let filterable of Object.keys(newFilters)) {
       let value = newFilters[filterable]
-      console.log(typeof value)
 
-      switch (typeof value){
-        case "string":
-          songsToFilter = songsToFilter.filter(song => song[filterable].includes(value))
-          break;
-        case "object": // date
-          songsToFilter = songsToFilter.filter(song => new Date(song[filterable]) >= value)
-          break;
-        default:
-          songsToFilter = songsToFilter.filter(song => song[filterable].includes(value))
+      if (value instanceof Date) {
+        // date: keep songs added on or after the chosen day
+        songsToFilter = songsToFilter.filter(song => new Date(song[filterable]) >= value)
+      } else {
+        // text: case-insensitive "contains"
+        const needle = String(value).toLowerCase()
+        songsToFilter = songsToFilter.filter(song =>
+          String(song[filterable] ?? "").toLowerCase().includes(needle)
+        )
       }
-
     }
 
     setFilteredSongs(songsToFilter)
   }
 
+  // Sets a filter, or removes it when the value is empty. Never mutates the existing filters object.
+  function updateFilter(key, value, isEmpty) {
+    const newFilters = { ...filters }
+    if (isEmpty) delete newFilters[key]
+    else newFilters[key] = value
+    applyFilters(newFilters)
+  }
+
+  const activeCount = Object.keys(filters).length
+
   return (
-    <div className="mt-5 text-center bg-white/50 mx-5 p-5 rounded-xl px-100 border 
-    *:flex *: flex-row *:justify-between *:text-center">
-      {/* Album */}
-      <div>
-        <label htmlFor="albumFilter">Album</label>
-        <select id="albumFilter" onChange={(e) => {
-          let album = e.target.value
-
-          let newFilters = Object.assign(filters, {"album": album})
-          if(album == "All") delete newFilters.album
-
-          applyFilters(newFilters)
-        }}>
-          {songAlbums.map(sa =>
-            <option key={sa} className="text-center" value={sa}>{sa}</option>
+    <div className="mx-5 mt-5 rounded-xl border bg-white/60 p-5 shadow-sm backdrop-blur-sm">
+      {/* Header */}
+      <div className="mb-4 flex flex-row items-center justify-between">
+        <div className="flex flex-row items-center gap-2 text-gray-800">
+          <SlidersHorizontal size={18} />
+          <h2 className="text-base font-semibold">Filter songs</h2>
+          {activeCount > 0 && (
+            <span className="rounded-full bg-blue-600 px-2 py-0.5 text-xs font-medium text-white">
+              {activeCount} active
+            </span>
           )}
-        </select>
-      </div>
-      {/* Name */}
-      <div>
-        <label htmlFor="nameFilter">Name</label>
-        <input id="nameFilter" onChange={(e) => {
-          let name = e.target.value
+        </div>
 
-          let newFilters = Object.assign(filters, {"name": name})
-          if(name == "") delete newFilters.name
-
-          applyFilters(newFilters)
-        }} type="text" />
+        <div className="flex flex-row items-center gap-3">
+          <p className="select-none text-sm text-gray-600">
+            Showing <b>{filteredSongs.length}</b> of <b>{songs.length}</b>
+          </p>
+          <button
+            type="button"
+            disabled={activeCount === 0}
+            onClick={() => applyFilters({})}
+            className="flex cursor-pointer flex-row items-center gap-1 rounded-lg border border-gray-300 bg-white px-3 py-1.5 text-sm text-gray-700 shadow-sm transition-all hover:bg-gray-100 active:scale-95 disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-white"
+          >
+            <X size={14} />
+            Clear all
+          </button>
+        </div>
       </div>
-      {/* Tags */}
-      <div>
-        <label htmlFor="tagFilter">Tags</label>
-        <select id="tagFilter" onChange={(e) => {
-        }}>
-          <option>TBD</option>
-        </select>
-      </div>
-      {/* Date */}
-      <div>
-        <label htmlFor="dateFilter">Date</label>
-        <input id="dateFilter" type="date" onChange={(e) => {
-          let date = e.target.value
 
-          let newFilters = Object.assign(filters, {"date_created": new Date(date)})
-          
-          applyFilters(newFilters)
-        }} />
+      {/* Controls */}
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {/* Name */}
+        <FilterField id="nameFilter" label="Name" icon={Search}>
+          <input
+            id="nameFilter"
+            type="text"
+            placeholder="Search by song name..."
+            className={filterInputClass}
+            value={filters.name ?? ""}
+            onChange={(e) => updateFilter("name", e.target.value, e.target.value === "")}
+          />
+        </FilterField>
+
+        {/* Album */}
+        <FilterField id="albumFilter" label="Album" icon={Disc}>
+          <select
+            id="albumFilter"
+            className={`${filterInputClass} cursor-pointer`}
+            value={filters.album ?? "All"}
+            onChange={(e) => updateFilter("album", e.target.value, e.target.value === "All")}
+          >
+            {songAlbums.map(sa => (
+              <option key={sa} value={sa}>{sa === "All" ? "All albums" : sa}</option>
+            ))}
+          </select>
+        </FilterField>
+
+        {/* Tags */}
+        <FilterField id="tagFilter" label="Tags" icon={Tag}>
+          <select
+            id="tagFilter"
+            disabled
+            title="Tag filtering is coming soon"
+            className={`${filterInputClass} cursor-not-allowed bg-gray-100 text-gray-400`}
+          >
+            <option>Coming soon</option>
+          </select>
+        </FilterField>
+
+        {/* Date */}
+        <FilterField id="dateFilter" label="Added on or after" icon={Calendar}>
+          <input
+            id="dateFilter"
+            type="date"
+            className={filterInputClass}
+            value={toDateInputValue(filters.date_created)}
+            onChange={(e) => {
+              const date = e.target.value
+              // "T00:00:00" parses as local midnight instead of UTC midnight
+              updateFilter("date_created", new Date(`${date}T00:00:00`), date === "")
+            }}
+          />
+        </FilterField>
       </div>
     </div>
   )
