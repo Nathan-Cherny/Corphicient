@@ -40,7 +40,10 @@ export default function SongCard({
       className={`rounded-xl p-1.5 transition-all duration-200 hover:scale-105 cursor-pointer ${isCurrentSong ? "bg-red-500" : "bg-black z-0"}`}
     >
       <div
-        onClick={() => setCurrentSong(isCurrentSong ? null : song)}
+        onClick={() => {
+          console.log(`Playing ${song.name}\n${JSON.stringify(song)}`)
+          setCurrentSong(isCurrentSong ? null : song)
+        }}
         className={`relative w-full flex flex-col p-1 h-full z-10 rounded-xl justify-between`}
         style={{
           background: `linear-gradient(45deg, ${bgColor1}, ${bgColor2})`,
