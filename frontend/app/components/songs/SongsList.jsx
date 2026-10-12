@@ -544,10 +544,12 @@ function HotKeyButtons({ hotkeysMap, currentAudioRef }) {
 
 function SongsListOptions({ filterOpen, setFilterOpen, songFilter }) {
   return (
-    <div className="p-5 w-full bg-gray-500/25 rounded-t-xl border-b border-black">
-      {<SongFilterToggleButton setFilterOpen={setFilterOpen} />}
+    <div className="p-5 w-full bg-gray-500/25 rounded-t-xl border-b border-black flex flex-col">
+      <div className="flex flex-row gap-5 items-center">
+        {<SongFilterToggleButton setFilterOpen={setFilterOpen} />}
+        {<ListOrdered size={18} className="border cursor-pointer hover:scale-105" />}
+      </div>
       {filterOpen && songFilter}
-      {}
     </div>
   )
 }
@@ -563,7 +565,7 @@ export function TagsList({ tags, tagOnClick, className }) {
   </div>)
 }
 
-export function TagManager({tags, setTags}) {
+export function TagManager({ tags, setTags }) {
   return (
     <>
       <input className="hidden" id="hiddenTagsInput" name="tags" type="text" defaultValue={tags} />
