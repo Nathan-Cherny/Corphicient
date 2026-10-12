@@ -10,6 +10,7 @@ from rest_framework.response import Response
 from .serializer import *
 from .colors import *
 from .forms import *
+from .filters import SONG_FILTERS
 from .download import download_song
 from . import progress
 import json
@@ -183,6 +184,16 @@ def crop_song(request, pk):
     
 
     return Response({"test": song.__getattribute__('src')}, status=status.HTTP_200_OK)
+
+
+# SONG FILTERS
+
+
+@api_view(["GET"])
+def get_song_filters(request):
+    """The filters songs can be filtered by (see songs/filters.py). The frontend builds its
+    filter UI and does its own matching from this, so it never hardcodes the list."""
+    return Response([spec.to_dict() for spec in SONG_FILTERS])
 
 
 # PLAYLISTS

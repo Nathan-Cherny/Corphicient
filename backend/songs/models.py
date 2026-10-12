@@ -1,9 +1,6 @@
-import datetime
-
-from django.conf import settings
 from django.db import models
-from django.utils import timezone
-from django.utils.dateparse import parse_date
+
+from .filters import filter_songs
 
 class Song(models.Model):
     name = models.CharField(max_length=50)
@@ -24,36 +21,6 @@ class Song(models.Model):
         return self.name
 
 
-# The filters a FilterPlaylist can have. These mirror the song filters in the frontend
-# (DEFAULT_FILTERS / filterSongs in frontend/app/components/songs/SongFilter.jsx), so when a
-# filter is added there, add it here too.
-DEFAULT_SONG_FILTERS = {"name": "", "album": "All", "since": ""}
-
-
-def filter_songs(queryset, filters):
-    """Narrows a Song queryset by a filters dict like {"name": "", "album": "Graduation", "since": ""}.
-
-    Missing keys fall back to DEFAULT_SONG_FILTERS, which means "don't filter on this".
-    """
-    filters = {**DEFAULT_SONG_FILTERS, **(filters or {})}
-
-    name = filters["name"].strip()
-    if name:
-        queryset = queryset.filter(name__icontains=name)
-
-    if filters["album"] != "All":
-        queryset = queryset.filter(album=filters["album"])
-
-    since = parse_date(filters["since"]) if filters["since"] else None
-    if since:
-        start = datetime.datetime.combine(since, datetime.time.min)
-        if settings.USE_TZ:
-            start = timezone.make_aware(start)
-        queryset = queryset.filter(date_created__gte=start)
-
-    return queryset
-
-
 class Playlist(models.Model):
     MANUAL = "manual"
     FILTER = "filter"
@@ -67,8 +34,9 @@ class Playlist(models.Model):
     # Manual playlists: the songs someone picked. Always empty for filter playlists.
     songs = models.ManyToManyField(Song, blank=True)
 
-    # A filter playlist ("FilterPlaylist") holds no songs. It stores filters instead and
-    # looks its songs up every time, so new songs show up in it automatically.
+    # A filter playlist ("FilterPlaylist") holds no songs. It stores filters instead (see
+    # songs/filters.py for what they can be) and looks its songs up every time, so new songs
+    # show up in it automatically. Only the filters that are switched on are stored.
     playlist_type = models.CharField(max_length=10, choices=PLAYLIST_TYPES, default=MANUAL)
     filters = models.JSONField(blank=True, default=dict)
 

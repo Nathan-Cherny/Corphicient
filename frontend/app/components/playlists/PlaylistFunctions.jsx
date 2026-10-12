@@ -17,7 +17,8 @@ export async function patchPlaylist(id, selected, name) {
     return response
 }
 
-// FilterPlaylists hold no songs; they have preset song filters (see DEFAULT_FILTERS in SongFilter.jsx)
+// FilterPlaylists hold no songs; they have preset song filters (what they can be is defined in
+// backend/songs/filters.py), e.g. { album: "Graduation" }
 export async function addFilterPlaylist(name, filters) {
     let payload = { name: name, playlist_type: "filter", filters: filters }
     return axiosClient("add_playlist/", payload, null, "POST")

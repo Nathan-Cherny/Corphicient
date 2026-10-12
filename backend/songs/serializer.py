@@ -1,6 +1,6 @@
 from rest_framework import serializers
-from django.utils.dateparse import parse_date
 from .models import *
+from .filters import clean_filters, FilterError
 
 
 class SongSerializer(serializers.ModelSerializer):
@@ -24,30 +24,11 @@ class PlaylistSerializer(serializers.ModelSerializer):
         return rep
 
     def validate_filters(self, value):
-        if not isinstance(value, dict):
-            raise serializers.ValidationError("Filters must be an object.")
-
-        unknown = set(value) - set(DEFAULT_SONG_FILTERS)
-        if unknown:
-            raise serializers.ValidationError(
-                f"Unknown filter(s): {', '.join(sorted(unknown))}. "
-                f"Allowed: {', '.join(DEFAULT_SONG_FILTERS)}."
-            )
-
-        for key, filter_value in value.items():
-            if not isinstance(filter_value, str):
-                raise serializers.ValidationError(f"Filter '{key}' must be a string.")
-
-        since = value.get("since")
-        if since:
-            try:
-                valid = parse_date(since) is not None
-            except ValueError:
-                valid = False
-            if not valid:
-                raise serializers.ValidationError("Filter 'since' must be a date like 2026-10-11.")
-
-        return value
+        # what the filters can be is defined in filters.py; this stores only the ones that are on
+        try:
+            return clean_filters(value)
+        except FilterError as e:
+            raise serializers.ValidationError(str(e))
 
     def validate(self, attrs):
         current_type = self.instance.playlist_type if self.instance else Playlist.MANUAL
@@ -65,9 +46,8 @@ class PlaylistSerializer(serializers.ModelSerializer):
                 )
             attrs.pop("songs", None)
 
-            # Always store every filter key, so the frontend can use the dict as-is
-            if "filters" in attrs or not self.instance:
-                attrs["filters"] = {**DEFAULT_SONG_FILTERS, **attrs.get("filters", {})}
+            if not self.instance:
+                attrs.setdefault("filters", {})
         elif attrs.get("filters"):
             raise serializers.ValidationError(
                 {"filters": "Only filter playlists can have filters."}

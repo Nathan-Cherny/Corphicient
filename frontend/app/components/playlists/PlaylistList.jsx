@@ -6,7 +6,8 @@ import { useEffect, useState, useSyncExternalStore } from "react";
 import PlaylistCard from "./PlaylistCard";
 import PlaylistListSettings from "./PlaylistListSettings";
 import { isFilterPlaylist } from "./PlaylistFunctions";
-import { describeFilters } from "../songs/SongFilter";
+import { useSongFilterSpecs } from "../songs/SongFilter";
+import { describeFilters } from "../songs/SongFilterFunctions";
 import { SlidersHorizontal } from "lucide-react";
 
 export default function PlaylistList({}) {
@@ -14,6 +15,7 @@ export default function PlaylistList({}) {
 
   const [activePlaylistId, setActivePlaylistId] = useState(null);
   const [playlists, setPlaylists] = useState([]);
+  const filterSpecs = useSongFilterSpecs();
   // Looked up by id (rather than stored) so it refreshes whenever the playlists are refetched.
   // That's what keeps a filter playlist current when songs are added, edited or removed.
   const activePlaylist = playlists.find((pl) => pl.id === activePlaylistId) ?? null;
@@ -83,7 +85,7 @@ export default function PlaylistList({}) {
             id={pl.id}
             title={
               isFilterPlaylist(pl)
-                ? `Filter playlist: ${describeFilters(pl.filters).join(", ") || "all songs"}`
+                ? `Filter playlist: ${describeFilters(filterSpecs, pl.filters).join(", ") || "all songs"}`
                 : undefined
             }
             className={`flex flex-row items-center gap-2 border bg-blue-50 p-5 hover:scale-105 hover:cursor-pointer ${pl?.id === activePlaylist?.id ? "bg-yellow-500 border-2 font-bold" : ""}`}

@@ -5,7 +5,8 @@ import SongsList from "../songs/SongsList";
 import { Edit, Eraser, SlidersHorizontal } from "lucide-react";
 import EditPlaylist from "./EditPlaylist";
 import FilterPlaylistForm from "./FilterPlaylistForm";
-import { describeFilters } from "../songs/SongFilter";
+import { useSongFilterSpecs } from "../songs/SongFilter";
+import { describeFilters } from "../songs/SongFilterFunctions";
 
 import { useState, useEffect, useRef } from "react";
 import PieChartVis from "../visual/PieChart";
@@ -23,6 +24,7 @@ export default function PlaylistCard({
   const [showEdit, setShowEdit] = useState(false);
   const songsListRef = useRef(null);
   const [pieChartOpen, setPieChartOpen] = useState(false);
+  const filterSpecs = useSongFilterSpecs();
 
 
   return (
@@ -83,7 +85,7 @@ export default function PlaylistCard({
               <SlidersHorizontal size={14} />
               <span>
                 Filter playlist:{" "}
-                <i>{describeFilters(playlist.filters).join(", ") || "all songs"}</i>
+                <i>{describeFilters(filterSpecs, playlist.filters).join(", ") || "all songs"}</i>
               </span>
             </p>
           )}
