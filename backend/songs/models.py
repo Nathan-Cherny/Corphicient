@@ -15,6 +15,8 @@ class Song(models.Model):
 
     album = models.CharField(max_length=50, default="")
 
+    tags = models.JSONField(default=list)
+
     date_created = models.DateTimeField(null=True, blank=True)
 
     def __str__(self):

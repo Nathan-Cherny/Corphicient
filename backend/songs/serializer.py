@@ -6,12 +6,26 @@ from .filters import clean_filters, FilterError
 class SongSerializer(serializers.ModelSerializer):
     class Meta:
         model = Song
-        fields = ["id", "name", "href", "src", "secondsPlayed", "duration", "thumbnail", "color", "date_created", "album"]
+        fields = [
+            "id",
+            "name",
+            "href",
+            "src",
+            "secondsPlayed",
+            "duration",
+            "thumbnail",
+            "color",
+            "date_created",
+            "album",
+            "tags",
+        ]
         read_only_fields = ["date_created"]
 
 
 class PlaylistSerializer(serializers.ModelSerializer):
-    songs = serializers.PrimaryKeyRelatedField(many=True, queryset=Song.objects.all(), required=False)
+    songs = serializers.PrimaryKeyRelatedField(
+        many=True, queryset=Song.objects.all(), required=False
+    )
 
     class Meta:
         model = Playlist
@@ -36,13 +50,17 @@ class PlaylistSerializer(serializers.ModelSerializer):
 
         if self.instance and playlist_type != current_type:
             raise serializers.ValidationError(
-                {"playlist_type": "A playlist's type can't be changed after it's created."}
+                {
+                    "playlist_type": "A playlist's type can't be changed after it's created."
+                }
             )
 
         if playlist_type == Playlist.FILTER:
             if attrs.get("songs"):
                 raise serializers.ValidationError(
-                    {"songs": "Filter playlists don't hold songs; they're picked by their filters."}
+                    {
+                        "songs": "Filter playlists don't hold songs; they're picked by their filters."
+                    }
                 )
             attrs.pop("songs", None)
 

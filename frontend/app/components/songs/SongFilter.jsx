@@ -141,7 +141,7 @@ function SongFilterControl({ spec, id, value, onChange, songs }) {
     case "multiselect":
       return (
         <FilterField label={spec.label}>
-          <div className="flex min-h-[2.25rem] flex-wrap items-center gap-1.5 rounded-lg border border-gray-300 bg-white p-1.5 shadow-sm">
+          <div className="flex min-h-9 flex-wrap items-center gap-1.5 rounded-lg border border-gray-300 bg-white p-1.5 shadow-sm">
             {options.length === 0 && (
               <span className="px-1.5 text-sm text-gray-400">Nothing to pick yet</span>
             )}
@@ -239,7 +239,7 @@ export default function SongFilter({ songs, filteredSongs, filters, setFilters, 
   const activeCount = countActiveFilters(specs, filters)
 
   return (
-    <div className="mx-5 mt-5 rounded-xl border bg-white/60 p-5 shadow-sm backdrop-blur-sm">
+    <div className="mx-5 mt-5 rounded-xl border bg-linear-to-r from-gray-300/30 via-gray-200/30 to-gray-100/30 p-5 shadow-sm backdrop-blur-sm">
       {/* Header */}
       <div className="mb-4 flex flex-row items-center justify-between">
         <div className="flex flex-row items-center gap-2 text-gray-800">
@@ -252,7 +252,7 @@ export default function SongFilter({ songs, filteredSongs, filters, setFilters, 
         </div>
 
         <div className="flex flex-row items-center gap-3">
-          <p className="select-none text-sm text-gray-600">
+          <p className="select-none text-sm text-black">
             Showing <b>{filteredSongs.length}</b> of <b>{songs.length}</b>
           </p>
           <button

@@ -90,6 +90,9 @@ export default function PlaylistCard({
             </p>
           )}
           <p className="w-full">
+            Total Songs: <i>{playlist.songs.length}</i>
+          </p>
+          <p className="w-full">
             Total Duration: <i>{getTotalDuration(playlist.songs)}</i>
           </p>
           <div className="w-full flex flex-row gap-5">
