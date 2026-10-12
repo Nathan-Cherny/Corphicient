@@ -551,10 +551,11 @@ function SongsListOptions({ filterOpen, setFilterOpen, songFilter }) {
   )
 }
 
-export function TagsList({ tags, editable, className }) {
+export function TagsList({ tags, tagOnClick, className }) {
+  let defaultFunction = () => {}
   return (<div className={`${className} pt-5 w-full flex flex-row gap-3`}>
     {tags.map((tag, i) =>
-      <div className="bg-blue-300 max-w-fit p-2 rounded-2xl border shadow-xl" key={i}>
+      <div onClick={tagOnClick || defaultFunction} className="bg-blue-300 max-w-fit p-2 rounded-2xl border shadow-xl hover:scale-105 cursor-pointer" key={i}>
         {tag}
       </div>)}
   </div>)

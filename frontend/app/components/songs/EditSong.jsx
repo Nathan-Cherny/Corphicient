@@ -21,7 +21,7 @@ export default function EditSong({ song, onSave }) {
   async function handleSave(e) {
     e.preventDefault();
     document.getElementById("hiddenTagsInput").value = JSON.stringify(tags)
-    
+
     let formData = new FormData(e.currentTarget);
 
     const thumbnailFile = formData.get("thumbnail");
@@ -121,7 +121,7 @@ export default function EditSong({ song, onSave }) {
               <b>Tags</b>
             </label>
             <input className="hidden" id="hiddenTagsInput" name="tags" type="text" defaultValue={tags} />
-            <TagsList tags={tags} />
+            <TagsList tags={tags} tagOnClick={(e) => {setTags(tags.filter(tag => tag != e.target.innerHTML))}} />
             <div className="flex flex-row gap-5">
               <input id="newTag" className="border w-1/4 p-1" type="text" />
               <button onClick={(e) => {
