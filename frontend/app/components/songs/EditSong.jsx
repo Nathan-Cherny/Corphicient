@@ -5,9 +5,11 @@ import { useNotification } from "../layout/notification/NotificationContext";
 import { API_BASE_URL } from "@/app/lib/config";
 import ColorSelect from "../visual/selectColor";
 import { deleteSong } from "./SongFunctions";
+import { TagsList } from "./SongsList";
 
 export default function EditSong({ song, onSave }) {
   const notify = useNotification();
+  const [tags, setTags] = useState(song?.tags)
 
   async function createFileFromUrl(url, filename) {
     const response = await fetch(url);
@@ -18,6 +20,8 @@ export default function EditSong({ song, onSave }) {
 
   async function handleSave(e) {
     e.preventDefault();
+    document.getElementById("hiddenTagsInput").value = JSON.stringify(tags)
+    
     let formData = new FormData(e.currentTarget);
 
     const thumbnailFile = formData.get("thumbnail");
@@ -32,6 +36,10 @@ export default function EditSong({ song, onSave }) {
       } catch (error) {
         console.log(`error: ${error}`);
       }
+    }
+
+    for (const [key, value] of formData.entries()) {
+      console.log(`${key}:`, value);
     }
 
     onSave?.(song.id, formData);
@@ -84,7 +92,7 @@ export default function EditSong({ song, onSave }) {
           <CropSong song={song} src={song.src} />
 
           <div className="flex flex-col gap-3">
-            <label htmlFor="name">
+            <label htmlFor="thumbnail">
               <b>Change Picture</b>
             </label>
             <img
@@ -95,17 +103,38 @@ export default function EditSong({ song, onSave }) {
           </div>
 
           <div className="flex flex-col gap-3">
-            <label htmlFor="name">
+            <label htmlFor="color">
               <b>Change Color</b>
             </label>
             <ColorSelect defaultColor={`rgb(${song.color})`} />
           </div>
 
           <div className="flex flex-col gap-3">
-            <label htmlFor="name" onChange={(e) => { e.stopPropagation(); e.preventDefault() }}>
+            <label htmlFor="album" onChange={(e) => { e.stopPropagation(); e.preventDefault() }}>
               <b>Change Album</b>
             </label>
             <input name="album" type="text" defaultValue={song?.album || "N/A"} />
+          </div>
+
+          <div className="flex flex-col gap-3">
+            <label htmlFor="tags" onChange={(e) => { e.stopPropagation(); e.preventDefault() }}>
+              <b>Tags</b>
+            </label>
+            <input className="hidden" id="hiddenTagsInput" name="tags" type="text" defaultValue={tags} />
+            <TagsList tags={tags} />
+            <div className="flex flex-row gap-5">
+              <input id="newTag" className="border w-1/4 p-1" type="text" />
+              <button onClick={(e) => {
+                e.stopPropagation()
+                e.preventDefault()
+
+                let newTagInput = document.getElementById("newTag")
+                let newTag = newTagInput.value
+
+                newTagInput.value = ""
+                setTags(prev => [newTag, ...prev])
+              }} className="bg-red-500 rounded-xl p-1 cursor-pointer border">Add Tag</button>
+            </div>
           </div>
         </div>
       </div>

@@ -429,12 +429,7 @@ function CurrentSongInfo({
               </h3>
             </div>
 
-            {currentSong?.tags.length > 0 && <div className="border-t-2 pt-5 w-full">
-              {currentSong?.tags.map((tag, i) => 
-                <div className="bg-blue-300 max-w-fit p-2 rounded-2xl border shadow-xl" key={i}>
-                  {tag}
-                </div>)}
-            </div>}
+            {currentSong?.tags.length > 0 && <TagsList tags={currentSong?.tags} className={"border-t-2"} />}
           </div>
         </div>
       </div>
@@ -547,13 +542,20 @@ function HotKeyButtons({ hotkeysMap, currentAudioRef }) {
   );
 }
 
-
 function SongsListOptions({ filterOpen, setFilterOpen, songFilter }) {
   return (
     <div className="p-5 w-full bg-gray-500/25 rounded-t-xl border-b border-black">
       {<SongFilterToggleButton setFilterOpen={setFilterOpen} />}
       {filterOpen && songFilter}
     </div>
-
   )
+}
+
+export function TagsList({ tags, editable, className }) {
+  return (<div className={`${className} pt-5 w-full flex flex-row gap-3`}>
+    {tags.map((tag, i) =>
+      <div className="bg-blue-300 max-w-fit p-2 rounded-2xl border shadow-xl" key={i}>
+        {tag}
+      </div>)}
+  </div>)
 }
