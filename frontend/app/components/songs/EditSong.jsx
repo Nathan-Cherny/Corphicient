@@ -43,7 +43,7 @@ export default function EditSong({ song, onSave }) {
     }
 
     onSave?.(song.id, formData);
-    notify({ message: `Edited Song!` });
+    notify({ message: `Edited ${song.name}!` });
   }
 
   return (

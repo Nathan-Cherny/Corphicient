@@ -25,7 +25,7 @@ import {
   SkipForward,
   SkipBack,
   XCircle,
-  SlidersHorizontal,
+  ListOrdered,
 } from "lucide-react";
 import { mapSongColorToLowerTint } from "../visual/colors";
 
@@ -547,6 +547,7 @@ function SongsListOptions({ filterOpen, setFilterOpen, songFilter }) {
     <div className="p-5 w-full bg-gray-500/25 rounded-t-xl border-b border-black">
       {<SongFilterToggleButton setFilterOpen={setFilterOpen} />}
       {filterOpen && songFilter}
+      {}
     </div>
   )
 }
