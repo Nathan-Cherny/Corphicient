@@ -75,6 +75,7 @@ SONG_FILTERS = [
     SongFilter("album", "Album", field="album", lookup="exact", type="select", icon="disc"),
     SongFilter("since", "Added on or after", field="date_created", lookup="gte", type="date",
                icon="calendar"),
+    SongFilter("tags", "Tags", "tags", "exact", "select", icon="calendar"),
 ]
 
 
