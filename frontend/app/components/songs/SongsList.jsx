@@ -552,11 +552,34 @@ function SongsListOptions({ filterOpen, setFilterOpen, songFilter }) {
 }
 
 export function TagsList({ tags, tagOnClick, className }) {
-  let defaultFunction = () => {}
+  let defaultFunction = () => { }
+
   return (<div className={`${className} pt-5 w-full flex flex-row gap-3`}>
     {tags.map((tag, i) =>
-      <div onClick={tagOnClick || defaultFunction} className="bg-blue-300 max-w-fit p-2 rounded-2xl border shadow-xl hover:scale-105 cursor-pointer" key={i}>
+      <div onClick={tagOnClick || defaultFunction} className="bg-gray-700 text-white max-w-fit p-2 rounded-2xl border shadow-2xl hover:scale-105 cursor-pointer" key={i}>
         {tag}
       </div>)}
   </div>)
+}
+
+export function TagManager({tags, setTags}) {
+  return (
+    <>
+      <input className="hidden" id="hiddenTagsInput" name="tags" type="text" defaultValue={tags} />
+      <TagsList tags={tags} tagOnClick={(e) => { setTags(tags.filter(tag => tag != e.target.innerHTML)) }} />
+      <div className="flex flex-row gap-5">
+        <input id="newTag" className="border w-1/4 p-1" type="text" />
+        <button onClick={(e) => {
+          e.stopPropagation()
+          e.preventDefault()
+
+          let newTagInput = document.getElementById("newTag")
+          let newTag = newTagInput.value
+
+          newTagInput.value = ""
+          setTags(prev => [newTag, ...prev])
+        }} className="bg-red-500 rounded-xl p-1 cursor-pointer border">Add Tag</button>
+      </div>
+    </>
+  )
 }

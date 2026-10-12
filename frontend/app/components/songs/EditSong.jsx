@@ -5,7 +5,7 @@ import { useNotification } from "../layout/notification/NotificationContext";
 import { API_BASE_URL } from "@/app/lib/config";
 import ColorSelect from "../visual/selectColor";
 import { deleteSong } from "./SongFunctions";
-import { TagsList } from "./SongsList";
+import { TagManager, TagsList } from "./SongsList";
 
 export default function EditSong({ song, onSave }) {
   const notify = useNotification();
@@ -120,21 +120,7 @@ export default function EditSong({ song, onSave }) {
             <label htmlFor="tags" onChange={(e) => { e.stopPropagation(); e.preventDefault() }}>
               <b>Tags</b>
             </label>
-            <input className="hidden" id="hiddenTagsInput" name="tags" type="text" defaultValue={tags} />
-            <TagsList tags={tags} tagOnClick={(e) => {setTags(tags.filter(tag => tag != e.target.innerHTML))}} />
-            <div className="flex flex-row gap-5">
-              <input id="newTag" className="border w-1/4 p-1" type="text" />
-              <button onClick={(e) => {
-                e.stopPropagation()
-                e.preventDefault()
-
-                let newTagInput = document.getElementById("newTag")
-                let newTag = newTagInput.value
-
-                newTagInput.value = ""
-                setTags(prev => [newTag, ...prev])
-              }} className="bg-red-500 rounded-xl p-1 cursor-pointer border">Add Tag</button>
-            </div>
+            <TagManager tags={tags} setTags={setTags}/>
           </div>
         </div>
       </div>
