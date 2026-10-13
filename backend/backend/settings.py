@@ -37,7 +37,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'corsheaders',
     'songs',
-    'notes'
+    'notes',
+    'daylog'
 ]
 
 MIDDLEWARE = [

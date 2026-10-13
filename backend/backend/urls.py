@@ -18,6 +18,7 @@ from django.contrib import admin
 from django.urls import path
 from songs.views import *
 from notes.views import *
+from daylog.views import *
 from django.conf import settings
 from django.conf.urls.static import static
 
@@ -53,6 +54,8 @@ urlpatterns = [
     path("get_note_form/", get_note_form, name="get_note_form"),
     path("delete_note/<int:pk>/", delete_note, name="delete_note"),
     path("note/<int:pk>/update/", update_note, name="update_note"),
+
+    path("daylogs/get_daylogs/", get_daylogs, name="get_daylogs"),
 
 ]
 
