@@ -46,6 +46,7 @@ export default function SongsList({
   const notify = useNotification();
 
   const [filterOpen, setFilterOpen] = useState(false)
+  const [orderOpen, setOrderOpen] = useState(false)
 
   const [songToEdit, setSongToEdit] = useState(null);
 
@@ -250,7 +251,14 @@ export default function SongsList({
 
       <div className="flex flex-col gap-5 border bg-black/20 rounded-xl shadow-x mt-5">
 
-        <SongsListOptions filterOpen={filterOpen} setFilterOpen={setFilterOpen} songFilter={<SongFilter songs={songs} filters={filters} setFilters={setFilters} filteredSongs={filteredSongs} setOpen={setFilterOpen} />} />
+        <SongsListOptions
+          filterOpen={filterOpen}
+          setFilterOpen={setFilterOpen}
+          songFilter={<SongFilter songs={songs} filters={filters} setFilters={setFilters} filteredSongs={filteredSongs} setOpen={setFilterOpen} />}
+          orderOpen={orderOpen}
+          setOrderOpen={setOrderOpen}
+          songOrder={<div><button >reorder</button></div>}
+        />
 
         <div className="grid grid-cols-5 gap-5 p-5">
           {filteredSongs.map((song) => (
@@ -542,14 +550,15 @@ function HotKeyButtons({ hotkeysMap, currentAudioRef }) {
   );
 }
 
-function SongsListOptions({ filterOpen, setFilterOpen, songFilter }) {
+function SongsListOptions({ filterOpen, setFilterOpen, orderOpen, setOrderOpen, songFilter, songOrder }) {
   return (
     <div className="p-5 w-full bg-gray-500/25 rounded-t-xl border-b border-black flex flex-col">
       <div className="flex flex-row gap-5 items-center">
         {<SongFilterToggleButton setFilterOpen={setFilterOpen} />}
-        {<ListOrdered size={18} className="border cursor-pointer hover:scale-105" />}
+        {<ListOrdered size={18} className="border cursor-pointer hover:scale-105" onClick={() => setOrderOpen(prev => !prev)} />}
       </div>
       {filterOpen && songFilter}
+      {orderOpen && songOrder}
     </div>
   )
 }
