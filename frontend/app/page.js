@@ -4,13 +4,15 @@ import { useEffect, useState } from "react";
 import { PageMain } from "./components/layout/PageMain";
 import axiosClient from "./axiosClient";
 import Section from "./components/notes/section/Section";
+import DayLog from "./components/daylogs/DayLog";
+import DayLogForm from "./components/daylogs/DayLogForm";
 
 export default function Home() {
   const section_request = ["get_sections/", null, "", "GET"];
-  const daylog_request = ["daylogs/get_daylogs/", null, "", "GET"];
+  const daylog_request = ["get_daylogs/", null, "", "GET"];
 
   const [sections, setSections] = useState([]);
-  const [daylogs, setDaylogs] = useState([])
+  const [daylogs, setDaylogs] = useState([]);
   const [update, setUpdate] = useState(0);
 
   useEffect(() => {
@@ -75,9 +77,18 @@ export default function Home() {
             ></iframe>
           </div>
 
-          <div className="flex flex-col border text-center rounded-2xl w-full bg-teal-400 shadow-2xl p-5">
-            <h1 className="text-3xl mb-5">Daylogs</h1>
-            <p>{JSON.stringify(daylogs)}</p>
+          <div className="flex flex-row gap-5">
+            <div className="flex flex-col border text-center rounded-2xl w-full bg-teal-400 shadow-2xl p-5">
+              <h1 className="text-3xl mb-5">Daylogs</h1>
+              {daylogs.map((daylogData, i) => (
+                <DayLog key={i} daylogData={daylogData} />
+              ))}
+            </div>
+            
+            <div className="flex flex-col border text-center rounded-2xl w-full bg-orange-400 shadow-2xl p-5">
+              <h1 className="text-3xl mb-5">Add Daylog</h1>
+              {<DayLogForm/>}
+            </div>
           </div>
         </div>
       </div>

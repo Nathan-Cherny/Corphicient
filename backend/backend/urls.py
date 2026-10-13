@@ -55,7 +55,8 @@ urlpatterns = [
     path("delete_note/<int:pk>/", delete_note, name="delete_note"),
     path("note/<int:pk>/update/", update_note, name="update_note"),
 
-    path("daylogs/get_daylogs/", get_daylogs, name="get_daylogs"),
+    path("get_daylogs/", get_daylogs, name="get_daylogs"),
+    path("add_daylog/", add_daylog, name="add_daylog"),
 
 ]
 
