@@ -6,17 +6,29 @@ import axiosClient from "./axiosClient";
 import Section from "./components/notes/section/Section";
 
 export default function Home() {
-  const request = ["get_sections/", null, "", "GET"];
+  const section_request = ["get_sections/", null, "", "GET"];
+  const daylog_request = ["daylogs/get_daylogs/", null, "", "GET"];
+
   const [sections, setSections] = useState([]);
+  const [daylogs, setDaylogs] = useState([])
   const [update, setUpdate] = useState(0);
 
   useEffect(() => {
     async function allSections() {
-      const res = await axiosClient(...request);
+      const res = await axiosClient(...section_request);
       setSections(res || []);
     }
 
     allSections();
+  }, [update]);
+
+  useEffect(() => {
+    async function allDaylogs() {
+      const res = await axiosClient(...daylog_request);
+      setDaylogs(res || []);
+    }
+
+    allDaylogs();
   }, [update]);
 
   return (
@@ -33,7 +45,12 @@ export default function Home() {
               .filter((s) => s.id == 10)
               .map((s) => (
                 <div className="w-full overflow-y-scroll" key={s.id}>
-                  <Section className={""} setUpdate={setUpdate} section={s} collapse={true} />
+                  <Section
+                    className={""}
+                    setUpdate={setUpdate}
+                    section={s}
+                    collapse={true}
+                  />
                 </div>
               ))}
 
@@ -56,6 +73,11 @@ export default function Home() {
               height="250"
               className="bg-transparent"
             ></iframe>
+          </div>
+
+          <div className="flex flex-col border text-center rounded-2xl w-full bg-teal-400 shadow-2xl p-5">
+            <h1 className="text-3xl mb-5">Daylogs</h1>
+            <p>{JSON.stringify(daylogs)}</p>
           </div>
         </div>
       </div>
