@@ -10,9 +10,11 @@ import DayLogForm from "./components/daylogs/DayLogForm";
 export default function Home() {
   const section_request = ["get_sections/", null, "", "GET"];
   const daylog_request = ["get_daylogs/", null, "", "GET"];
+  const dadjoke_request = ["https://www.icanhazdadjoke.com/", null, "", "GET"];
 
   const [sections, setSections] = useState([]);
   const [daylogs, setDaylogs] = useState([]);
+  const [dadjoke, setDadJoke] = useState({});
   const [update, setUpdate] = useState(0);
 
   useEffect(() => {
@@ -33,12 +35,22 @@ export default function Home() {
     allDaylogs();
   }, [update]);
 
+  useEffect(() => {
+    async function dadJoke() {
+      const res = await fetch("https://www.icanhazdadjoke.com/");
+      setDadJoke(res || {});
+    }
+
+    dadJoke();
+  }, [update]);
+
   return (
     <PageMain>
       <div className="m-20">
         <h1 className="text-5xl text-center font-light">
           {new Date().toLocaleDateString()}
         </h1>
+        <p>{JSON.stringify(dadjoke)}</p>
         <hr className="my-10 w-full" />
 
         <div className="flex flex-col gap-5">

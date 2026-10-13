@@ -56,14 +56,15 @@ MIDDLEWARE = [
 CSRF_TRUSTED_ORIGINS = [
     "http://localhost:3000",
     "http://localhost:8000",
+    "https://icanhazdadjoke.com/"
 ]
 
 CSRF_TRUSTED_ORIGINS = _split_env(
-    "CSRF_TRUSTED_ORIGINS", "http://localhost:3000,http://localhost:8000"
+    "CSRF_TRUSTED_ORIGINS", "http://localhost:3000,http://localhost:8000,https://icanhazdadjoke.com/"
 )
 
 CORS_ALLOWED_ORIGINS = _split_env(
-    "CORS_ALLOWED_ORIGINS", "http://localhost:3000"
+    "CORS_ALLOWED_ORIGINS", "http://localhost:3000,https://icanhazdadjoke.com/"
 )
 
 CORS_ALLOW_HEADERS = [
@@ -88,6 +89,7 @@ CORS_EXPOSE_HEADERS = [
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
+    "https://icanhazdadjoke.com/"
 ]
 
 CORS_ALLOWED_ORIGIN_REGEXES = [
