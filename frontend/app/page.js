@@ -37,12 +37,17 @@ export default function Home() {
     <PageMain>
       <div className="m-20">
         <h1 className="text-5xl text-center font-light">
-          {new Date().toLocaleDateString()} - Corphicient
+          {new Date().toLocaleDateString()}
         </h1>
         <hr className="my-10 w-full" />
 
         <div className="flex flex-col gap-5">
           <div className="flex flex-row items-stretch gap-15 *:h-full">
+            <div className="flex flex-col border text-center rounded-2xl w-full bg-orange-400 shadow-2xl p-5">
+              <h1 className="text-3xl mb-5">Add Daylog</h1>
+              {<DayLogForm />}
+            </div>
+
             {sections
               .filter((s) => s.id == 10)
               .map((s) => (
@@ -55,16 +60,16 @@ export default function Home() {
                   />
                 </div>
               ))}
+          </div>
 
-            <div className="flex flex-col border text-center rounded-2xl w-full bg-amber-400 shadow-2xl p-5">
-              <h1 className="text-3xl mb-5">Tasks</h1>
-              <iframe
-                className="w-full"
-                src="https://calendar.google.com/calendar/embed?src=natec3632%40gmail.com&ctz=America%2FNew_York&mode=WEEK"
-                width="400"
-                height="600"
-              ></iframe>
-            </div>
+          <div className="flex flex-col border text-center rounded-2xl w-full bg-amber-400 shadow-2xl p-5">
+            <h1 className="text-3xl mb-5">Tasks</h1>
+            <iframe
+              className="w-full"
+              src="https://calendar.google.com/calendar/embed?src=natec3632%40gmail.com&ctz=America%2FNew_York&mode=WEEK"
+              width="400"
+              height="600"
+            ></iframe>
           </div>
 
           <div className="flex flex-col border text-center rounded-2xl w-full bg-purple-400 shadow-2xl p-5">
@@ -77,18 +82,11 @@ export default function Home() {
             ></iframe>
           </div>
 
-          <div className="flex flex-row gap-5">
-            <div className="flex flex-col border text-center rounded-2xl w-full bg-teal-400 shadow-2xl p-5">
-              <h1 className="text-3xl mb-5">Daylogs</h1>
-              {daylogs.map((daylogData, i) => (
-                <DayLog key={i} daylogData={daylogData} />
-              ))}
-            </div>
-            
-            <div className="flex flex-col border text-center rounded-2xl w-full bg-orange-400 shadow-2xl p-5">
-              <h1 className="text-3xl mb-5">Add Daylog</h1>
-              {<DayLogForm/>}
-            </div>
+          <div className="flex flex-col border text-center rounded-2xl w-full bg-teal-400 shadow-2xl p-5">
+            <h1 className="text-3xl mb-5">Daylogs</h1>
+            {daylogs.map((daylogData, i) => (
+              <DayLog key={i} daylogData={daylogData} />
+            ))}
           </div>
         </div>
       </div>

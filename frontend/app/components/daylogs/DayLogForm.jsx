@@ -16,6 +16,10 @@ export default function DayLogForm() {
                     <h3>Mood</h3>
                     <input name="mood" className="border p-1" type="number" min={1} max={10} defaultValue={5} />
                 </div>
+                <div className="flex-row gap-5 items-center">
+                    <h3>Note</h3>
+                    <textarea className="border p-1" name="note"></textarea>
+                </div>
                 <input type="submit" value={"Add"} />
             </div>
 
