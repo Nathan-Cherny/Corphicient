@@ -10,11 +10,12 @@ export default function DayLogForm() {
     return (
         <form onSubmit={(e) => {
             addModel(e, "daylog")
+            e.target.reset()
         }}>
             <div className="p-5 flex flex-col justify-center gap-5 w-fit">
                 <div className="flex-row gap-5 items-center">
                     <h3>Mood</h3>
-                    <input name="mood" className="border p-1" type="number" min={1} max={10} defaultValue={5} />
+                    <input name="mood" className="border p-1" type="number" min={1} max={10} step={"any"} defaultValue={5} />
                 </div>
                 <div className="flex-row gap-5 items-center">
                     <h3>Note</h3>
