@@ -10,11 +10,10 @@ import DayLogForm from "./components/daylogs/DayLogForm";
 export default function Home() {
   const section_request = ["get_sections/", null, "", "GET"];
   const daylog_request = ["get_daylogs/", null, "", "GET"];
-  const dadjoke_request = ["https://www.icanhazdadjoke.com/", null, "", "GET"];
 
   const [sections, setSections] = useState([]);
   const [daylogs, setDaylogs] = useState([]);
-  const [dadjoke, setDadJoke] = useState({});
+  const [dadjoke, setDadJoke] = useState("");
   const [update, setUpdate] = useState(0);
 
   useEffect(() => {
@@ -37,8 +36,9 @@ export default function Home() {
 
   useEffect(() => {
     async function dadJoke() {
-      const res = await fetch("https://www.icanhazdadjoke.com/");
-      setDadJoke(res || {});
+      const res = await (await fetch("/api/dad-joke")).json();
+      const joke = res["joke"];
+      setDadJoke(joke || {});
     }
 
     dadJoke();
@@ -47,11 +47,13 @@ export default function Home() {
   return (
     <PageMain>
       <div className="m-20">
-        <h1 className="text-5xl text-center font-light">
-          {new Date().toLocaleDateString()}
-        </h1>
-        <p>{JSON.stringify(dadjoke)}</p>
-        <hr className="my-10 w-full" />
+        <div className="flex flex-col justify-center items-center gap-5">
+          <h1 className="text-5xl text-center font-light">
+            {new Date().toLocaleDateString()}
+          </h1>
+          <h3>{dadjoke}</h3>
+        </div>
+        <hr className="mb-10 mt-7.5 w-full" />
 
         <div className="flex flex-col gap-5">
           <div className="flex flex-row items-stretch gap-15 *:h-full">
