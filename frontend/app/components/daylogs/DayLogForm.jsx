@@ -15,7 +15,12 @@ export default function DayLogForm() {
             <div className="p-5 flex flex-col justify-center gap-5 w-fit">
                 <div className="flex-row gap-5 items-center">
                     <h3>Mood</h3>
-                    <input name="mood" className="border p-1" type="number" min={1} max={10} step={"any"} defaultValue={5} />
+                    <div className="flex flex-row items-center gap-5">
+                        <input name="mood" className="border p-1" type="range" min={0} max={10} step={"0.5"} defaultValue={5} onChange={(e) => {
+                            document.getElementById("outputMood").innerHTML = e.target.value
+                        }} />
+                        <output id="outputMood">5</output>
+                    </div>
                 </div>
                 <div className="flex-row gap-5 items-center">
                     <h3>Note</h3>

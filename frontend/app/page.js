@@ -36,9 +36,11 @@ export default function Home() {
 
   useEffect(() => {
     async function dadJoke() {
-      const res = await (await fetch("/api/dad-joke")).json();
-      const joke = res["joke"];
-      setDadJoke(joke || {});
+      const res = await fetch("/api/dad-joke");
+      if(res.status != 200) { setDadJoke(""); return }
+
+      const joke = (await res.json())["joke"];
+      setDadJoke(joke || "");
     }
 
     dadJoke();
