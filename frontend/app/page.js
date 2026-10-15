@@ -59,7 +59,7 @@ export default function Home() {
 
         <div className="flex flex-col gap-5">
           <div className="flex flex-row items-stretch gap-15 *:h-full">
-            <div className="flex flex-col border text-center rounded-2xl w-full bg-orange-400 shadow-2xl p-5">
+            <div className="flex w-full flex-col grow border text-center rounded-2xl bg-blue-500 shadow-2xl p-5">
               <h1 className="text-3xl mb-5">Add Daylog</h1>
               {<DayLogForm />}
             </div>
@@ -67,7 +67,7 @@ export default function Home() {
             {sections
               .filter((s) => s.id == 10)
               .map((s) => (
-                <div className="w-full overflow-y-scroll" key={s.id}>
+                <div className="overflow-y-scroll" key={s.id}>
                   <Section
                     className={""}
                     setUpdate={setUpdate}
@@ -78,7 +78,7 @@ export default function Home() {
               ))}
           </div>
 
-          <div className="flex flex-col border text-center rounded-2xl w-full bg-amber-400 shadow-2xl p-5">
+          <div className="flex flex-col border text-center rounded-2xl bg-amber-400 shadow-2xl p-5">
             <h1 className="text-3xl mb-5">Tasks</h1>
             <iframe
               className="w-full"

@@ -10,6 +10,13 @@ const MOOD_MAX = 10
 const MOOD_STEP = 0.5
 const DEFAULT_MOOD = 5
 
+// 20 blocks: block 1 is 0.5, block 20 is 10. Clicking the lowest block again while it's the
+// only one selected sets the mood to 0 (there is no "block 0").
+const MOOD_BLOCKS = Array.from(
+    { length: (MOOD_MAX - MOOD_MIN) / MOOD_STEP },
+    (_, i) => MOOD_MIN + (i + 1) * MOOD_STEP
+)
+
 // red (0) -> orange -> yellow -> green (10)
 function moodColor(mood) {
     const hue = ((mood - MOOD_MIN) / (MOOD_MAX - MOOD_MIN)) * 120
@@ -18,12 +25,10 @@ function moodColor(mood) {
 
 export default function DayLogForm({ onAdded }) {
     const [mood, setMood] = useState(DEFAULT_MOOD);
+    const [hoverMood, setHoverMood] = useState(null);
     const [tags, setTags] = useState([]);
     const [availableTags, setAvailableTags] = useState([]);
-    const sliderRef = useRef(null);
-
-    const createRange = (min, max, step = 1) =>
-        Array.from({ length: Math.floor((max - min) / step) + 1 }, (_, i) => min + (i * step));
+    const blocksRef = useRef(null);
 
     // the tags themselves live in backend/daylog/tags.py (gitignored)
     useEffect(() => {
@@ -49,20 +54,44 @@ export default function DayLogForm({ onAdded }) {
 
         form.reset()
         setMood(DEFAULT_MOOD)
+        setHoverMood(null)
         setTags([])
         onAdded?.()
     }
 
-    function focusSliderUnlessSpecific(e) {
+    // Clicking empty space on the form focuses the mood blocks (so arrow keys change the mood).
+    // Clicking the note, a tag or a button leaves focus on that instead.
+    function focusMoodUnlessSpecific(e) {
         if (e.target.closest("textarea, input, button, [data-tags]")) return
-        sliderRef.current?.focus({ preventScroll: true })
+        blocksRef.current?.focus({ preventScroll: true })
     }
 
-    const color = moodColor(mood)
-    const percent = ((mood - MOOD_MIN) / (MOOD_MAX - MOOD_MIN)) * 100
+    function selectMood(value) {
+        // clicking the lowest block while it's the only one lit drops the mood to 0
+        setMood(prev => (value === MOOD_STEP && prev === MOOD_STEP ? MOOD_MIN : value))
+    }
+
+    function handleMoodKeyDown(e) {
+        const moves = { ArrowRight: MOOD_STEP, ArrowUp: MOOD_STEP, ArrowLeft: -MOOD_STEP, ArrowDown: -MOOD_STEP }
+
+        if (e.key in moves) {
+            e.preventDefault()
+            setMood(prev => Math.min(MOOD_MAX, Math.max(MOOD_MIN, prev + moves[e.key])))
+        } else if (e.key === "Home") {
+            e.preventDefault()
+            setMood(MOOD_MIN)
+        } else if (e.key === "End") {
+            e.preventDefault()
+            setMood(MOOD_MAX)
+        }
+    }
+
+    // while hovering a block, the badge and the lit blocks preview that value
+    const shownMood = hoverMood ?? mood
+    const color = moodColor(shownMood)
 
     return (
-        <form onSubmit={handleSubmit} onClick={focusSliderUnlessSpecific}>
+        <form onSubmit={handleSubmit} onClick={focusMoodUnlessSpecific}>
             <div className="p-5 flex flex-col gap-6 w-full max-w-xl mx-auto text-left bg-white/30 rounded-2xl">
                 <div className="flex flex-col gap-3">
                     <div className="flex flex-row justify-between items-center">
@@ -71,32 +100,50 @@ export default function DayLogForm({ onAdded }) {
                             className="min-w-16 text-center text-2xl font-bold text-white rounded-full px-4 py-1 shadow-md transition-colors"
                             style={{ backgroundColor: color }}
                         >
-                            {mood}
+                            {shownMood}
                         </output>
                     </div>
 
-                    <input
-                        ref={sliderRef}
-                        name="mood"
-                        className="mood-slider"
-                        style={{ "--mood-color": color, "--mood-percent": `${percent}%` }}
-                        type="range"
-                        min={MOOD_MIN}
-                        max={MOOD_MAX}
-                        step={MOOD_STEP}
-                        value={mood}
-                        onChange={(e) => setMood(parseFloat(e.target.value))}
-                        list="steplist"
-                    />
+                    {/* the form value; the blocks below just set it */}
+                    <input type="hidden" name="mood" value={mood} />
 
-                    <datalist id="steplist">
-                        {createRange(MOOD_MIN, MOOD_MAX, MOOD_STEP).map(num => (
-                            <option key={num} value={num} label={`${num / MOOD_MAX}%`}></option>
-                        ))}
-                    </datalist>
+                    <div
+                        ref={blocksRef}
+                        role="slider"
+                        tabIndex={0}
+                        aria-label="Mood"
+                        aria-valuemin={MOOD_MIN}
+                        aria-valuemax={MOOD_MAX}
+                        aria-valuenow={mood}
+                        className="flex flex-row gap-1 rounded-xl p-2 focus:outline-none focus:ring-2 focus:ring-black/40 bg-black/25"
+                        onKeyDown={handleMoodKeyDown}
+                        onMouseLeave={() => setHoverMood(null)}
+                    >
+                        {MOOD_BLOCKS.map(value => {
+                            const lit = value <= shownMood
+                            const hovered = value === hoverMood
+
+                            return (
+                                <div
+                                    key={value}
+                                    title={value}
+                                    className="flex-1 h-10 rounded-md cursor-pointer border transition-all duration-100"
+                                    style={{
+                                        // every block keeps its own hue; unlit ones are just faded
+                                        backgroundColor: moodColor(value),
+                                        opacity: lit ? 1 : 0.2,
+                                        transform: hovered ? "scaleY(1.2)" : "none",
+                                        boxShadow: hovered ? "0 2px 8px rgba(0, 0, 0, 0.4)" : "none",
+                                    }}
+                                    onMouseEnter={() => setHoverMood(value)}
+                                    onClick={() => selectMood(value)}
+                                />
+                            )
+                        })}
+                    </div>
 
                     <div className="flex flex-row justify-between text-sm opacity-70">
-                        <span>0</span>
+                        <span>0.5</span>
                         <span>10</span>
                     </div>
                 </div>
@@ -128,7 +175,7 @@ function DayLogTagManager({ tags, setTags, availableTags }) {
     const unusedTags = availableTags.filter(tag => !tags.includes(tag))
 
     return (
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-2" data-tags>
             <h3 className="text-lg font-semibold">Tags</h3>
 
             {availableTags.length == 0 && (
