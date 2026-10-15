@@ -5,6 +5,6 @@ from .models import *
 
 @admin.register(DayLog)
 class DayLogAdmin(admin.ModelAdmin):
-    list_display = ('created_at', 'note', "mood")
+    list_display = ('created_at', 'note', "mood", "tags")
     search_fields = ('created_at',)
 

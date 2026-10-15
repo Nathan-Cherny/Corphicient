@@ -57,6 +57,7 @@ urlpatterns = [
 
     path("get_daylogs/", get_daylogs, name="get_daylogs"),
     path("add_daylog/", add_daylog, name="add_daylog"),
+    path("get_daylog_tags/", get_daylog_tags, name="get_daylog_tags"),
 
 ]
 
