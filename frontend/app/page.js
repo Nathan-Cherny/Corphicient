@@ -6,6 +6,7 @@ import axiosClient from "./axiosClient";
 import Section from "./components/notes/section/Section";
 import DayLog from "./components/daylogs/DayLog";
 import DayLogForm from "./components/daylogs/DayLogForm";
+import DayLogAnalytics from "./components/daylogs/DayLogAnalytics";
 
 export default function Home() {
   const section_request = ["get_sections/", null, "", "GET"];
@@ -37,7 +38,10 @@ export default function Home() {
   useEffect(() => {
     async function dadJoke() {
       const res = await fetch("/api/dad-joke");
-      if(res.status != 200) { setDadJoke(""); return }
+      if (res.status != 200) {
+        setDadJoke("");
+        return;
+      }
 
       const joke = (await res.json())["joke"];
       setDadJoke(joke || "");
@@ -104,6 +108,10 @@ export default function Home() {
               <DayLog key={i} daylogData={daylogData} />
             ))}
           </div>
+
+          <h1>Day Log Analytics</h1>
+
+          <DayLogAnalytics  />
         </div>
       </div>
     </PageMain>
