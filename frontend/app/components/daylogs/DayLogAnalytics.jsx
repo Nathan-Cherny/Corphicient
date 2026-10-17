@@ -182,8 +182,7 @@ export default function DayLogAnalytics({ }) {
         <h2>Average Mood Over Time</h2>
 
         <p className="analytics-description">
-          Daily average mood, from your first tagged day
-          through today.
+          Daily average mood
         </p>
 
         {moodData.length === 0 ? (
@@ -254,7 +253,7 @@ export default function DayLogAnalytics({ }) {
         <h2>Most Common Tags</h2>
 
         <p className="analytics-description">
-          How often each tag appears across your day logs.
+
         </p>
 
         {tagData.length === 0 ? (
