@@ -180,7 +180,7 @@ export default function DayLogAnalytics({ }) {
 
   return (
     <div className="daylog-analytics">
-      <div className="flex flex-col border text-center rounded-2xl w-full bg-teal-400 shadow-2xl p-5">
+      <div className="flex flex-col border text-center rounded-2xl w-full bg-teal-400 max-h-125 overflow-y-scroll shadow-2xl p-5">
         <h1 className="text-3xl mb-5">Daylogs</h1>
         {dayLogs.map((daylogData, i) => (
           <DayLog key={i} daylogData={daylogData} />
