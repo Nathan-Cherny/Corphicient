@@ -27,15 +27,6 @@ export default function Home() {
   }, [update]);
 
   useEffect(() => {
-    async function allDaylogs() {
-      const res = await axiosClient(...daylog_request);
-      setDaylogs(res || []);
-    }
-
-    allDaylogs();
-  }, [update]);
-
-  useEffect(() => {
     async function dadJoke() {
       const res = await fetch("/api/dad-joke");
       if (res.status != 200) {
@@ -100,13 +91,6 @@ export default function Home() {
               height="250"
               className="bg-transparent"
             ></iframe>
-          </div>
-
-          <div className="flex flex-col border text-center rounded-2xl w-full bg-teal-400 shadow-2xl p-5">
-            <h1 className="text-3xl mb-5">Daylogs</h1>
-            {daylogs.map((daylogData, i) => (
-              <DayLog key={i} daylogData={daylogData} />
-            ))}
           </div>
 
           <h1>Day Log Analytics</h1>

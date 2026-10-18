@@ -33,6 +33,8 @@ const COLORS = [
   "#59A14F",
 ];
 
+import DayLog from "./DayLog";
+
 // Format a Date as a local YYYY-MM-DD string.
 function toDateKey(date) {
   const year = date.getFullYear();
@@ -178,6 +180,12 @@ export default function DayLogAnalytics({ }) {
 
   return (
     <div className="daylog-analytics">
+      <div className="flex flex-col border text-center rounded-2xl w-full bg-teal-400 shadow-2xl p-5">
+        <h1 className="text-3xl mb-5">Daylogs</h1>
+        {dayLogs.map((daylogData, i) => (
+          <DayLog key={i} daylogData={daylogData} />
+        ))}
+      </div>
       <section className="analytics-card">
         <h2>Average Mood Over Time</h2>
 
