@@ -14,10 +14,11 @@ HOW TO ADD A FILTER
     Example, a plain field:
         SongFilter("artist", "Artist", field="artist", lookup="icontains", type="text")
 
-    Example, tags as a many-to-many (Song.tags -> Tag.name):
-        SongFilter("tags", "Tags", field="tags__name", lookup="in", type="multiselect", icon="tag")
-      For this one SongSerializer should return `tags` as a list of {"name": ...} objects, since
-      the frontend reads the same `tags__name` path from each song it has.
+    Example, tags (Song.tags is a JSONField holding a list of strings, e.g. ["rock", "pop"]):
+        SongFilter("tags", "Tags", field="tags", lookup="exact", type="select", icon="tag")
+      A song matches when the value is one of its tags. (A JSON column can't be matched with a
+      plain Django `exact`/`in`, which compare the whole list, so filter_songs handles JSON fields
+      itself; see _filter_json_field.) The frontend reads the same `tags` path from each song.
 
 Filters are stored sparsely, as {key: value} for just the filters that are switched on, e.g.
 {"album": "Graduation"}. A missing key means "don't filter on this", so adding a filter here
@@ -28,6 +29,8 @@ import datetime
 from dataclasses import dataclass, asdict
 
 from django.conf import settings
+from django.core.exceptions import FieldDoesNotExist
+from django.db import models
 from django.utils import timezone
 from django.utils.dateparse import parse_date
 
@@ -75,7 +78,7 @@ SONG_FILTERS = [
     SongFilter("album", "Album", field="album", lookup="exact", type="select", icon="disc"),
     SongFilter("since", "Added on or after", field="date_created", lookup="gte", type="date",
                icon="calendar"),
-    SongFilter("tags", "Tags", "tags", "exact", "select", icon="calendar"),
+    SongFilter("tags", "Tags", field="tags", lookup="exact", type="select", icon="tag"),
 ]
 
 
@@ -148,6 +151,36 @@ def _date_to_datetime(value, lookup):
     return timezone.make_aware(moment) if settings.USE_TZ else moment
 
 
+def _is_json_field(queryset, path):
+    """Whether `path` is a JSONField directly on the queryset's model (not reached via a relation)."""
+    try:
+        return isinstance(queryset.model._meta.get_field(path), models.JSONField)
+    except FieldDoesNotExist:
+        return False
+
+
+def _filter_json_field(queryset, field, wanted):
+    """Keeps the rows whose JSON value at `field` has one of the `wanted` values.
+
+    `wanted` is a single string (a "select" filter) or a list of them (a "multiselect" filter).
+    A JSON list, like Song.tags, matches when any of its items is wanted; a lone JSON value
+    matches when it is wanted. That is what the frontend does too (see getValues/matchesFilter).
+
+    Django's own lookups can't do this here: `exact` and `in` compare the entire JSON value (so
+    the string "rock" never equals the list ["rock", "pop"]), and `contains` isn't supported on
+    SQLite. So the matching ids are worked out in Python, which works on every database.
+    """
+    wanted = {wanted} if isinstance(wanted, str) else set(wanted)
+
+    matching_ids = []
+    for pk, value in queryset.values_list("pk", field):
+        items = value if isinstance(value, list) else [value]
+        if any(isinstance(item, str) and item in wanted for item in items):
+            matching_ids.append(pk)
+
+    return queryset.filter(pk__in=matching_ids)
+
+
 def filter_songs(queryset, filters, specs=None):
     """Narrows a Song queryset by a filters dict like {"album": "Graduation"}.
 
@@ -164,6 +197,10 @@ def filter_songs(queryset, filters, specs=None):
         value = filters[spec.key]
         if spec.type == "date":
             value = _date_to_datetime(value, spec.lookup)
+
+        if spec.lookup in ("exact", "in") and _is_json_field(queryset, spec.field):
+            queryset = _filter_json_field(queryset, spec.field, value)
+            continue
 
         queryset = queryset.filter(**{f"{spec.field}__{spec.lookup}": value})
         spans_relations = spans_relations or "__" in spec.field

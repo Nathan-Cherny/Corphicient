@@ -51,6 +51,42 @@ class FilterSongsTests(TestCase):
     def test_filters_combine(self):
         self.assertEqual(self.names({"album": "Graduation", "name": "strong"}), ["Stronger"])
 
+    def test_tag_matches_songs_that_have_it_among_their_tags(self):
+        # Song.tags is a JSON list, so the tag only has to be one of the items, not the whole list
+        self.stronger.tags = ["hype", "gym"]
+        self.stronger.save()
+        self.flashing.tags = ["gym"]
+        self.flashing.save()
+        self.heartless.tags = ["sad"]
+        self.heartless.save()
+
+        self.assertEqual(self.names({"tags": "gym"}), ["Flashing Lights", "Stronger"])
+        self.assertEqual(self.names({"tags": "hype"}), ["Stronger"])
+        self.assertEqual(self.names({"tags": "sad"}), ["Heartless"])
+        self.assertEqual(self.names({"tags": "nope"}), [])
+
+    def test_tag_must_match_a_whole_tag(self):
+        self.stronger.tags = ["gym"]
+        self.stronger.save()
+
+        self.assertEqual(self.names({"tags": "gy"}), [])
+        self.assertEqual(self.names({"tags": "gym "}), ["Stronger"])  # surrounding spaces are trimmed
+        self.assertEqual(self.names({"tags": "GYM"}), [])  # exact, like the album filter
+
+    def test_tag_ignores_songs_with_no_tags(self):
+        self.stronger.tags = ["gym"]
+        self.stronger.save()
+
+        self.assertEqual(self.names({"tags": "gym"}), ["Stronger"])  # the other two have tags == []
+
+    def test_tag_combines_with_other_filters(self):
+        self.stronger.tags = ["gym"]
+        self.stronger.save()
+        self.heartless.tags = ["gym"]
+        self.heartless.save()
+
+        self.assertEqual(self.names({"tags": "gym", "album": "808s"}), ["Heartless"])
+
     def test_every_registered_filter_can_be_applied(self):
         # guards against a SongFilter whose field/lookup doesn't actually work on Song
         samples = {"text": "a", "select": "Graduation", "date": "2000-01-01", "multiselect": ["Graduation"]}
@@ -77,6 +113,19 @@ class FilterRegistryTests(TestCase):
         )
         self.assertEqual(self.names({"albums": ["808s"]}, specs), ["Heartless"])
         self.assertEqual(self.names({"albums": []}, specs), ["Flashing Lights", "Heartless", "Stronger"])
+
+    def test_multiselect_on_a_json_list_matches_any_of_the_values(self):
+        Song.objects.filter(name="Stronger").update(tags=["gym", "hype"])
+        Song.objects.filter(name="Flashing Lights").update(tags=["gym"])
+        Song.objects.filter(name="Heartless").update(tags=["sad"])
+        specs = [SongFilter("tags", "Tags", field="tags", lookup="in", type="multiselect")]
+
+        self.assertEqual(self.names({"tags": ["hype"]}, specs), ["Stronger"])
+        self.assertEqual(self.names({"tags": ["hype", "sad"]}, specs), ["Heartless", "Stronger"])
+        self.assertEqual(self.names({"tags": ["gym"]}, specs), ["Flashing Lights", "Stronger"])
+        self.assertEqual(self.names({"tags": []}, specs), ["Flashing Lights", "Heartless", "Stronger"])
+        # a song that matches on more than one of the picked tags is still only listed once
+        self.assertEqual(self.names({"tags": ["gym", "hype"]}, specs), ["Flashing Lights", "Stronger"])
 
     def test_text_lookups(self):
         specs = [SongFilter("starts", "Starts with", field="name", lookup="istartswith", type="text")]
@@ -148,6 +197,23 @@ class FilterPlaylistTests(TestCase):
         self.assertEqual(response.data["filters"], {"album": "Graduation"})
         # and it holds no songs of its own
         self.assertEqual(Playlist.objects.get(pk=response.data["id"]).songs.count(), 0)
+
+    def test_filter_playlist_can_filter_by_tag(self):
+        self.stronger.tags = ["gym", "hype"]
+        self.stronger.save()
+        self.heartless.tags = ["sad"]
+        self.heartless.save()
+
+        response = self.create(name="Gym", playlist_type="filter", filters={"tags": "gym"})
+        self.assertEqual(response.status_code, 201)
+        self.assertEqual(response.data["filters"], {"tags": "gym"})
+        self.assertEqual([s["name"] for s in response.data["songs"]], ["Stronger"])
+
+        # it's looked up each time, so a newly tagged song joins the playlist
+        self.heartless.tags = ["sad", "gym"]
+        self.heartless.save()
+        names = [s["name"] for s in self.client.get("/playlists/").data[0]["songs"]]
+        self.assertEqual(sorted(names), ["Heartless", "Stronger"])
 
     def test_filter_playlist_picks_up_songs_added_later(self):
         self.create(name="Grad", playlist_type="filter", filters={"album": "Graduation"})
