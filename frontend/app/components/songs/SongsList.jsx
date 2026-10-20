@@ -568,7 +568,7 @@ export function TagsList({ tags, tagOnClick, className }) {
 
   return (<div className={`${className} pt-5 w-full flex flex-row gap-3`}>
     {tags.map((tag, i) =>
-      <div onClick={tagOnClick || defaultFunction} className="bg-gray-700 text-white max-w-fit p-2 rounded-2xl border shadow-2xl hover:scale-105 cursor-pointer" key={i}>
+      <div onClick={tagOnClick || defaultFunction} className="bg-gray-700 text-white max-w-fit p-2 rounded-2xl border shadow-2xl hover:scale-105 cursor-pointer max-h-fit" key={i}>
         {tag}
       </div>)}
   </div>)
