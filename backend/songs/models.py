@@ -31,6 +31,8 @@ class Playlist(models.Model):
         (FILTER, "Filter"),
     ]
 
+    thumbnail = models.ImageField(upload_to='thumbnail/playlist', blank=True, null=True)
+
     name = models.CharField(max_length=100)
 
     # Manual playlists: the songs someone picked. Always empty for filter playlists.
