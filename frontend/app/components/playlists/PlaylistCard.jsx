@@ -13,6 +13,7 @@ import PieChartVis from "../visual/PieChart";
 import { getRandomColor } from "../visual/colors";
 import FadeOverlay from "../layout/FadeOverlay";
 import { PieChart } from "lucide-react";
+import { API_BASE_URL } from "@/app/lib/config";
 
 export default function PlaylistCard({
   playlist,
@@ -25,7 +26,6 @@ export default function PlaylistCard({
   const songsListRef = useRef(null);
   const [pieChartOpen, setPieChartOpen] = useState(false);
   const filterSpecs = useSongFilterSpecs();
-
 
   return (
     <div className="relative flex flex-col border p-5 bg-white/25 shadow-2xl">
@@ -43,7 +43,7 @@ export default function PlaylistCard({
       </button>
 
       <div className="flex flex-row gap-5">
-        
+
         <FadeOverlay isOpen={showEdit} onClose={() => setShowEdit(false)}>
           {Playlist.isFilterPlaylist(playlist) ? (
             <div className="w-full max-w-3xl rounded-2xl bg-white p-6">
@@ -64,7 +64,7 @@ export default function PlaylistCard({
               onSave={async (selected, name) => {
                 // refetch only once the change has actually been saved
                 await Playlist.patchPlaylist(playlist.id, selected, name);
-                setUpdate(prev => prev+1)
+                setUpdate(prev => prev + 1)
               }}
               playlist={playlist}
             />
@@ -89,36 +89,8 @@ export default function PlaylistCard({
               </span>
             </p>
           )}
-          <p className="w-full">
-            Total Songs: <i>{playlist.songs.length}</i>
-          </p>
-          <p className="w-full">
-            Total Duration: <i>{getTotalDuration(playlist.songs)}</i>
-          </p>
-          <div className="w-full flex flex-row gap-5">
-            <p>
-              Total Time Spent Listening to Songs:{" "}
-              <i>{getTotalPlayed(playlist.songs)}</i>
-            </p>
-            <PieChart
-              className="cursor-pointer hover:scale-105"
-              onClick={() => setPieChartOpen(true)}
-            />
-          </div>
 
-          <FadeOverlay
-            isOpen={pieChartOpen}
-            onClose={() => setPieChartOpen(false)}
-          >
-            <PieChartVis
-              data={playlist.songs.map((s) => ({
-                name: s.name,
-                secondsPlayed: s.secondsPlayed,
-                fill: getRandomColor(),
-              }))}
-              playlistName={playlist.name}
-            />
-          </FadeOverlay>
+          <PlaylistMetadata playlist={playlist} setPieChartOpen={setPieChartOpen} pieChartOpen={pieChartOpen} />
 
           <hr className="w-full border my-15" />
 
@@ -137,6 +109,57 @@ export default function PlaylistCard({
       </div>
     </div>
   );
+}
+
+function PlaylistMetadata({ playlist, setPieChartOpen, pieChartOpen }) {
+  return (
+    <div className="w-full flex-row flex justify-between items-center px-2 gap-5">
+      <div>
+        <p className="w-full">
+          Total Songs: <i>{playlist.songs.length}</i>
+        </p>
+        <p className="w-full">
+          Total Duration: <i>{getTotalDuration(playlist.songs)}</i>
+        </p>
+        <div className="w-full flex flex-row gap-5">
+          <p>
+            Total Time Spent Listening to Songs:{" "}
+            <i>{getTotalPlayed(playlist.songs)}</i>
+          </p>
+          <PieChart
+            className="cursor-pointer hover:scale-105"
+            onClick={() => setPieChartOpen(true)}
+          />
+        </div>
+
+        <FadeOverlay
+          isOpen={pieChartOpen}
+          onClose={() => setPieChartOpen(false)}
+        >
+          <PieChartVis
+            data={playlist.songs.map((s) => ({
+              name: s.name,
+              secondsPlayed: s.secondsPlayed,
+              fill: getRandomColor(),
+            }))}
+            playlistName={playlist.name}
+          />
+        </FadeOverlay>
+      </div>
+      <PlaylistImg playlist={playlist}/>
+    </div>
+  )
+}
+
+export function PlaylistImg({ playlist, className }) {
+  return (
+    <div className={`border-4 bg-black/75 aspect-square flex items-center max-w-1/4 ${className}`}>
+      <img
+        className="object-fit"
+        src={`${API_BASE_URL}/media/thumbnail/playlist/corph.png`}
+      />
+    </div>
+  )
 }
 
 function getTotalDuration(songs) {

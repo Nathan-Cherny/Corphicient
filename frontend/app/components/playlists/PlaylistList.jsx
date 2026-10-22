@@ -3,14 +3,14 @@
 // imports from next
 import axiosClient from "../../axiosClient";
 import { useEffect, useState, useSyncExternalStore } from "react";
-import PlaylistCard from "./PlaylistCard";
+import PlaylistCard, { PlaylistImg } from "./PlaylistCard";
 import PlaylistListSettings from "./PlaylistListSettings";
 import { isFilterPlaylist } from "./PlaylistFunctions";
 import { useSongFilterSpecs } from "../songs/SongFilter";
 import { describeFilters } from "../songs/SongFilterFunctions";
 import { SlidersHorizontal } from "lucide-react";
 
-export default function PlaylistList({}) {
+export default function PlaylistList({ }) {
   const request = ["playlists/", null, "", "GET"];
 
   const [activePlaylistId, setActivePlaylistId] = useState(null);
@@ -90,8 +90,11 @@ export default function PlaylistList({}) {
             }
             className={`flex flex-row items-center gap-2 border bg-blue-50 p-5 hover:scale-105 hover:cursor-pointer ${pl?.id === activePlaylist?.id ? "bg-yellow-500 border-2 font-bold" : ""}`}
           >
-            {isFilterPlaylist(pl) && <SlidersHorizontal size={16} />}
-            {pl.name}
+            <div className="flex flex-row items-center justify-around gap-5">
+              {isFilterPlaylist(pl) && <SlidersHorizontal size={16} />}
+              {pl.name}
+              <PlaylistImg className={`border! w-10! min-w-10!`} playlist={pl} />
+            </div>
           </button>
         ))}
         <PlaylistListSettings

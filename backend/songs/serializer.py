@@ -29,7 +29,7 @@ class PlaylistSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Playlist
-        fields = ["id", "name", "songs", "playlist_type", "filters"]
+        fields = ["id", "name", "songs", "playlist_type", "filters", "thumbnail"]
 
     def to_representation(self, instance):
         rep = super().to_representation(instance)
