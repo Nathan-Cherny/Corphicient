@@ -23,7 +23,7 @@ class Song(models.Model):
         return self.name
 
 
-class Playlist(models.Model):
+class Playlist(models.Model):  
     MANUAL = "manual"
     FILTER = "filter"
     PLAYLIST_TYPES = [
