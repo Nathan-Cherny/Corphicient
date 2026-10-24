@@ -7,7 +7,7 @@ from PIL import Image, ImageOps, UnidentifiedImageError
 
 
 def generate_playlist_thumbnail(playlist):
-    songs = list(playlist.get_songs()[:9])
+    songs = list(playlist.get_songs())
 
     # An empty playlist has no composite cover.
     if not songs:
@@ -19,7 +19,8 @@ def generate_playlist_thumbnail(playlist):
         return
 
     # 1 song = 1x1, 2-4 songs = 2x2, 5-9 songs = 3x3.
-    grid_size = ceil(sqrt(len(songs)))
+    grid_size = min(ceil(sqrt(len(songs))), 3)
+    
     tile_size = 300
     canvas_size = grid_size * tile_size
 
@@ -29,8 +30,15 @@ def generate_playlist_thumbnail(playlist):
         color="#222222",
     )
 
+    counted_songs = 0
+
     for index, song in enumerate(songs):
+        if int(counted_songs) >= int(grid_size * grid_size): break
+
+        print(song.thumbnail)
+
         if not song.thumbnail:
+            print("test")
             continue
 
         try:
@@ -46,10 +54,16 @@ def generate_playlist_thumbnail(playlist):
             continue
 
         # Position each image in row-major order.
-        x = (index % grid_size) * tile_size
-        y = (index // grid_size) * tile_size
+        x = (counted_songs % grid_size) * tile_size
+        y = (counted_songs // grid_size) * tile_size
+
+        print(f"{x} {y}")
 
         canvas.paste(image, (x, y))
+
+        counted_songs += 1
+
+
 
     # Encode the composite as a JPEG in memory.
     output = BytesIO()
@@ -60,7 +74,7 @@ def generate_playlist_thumbnail(playlist):
     if playlist.thumbnail:
         playlist.thumbnail.delete(save=False)
 
-    filename = f"playlist_{playlist.pk}.jpg"
+    filename = f"playlist_{playlist.pk}_${playlist.name}.jpg"
 
     playlist.thumbnail.save(
         filename,

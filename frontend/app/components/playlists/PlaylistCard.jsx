@@ -27,6 +27,8 @@ export default function PlaylistCard({
   const [pieChartOpen, setPieChartOpen] = useState(false);
   const filterSpecs = useSongFilterSpecs();
 
+  console.log(playlist)
+
   return (
     <div className="relative flex flex-col border p-5 bg-white/25 shadow-2xl">
       <button
@@ -156,7 +158,7 @@ export function PlaylistImg({ playlist, className }) {
     <div className={`border-4 bg-black/75 aspect-square flex items-center max-w-1/4 ${className}`}>
       <img
         className="object-fit"
-        src={`${API_BASE_URL}/media/thumbnail/playlist/corph.png`}
+        src={`${API_BASE_URL}${playlist.thumbnail || "/media/thumbnail/playlist/corph.png"}`}
       />
     </div>
   )
