@@ -93,8 +93,6 @@ export default function Home() {
             ></iframe>
           </div>
 
-          <h1>Day Log Analytics</h1>
-
           <DayLogAnalytics  />
         </div>
       </div>
