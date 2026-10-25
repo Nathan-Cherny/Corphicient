@@ -7,7 +7,7 @@ class DayLogSerializer(serializers.ModelSerializer):
     class Meta:
         model = DayLog
         fields = ["note", "mood", "tags", "created_at"]
-        read_only_fields = ["created_at"]
+        read_only_fields = [""]
 
     def validate_tags(self, value):
         # Tags are defined in daylog/tags.py; a log can only use tags from there.
