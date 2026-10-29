@@ -18,7 +18,7 @@ const MOOD_BLOCKS = Array.from(
 )
 
 // red (0) -> orange -> yellow -> green (10)
-function moodColor(mood) {
+export function moodColor(mood) {
     const hue = ((mood - MOOD_MIN) / (MOOD_MAX - MOOD_MIN)) * 120
     return `hsl(${hue}, 85%, 42%)`
 }
