@@ -179,19 +179,15 @@ export default function DayLogAnalytics({ }) {
   }
 
   return (
-    <div className="daylog-analytics">
-      <div className="flex flex-col border text-center rounded-2xl w-full bg-teal-400 max-h-125 overflow-y-scroll shadow-2xl p-5">
-        <h1 className="text-3xl mb-5">Daylogs</h1>
+    <div className={`daylog-analytics rounded-2xl w-full bg-teal-400 p-2.5`}>
+      <div className="flex flex-col analytics-card text-center max-h-120 overflow-y-scroll shadow-2xl p-5">
+        <h2 className="text-left">Daylogs</h2>
         {dayLogs.map((daylogData, i) => (
           <DayLog key={i} daylogData={daylogData} />
         ))}
       </div>
       <section className="analytics-card">
         <h2>Average Mood Over Time</h2>
-
-        <p className="analytics-description">
-          Daily average mood
-        </p>
 
         {moodData.length === 0 ? (
           <p>No day logs available yet.</p>
