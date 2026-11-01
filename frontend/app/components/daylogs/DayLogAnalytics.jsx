@@ -175,7 +175,7 @@ export default function DayLogAnalytics({ }) {
   );
 
   if (error) {
-    return <p role="alert">Error: {error}</p>;
+    return <p role="alert">Woah! Error: {error}</p>;
   }
 
   return (
