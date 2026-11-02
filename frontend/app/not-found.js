@@ -21,6 +21,7 @@ export default function Home() {
               <span className="font-bold">"{usePathname()}" </span> - maybe try
               using the navbar!
             </p>
+            <p>:(</p>
           </div>
         </div>
       </div>
