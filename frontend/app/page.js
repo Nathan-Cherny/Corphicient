@@ -6,6 +6,7 @@ import axiosClient from "./axiosClient";
 import Section from "./components/notes/section/Section";
 import DayLog from "./components/daylogs/DayLog";
 import DayLogForm from "./components/daylogs/DayLogForm";
+import DayLogImport from "./components/daylogs/DayLogImport";
 import DayLogAnalytics from "./components/daylogs/DayLogAnalytics";
 
 export default function Home() {
@@ -16,6 +17,7 @@ export default function Home() {
   const [daylogs, setDaylogs] = useState([]);
   const [dadjoke, setDadJoke] = useState("");
   const [update, setUpdate] = useState(0);
+  const [daylogVersion, setDaylogVersion] = useState(0);
 
   useEffect(() => {
     async function allSections() {
@@ -57,6 +59,9 @@ export default function Home() {
             <div className="flex w-full flex-col grow border text-center rounded-2xl bg-blue-500 shadow-2xl p-5">
               <h1 className="text-3xl mb-5">Add Daylog</h1>
               {<DayLogForm />}
+              <div className="mt-5">
+                <DayLogImport onImported={() => setDaylogVersion((v) => v + 1)} />
+              </div>
             </div>
 
             {sections
@@ -93,7 +98,7 @@ export default function Home() {
             ></iframe>
           </div>
 
-          <DayLogAnalytics  />
+          <DayLogAnalytics key={daylogVersion} />
         </div>
       </div>
     </PageMain>
