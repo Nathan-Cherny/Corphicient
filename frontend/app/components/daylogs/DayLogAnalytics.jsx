@@ -31,6 +31,7 @@ const COLORS = [
   "#A3A3A3",
   "#B07AA1",
   "#59A14F",
+  "#4acdea"
 ];
 
 import DayLog from "./DayLog";
