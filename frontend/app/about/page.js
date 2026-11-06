@@ -35,6 +35,7 @@ export default function About() {
           </ul>
           <img className="w-1/2" src="https://preview.redd.it/opinions-on-ashs-corphish-v0-06k8v1nrvywc1.jpeg?auto=webp&s=b6aa098f7f28e16be087d9672273e3e49bd56bc9" />
         </div>
+        <div>:)</div>
       </div>
     </PageMain>
   );
