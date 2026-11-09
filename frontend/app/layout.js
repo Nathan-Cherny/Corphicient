@@ -11,7 +11,6 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-
 export const metadata = {
   title: "Corphicient",
   description: "Corphish's hardy vitality allows it to adapt to any environment. Be like Corphish. Be Corphicient!",
