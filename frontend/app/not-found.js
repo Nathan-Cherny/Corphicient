@@ -11,8 +11,8 @@ import Image from "next/image";
 export default function Home() {
   return (
     <PageMain>
-      <div className="my-auto mx-0">
-        <div className="flex flex-row gap-5 w-full justify-around items-center">
+      <div className="my-auto mx-0 w-full">
+        <div className="flex flex-row gap-5 w-full justify-evenly items-center">
           <Image src={corphishSad} className="max-w-75" alt="corphish so sad" />
           <div className="text-center flex flex-col gap-10">
             <h1 className="text-5xl font-bold">Page Not Found!</h1>

@@ -21,7 +21,7 @@ export function PageMain({ children }) {
     <NotificationProvider>
       <div
         style={{ backgroundColor: bgColor }}
-        className="relative z-10 pt-18 flex min-h-screen flex-col w-full"
+        className="relative z-10 flex min-h-screen flex-col w-full"
       >
         <Navbar />
 
