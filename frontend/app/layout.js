@@ -13,12 +13,13 @@ const geistMono = Geist_Mono({
 
 export const metadata = {
   title: "Corphicient",
-  description: "Corphish's hardy vitality allows it to adapt to any environment. Be like Corphish. Be Corphicient!",
+  description:
+    "Corphish's hardy vitality allows it to adapt to any environment. Be like Corphish. Be Corphicient!",
 };
 
 import "@fortawesome/fontawesome-svg-core/styles.css";
 import { config } from "@fortawesome/fontawesome-svg-core";
-config.autoAddCss = false; 
+config.autoAddCss = false;
 
 export default function RootLayout({ children }) {
   return (
