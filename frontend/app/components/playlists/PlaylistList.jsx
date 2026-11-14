@@ -16,8 +16,6 @@ export default function PlaylistList({ }) {
   const [activePlaylistId, setActivePlaylistId] = useState(null);
   const [playlists, setPlaylists] = useState([]);
   const filterSpecs = useSongFilterSpecs();
-  // Looked up by id (rather than stored) so it refreshes whenever the playlists are refetched.
-  // That's what keeps a filter playlist current when songs are added, edited or removed.
   const activePlaylist = playlists.find((pl) => pl.id === activePlaylistId) ?? null;
   const [currentSong, setCurrentSong] = useState(null);
   const [prevCurrentSong, setPrevCurrentSong] = useState(null);

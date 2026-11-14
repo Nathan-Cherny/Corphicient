@@ -47,7 +47,7 @@ function SettingsMenu({ settings, setSettings, onPlaylistsChanged }) {
       <div className="mt-6 flex flex-col items-stretch gap-5 rounded-xl bg-sky-50 p-5">
         <Form
           formType="get_song_form"
-          nonFormFields={["secondsPlayed", "src", "duration"]}
+          nonFormFields={["secondsPlayed", "src", "duration", "tags"]}
           submitFunction={(e) => {
             setSongProgress({ status: "starting", progress: 0 });
             addSong(e, setSongProgress)
