@@ -370,7 +370,7 @@ function CurrentSongInfo({
       style={{ borderColor: color }}
     >
       <div
-        className={`flex flex-row justify-between items-stretch mb-5 *:text-center p-5`}
+        className={`flex flex-row justify-between items-stretch mb-5 *:text-center p-5 gap-10`}
       >
         <div className="flex items-stretch">
           <div

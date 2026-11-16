@@ -79,7 +79,7 @@ export default function DayLogAnalytics({ }) {
   // Count occurrences of every tag.
   const tagCounts = {};
 
-  // Find the earliest log and earliest log containing tags.
+  // Find the earliest log and earliest log containing feeling.
   let earliestLogDate = null;
   let earliestTaggedDate = null;
 
@@ -110,9 +110,9 @@ export default function DayLogAnalytics({ }) {
       dailyMood[dateKey].count += 1;
     }
 
-    const tags = Array.isArray(log.tags) ? log.tags : [];
+    const feeling = Array.isArray(log.feeling) ? log.feeling : [];
 
-    if (tags.some(
+    if (feeling.some(
       (tag) => typeof tag === "string" && tag.trim()
     )) {
       if (!earliestTaggedDate || dateKey < earliestTaggedDate) {
@@ -120,7 +120,7 @@ export default function DayLogAnalytics({ }) {
       }
     }
 
-    for (const tag of tags) {
+    for (const tag of feeling) {
       if (typeof tag !== "string" || !tag.trim()) continue;
 
       const normalizedTag = tag.trim();
@@ -131,7 +131,7 @@ export default function DayLogAnalytics({ }) {
   }
 
   // Start at the first tagged day, falling back to the first
-  // log if no tags exist. Include every day through today.
+  // log if no feeling exist. Include every day through today.
   const startKey = earliestTaggedDate || earliestLogDate;
 
   const moodData = [];
@@ -162,7 +162,7 @@ export default function DayLogAnalytics({ }) {
     }
   }
 
-  // Sort the most common tags first.
+  // Sort the most common feeling first.
   const tagData = Object.entries(tagCounts)
     .map(([name, count]) => ({
       name,
@@ -255,14 +255,14 @@ export default function DayLogAnalytics({ }) {
       </section>
 
       <section className="analytics-card">
-        <h2>Most Common Tags</h2>
+        <h2>Most Common Feelings</h2>
 
         <p className="analytics-description">
 
         </p>
 
         {tagData.length === 0 ? (
-          <p>No tags available yet.</p>
+          <p>No feeling available yet.</p>
         ) : (
           <>
             <div className="analytics-chart">

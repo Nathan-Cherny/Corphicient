@@ -12,7 +12,7 @@ export default function DayLog({ daylogData }) {
                 <p className="text-3xl">{daylogData.mood}</p>
             </div>
             {daylogData?.note && <p className="text-left font-bold">{daylogData.note}</p>}
-            {daylogData?.tags?.length > 0 && <TagsList className="pt-0! w-fit! *:text-[10.5px]!" tags={daylogData.tags} />}
+            {daylogData?.feeling?.length > 0 && <TagsList className="pt-0! w-fit! *:text-[10.5px]!" tags={daylogData.feeling} />}
 
         </div>
     )
