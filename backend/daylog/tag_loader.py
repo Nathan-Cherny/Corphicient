@@ -7,12 +7,12 @@
 
 def get_tags():
     try:
-        from .tags import TAGS
+        from .tags import FEELING
     except ImportError:
         return []
 
     cleaned = []
-    for tag in TAGS:
+    for tag in FEELING:
         tag = str(tag).strip()
         if tag and tag not in cleaned:
             cleaned.append(tag)

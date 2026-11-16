@@ -44,7 +44,6 @@ function SettingsMenu({ settings, setSettings, onPlaylistsChanged }) {
         Settings
       </h1>
 
-
       <div className="mt-6 flex flex-col items-stretch gap-5 rounded-xl bg-sky-50 p-5">
         <Form
           formType="get_song_form"

@@ -6,7 +6,7 @@ from .tag_loader import get_tags
 class DayLogSerializer(serializers.ModelSerializer):
     class Meta:
         model = DayLog
-        fields = ["note", "mood", "tags", "created_at"]
+        fields = ["note", "mood", "feeling", "created_at"]
         read_only_fields = [""]
 
     def validate_tags(self, value):
