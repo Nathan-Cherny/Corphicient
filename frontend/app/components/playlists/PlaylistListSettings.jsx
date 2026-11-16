@@ -40,9 +40,10 @@ function SettingsMenu({ settings, setSettings, onPlaylistsChanged }) {
 
   return (
     <div className="w-full max-w-3xl max-h-[90vh] overflow-scroll rounded-2xl bg-white p-8 shadow-xl">
-      <h1 className="text-center text-2xl font-semibold text-sky-950">
+      <h1 className="text-center text-2xl font-semibold text-teal-950">
         Settings
       </h1>
+
 
       <div className="mt-6 flex flex-col items-stretch gap-5 rounded-xl bg-sky-50 p-5">
         <Form
