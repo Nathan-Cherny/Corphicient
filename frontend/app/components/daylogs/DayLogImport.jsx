@@ -7,8 +7,8 @@ const MOOD_MIN = 0
 const MOOD_MAX = 10
 
 // Accepts a list of daylogs, a single daylog, or { "daylogs": [...] }.
-// Each daylog looks like: { "mood": 7.5, "note": "text", "tags": ["work"], "created_at": "2026-01-02T03:04:05Z" }
-// (only "mood" is required; tags have to exist in backend/daylog/tags.py)
+// Each daylog looks like: { "mood": 7.5, "note": "text", "feeling": ["work"], "created_at": "2026-01-02T03:04:05Z" }
+// (only "mood" is required; feeling have to exist in backend/daylog/feeling.py)
 export function parseDayLogs(text) {
     let parsed
     try {
@@ -46,8 +46,8 @@ export function parseDayLogs(text) {
         if (log.note != null && typeof log.note !== "string") {
             errors.push(`${label}: note must be text`)
         }
-        if (log.tags != null && (!Array.isArray(log.tags) || !log.tags.every(tag => typeof tag === "string"))) {
-            errors.push(`${label}: tags must be a list of strings`)
+        if (log.feeling != null && (!Array.isArray(log.feeling) || !log.feeling.every(tag => typeof tag === "string"))) {
+            errors.push(`${label}: feeling must be a list of strings`)
         }
         if (log.created_at != null && Number.isNaN(new Date(log.created_at).getTime())) {
             errors.push(`${label}: created_at isn't a valid date`)
@@ -56,7 +56,7 @@ export function parseDayLogs(text) {
         // only send what the backend knows about; leave out nulls so the model defaults apply
         const clean = { mood }
         if (log.note != null) clean.note = log.note
-        if (log.tags != null) clean.tags = log.tags
+        if (log.feeling != null) clean.feeling = log.feeling
         if (log.created_at != null) clean.created_at = log.created_at
         return clean
     })
@@ -124,7 +124,7 @@ export default function DayLogImport({ onImported }) {
             <form onSubmit={handleImport} className="flex flex-col gap-3 mt-4">
                 <p className="text-sm opacity-70">
                     Paste a list like{" "}
-                    <code>{`[{"mood": 7.5, "note": "text", "tags": ["work"], "created_at": "2026-01-02T03:04:05Z"}]`}</code>.
+                    <code>{`[{"mood": 7.5, "note": "text", "feeling": ["work"], "created_at": "2026-01-02T03:04:05Z"}]`}</code>.
                     Only <code>mood</code> is required. If any log is invalid, nothing is imported.
                 </p>
 
