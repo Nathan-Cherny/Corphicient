@@ -35,6 +35,7 @@ const COLORS = [
 ];
 
 import DayLog from "./DayLog";
+import DayLogMoodChart from "./DayLogMoodChart";
 
 // Format a Date as a local YYYY-MM-DD string.
 function toDateKey(date) {
@@ -253,6 +254,8 @@ export default function DayLogAnalytics({ }) {
           Mood scale: 0–10. Days without entries are left blank.
         </p>
       </section>
+
+      <DayLogMoodChart dayLogs={dayLogs} />
 
       <section className="analytics-card">
         <h2>Most Common Feelings</h2>

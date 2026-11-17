@@ -39,6 +39,38 @@
   font-size: 0.8rem;
 }
 
+.analytics-range-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.analytics-range-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 0.8rem;
+  color: #666666;
+  text-align: left;
+}
+
+.analytics-range-field select,
+.analytics-range-field input {
+  padding: 6px 8px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #222222;
+  font-size: 0.9rem;
+}
+
+.analytics-range-error {
+  margin: 0 0 12px;
+  color: #b91c1c;
+  font-size: 0.85rem;
+}
+
 .tag-frequency-list {
   display: flex;
   flex-direction: column;
