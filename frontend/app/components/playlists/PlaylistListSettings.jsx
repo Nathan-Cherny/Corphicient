@@ -16,7 +16,7 @@ export default function PlaylistListSettings({ settings, setSettings, onPlaylist
   return (
     <>
       <button
-        className="rounded-xl border border-sky-200 bg-sky-100 px-6 py-3 font-medium text-sky-900 shadow-md transition-all duration-150 hover:scale-105 hover:bg-sky-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 cursor-pointer"
+        className="w-fit h-fit m-auto rounded-xl border border-sky-200 bg-sky-100 px-6 py-3 font-medium text-sky-900 shadow-md transition-all duration-150 hover:scale-105 hover:bg-sky-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 cursor-pointer"
         onClick={() => setSettingsMenuOpen(true)}
       >
         Settings
@@ -40,9 +40,9 @@ function SettingsMenu({ settings, setSettings, onPlaylistsChanged }) {
 
   return (
     <div className="w-full max-w-3xl max-h-[90vh] overflow-scroll rounded-2xl bg-white p-8 shadow-xl">
-      <h1 className="text-center text-2xl font-semibold text-teal-950">
+      <h1 className="text-center text-2xl font-semibold text-teal-950 w-fit">
         Settings
-      </h1>
+      </h1> 
 
       <div className="mt-6 flex flex-col items-stretch gap-5 rounded-xl bg-sky-50 p-5">
         <Form
