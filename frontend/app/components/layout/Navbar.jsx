@@ -102,8 +102,8 @@ export default function Navbar() {
   return (
     <>
       <nav
-        style={{ backgroundColor: "rgb(20, 40, 40)" }}
-        className="mt-0 top-0 left-0 right-0 z-50 backdrop-blur-xl after:content-[''] after:absolute after:left-0 after:right-0 after:bottom-0 after:h-0.75 after:bg-[#00a0b5]"
+        style={{ backgroundColor: "rgb(20, 40, 40)", borderBottom: "3px solid orangered" }}
+        className="mt-0 top-0 left-0 right-0 z-50 backdrop-blur-xl"
       >
         <div className="max-w-11/12 mx-auto px-2 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-1/8 py-1">

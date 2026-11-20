@@ -30,7 +30,7 @@ export default function PlaylistCard({
   console.log(playlist)
 
   return (
-    <div className="relative flex flex-col border p-5 bg-white/25 shadow-2xl">
+    <div className="relative flex flex-col border p-5 bg-[rgba(70, 70, 70, 0.75)] shadow-2xl">
       <button
         onClick={() => Playlist.deletePlaylist(playlist.id)}
         className="absolute top-2 right-2 bg-red-500 text-white w-6 h-6 flex items-center justify-center hover:scale-110 hover:cursor-pointer transition-all duration-200"
@@ -96,16 +96,14 @@ export default function PlaylistCard({
 
           <hr className="w-full border my-15" />
 
-          <div className="flex flex-row" style={{ alignItems: "start" }}>
-            <div ref={songsListRef}>
-              <SongsList
-                currentSong={currentSong}
-                setCurrentSong={setCurrentSong}
-                songs={playlist.songs}
-                settings={settings}
-                setUpdate={setUpdate}
-              />
-            </div>
+          <div ref={songsListRef}>
+            <SongsList
+              currentSong={currentSong}
+              setCurrentSong={setCurrentSong}
+              songs={playlist.songs}
+              settings={settings}
+              setUpdate={setUpdate}
+            />
           </div>
         </div>
       </div>
@@ -148,7 +146,7 @@ function PlaylistMetadata({ playlist, setPieChartOpen, pieChartOpen }) {
           />
         </FadeOverlay>
       </div>
-      <PlaylistImg playlist={playlist}/>
+      <PlaylistImg playlist={playlist} />
     </div>
   )
 }
