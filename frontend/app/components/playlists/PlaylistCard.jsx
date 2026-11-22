@@ -26,6 +26,7 @@ export default function PlaylistCard({
   const songsListRef = useRef(null);
   const [pieChartOpen, setPieChartOpen] = useState(false);
   const filterSpecs = useSongFilterSpecs();
+  
 
   return (
     <div className="relative flex flex-col border p-5 bg-[rgba(70, 70, 70, 0.75)] shadow-2xl">
