@@ -29,7 +29,7 @@ export default function PlaylistCard({
   
 
   return (
-    <div className="relative flex flex-col border p-5 bg-[rgba(70, 70, 70, 0.75)] shadow-2xl">
+    <div className="relative flex flex-col border-4 p-5 linear bg-linear-to-br from-emerald-300/85 to-lime-300/85 shadow-2xl">
       <button
         onClick={() => Playlist.deletePlaylist(playlist.id)}
         className="absolute top-2 right-2 bg-red-500 text-white w-6 h-6 flex items-center justify-center hover:scale-110 hover:cursor-pointer transition-all duration-200"
@@ -48,7 +48,7 @@ export default function PlaylistCard({
         <FadeOverlay isOpen={showEdit} onClose={() => setShowEdit(false)}>
           {Playlist.isFilterPlaylist(playlist) ? (
             <div className="w-full max-w-3xl rounded-2xl bg-white p-6">
-              <h1 className="mb-4 text-center text-2xl">
+              <h1 className="mb-4 text-center text-3xl">
                 Edit <b>{playlist.name}</b>
               </h1>
               <FilterPlaylistForm
@@ -72,7 +72,7 @@ export default function PlaylistCard({
           )}
         </FadeOverlay>
 
-        <div>
+        <div className="w-full h-fit">
           <h3
             className={`font-bold text-3xl text-center m-5`}
           >
