@@ -26,7 +26,7 @@ export default function PlaylistCard({
   const songsListRef = useRef(null);
   const [pieChartOpen, setPieChartOpen] = useState(false);
   const filterSpecs = useSongFilterSpecs();
-  
+
 
   return (
     <div className="relative flex flex-col border-4 p-5 linear bg-linear-to-br from-emerald-300/85 to-lime-300/85 shadow-2xl">
@@ -43,7 +43,7 @@ export default function PlaylistCard({
         <Edit />
       </button>
 
-      <div className="flex flex-row gap-5">
+      <div className="flex flex-col">
 
         <FadeOverlay isOpen={showEdit} onClose={() => setShowEdit(false)}>
           {Playlist.isFilterPlaylist(playlist) ? (
@@ -72,38 +72,36 @@ export default function PlaylistCard({
           )}
         </FadeOverlay>
 
-        <div className="w-full h-fit">
-          <h3
-            className={`font-bold text-3xl text-center m-5`}
+        <h3
+          className={`font-bold text-3xl text-center m-5`}
+        >
+          {playlist.name}
+        </h3>
+        {Playlist.isFilterPlaylist(playlist) && (
+          <p
+            className="mb-3 flex flex-row items-center justify-center gap-2 text-sm text-gray-700"
+            title="This playlist has no songs of its own. It always shows every song matching its filters."
           >
-            {playlist.name}
-          </h3>
-          {Playlist.isFilterPlaylist(playlist) && (
-            <p
-              className="mb-3 flex flex-row items-center justify-center gap-2 text-sm text-gray-700"
-              title="This playlist has no songs of its own. It always shows every song matching its filters."
-            >
-              <SlidersHorizontal size={14} />
-              <span>
-                Filter playlist:{" "}
-                <i>{describeFilters(filterSpecs, playlist.filters).join(", ") || "all songs"}</i>
-              </span>
-            </p>
-          )}
+            <SlidersHorizontal size={14} />
+            <span>
+              Filter playlist:{" "}
+              <i>{describeFilters(filterSpecs, playlist.filters).join(", ") || "all songs"}</i>
+            </span>
+          </p>
+        )}
 
-          <PlaylistMetadata playlist={playlist} setPieChartOpen={setPieChartOpen} pieChartOpen={pieChartOpen} />
+        <PlaylistMetadata playlist={playlist} setPieChartOpen={setPieChartOpen} pieChartOpen={pieChartOpen} />
 
-          <hr className="w-full border my-15" />
+        <hr className="w-full border my-15" />
 
-          <div ref={songsListRef}>
-            <SongsList
-              currentSong={currentSong}
-              setCurrentSong={setCurrentSong}
-              songs={playlist.songs}
-              settings={settings}
-              setUpdate={setUpdate}
-            />
-          </div>
+        <div ref={songsListRef}>
+          <SongsList
+            currentSong={currentSong}
+            setCurrentSong={setCurrentSong}
+            songs={playlist.songs}
+            settings={settings}
+            setUpdate={setUpdate}
+          />
         </div>
       </div>
     </div>
