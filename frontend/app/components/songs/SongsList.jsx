@@ -229,7 +229,7 @@ export default function SongsList({
   }, []);
 
   return (
-    <div className="flex flex-wrap flex-col justify-center gap-0">
+    <div className="flex flex-col gap-0 w-full min-w-0">
       <FadeOverlay isOpen={songToEdit} onClose={() => setSongToEdit(null)}>
         <EditSong
           song={songToEdit}
