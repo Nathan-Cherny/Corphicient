@@ -63,7 +63,7 @@ export default function PlaylistList({ }) {
   }, [currentSong]);
 
   return (
-    <div className="flex flex-col flex-wrap justify-center m-20 gap-7 max-w-11/12">
+    <div className="flex flex-col flex-wrap justify-center m-25 gap-7 max-w-11/12">
       <div
         id="playlistButtonBar"
         className="flex flex-row gap-10 flex-wrap justify-center"
