@@ -229,11 +229,11 @@ export default function SongsList({
   }, []);
 
   return (
-    <div className="flex flex-col gap-0 w-full min-w-0">
+    <div className="flex flex-col gap-2.5 w-full min-w-0">
       <FadeOverlay isOpen={songToEdit} onClose={() => setSongToEdit(null)}>
         <EditSong
           song={songToEdit}
-          onSave={async (id, formData) => {
+          onSave={async (id, formData) => { 
             await Song.patchSong(id, formData);
           }}
         />
@@ -249,7 +249,7 @@ export default function SongsList({
         setSongToEdit={setSongToEdit}
       />
 
-      <div className="flex flex-col gap-5 border bg-black/20 rounded-xl shadow-x mt-5">
+      <div className="flex flex-col gap-5 border bg-black/20 rounded-xl shadow-x">
 
         <SongsListOptions
           filterOpen={filterOpen}
