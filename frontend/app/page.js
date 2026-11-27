@@ -55,6 +55,7 @@ export default function Home() {
         <hr className="mb-10 mt-7.5 w-full" />
 
         <div className="flex flex-col gap-5">
+
           <div className="flex flex-row items-stretch gap-15 *:h-full">
             <div className="flex w-full flex-col grow border text-center rounded-2xl bg-blue-500 shadow-2xl p-5">
               <h1 className="text-3xl mb-5">Add Daylog</h1>
@@ -67,7 +68,7 @@ export default function Home() {
             {sections
               .filter((s) => s.id == 10)
               .map((s) => (
-                <div className="overflow-y-scroll" key={s.id}>
+                <div className="overflow-y-scroll w-full" key={s.id}>
                   <Section
                     className={""}
                     setUpdate={setUpdate}
